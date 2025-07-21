@@ -1,7 +1,10 @@
 package uz.urinboydev.domproduct.app.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class User(
     @SerializedName("id")
     val id: Int,
@@ -32,4 +35,4 @@ data class User(
 
     @SerializedName("updated_at")
     val updatedAt: String? = null
-)
+) : Parcelable

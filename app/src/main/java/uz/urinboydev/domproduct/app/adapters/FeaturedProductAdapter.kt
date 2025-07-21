@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import uz.urinboydev.domproduct.app.R
+import uz.urinboydev.domproduct.app.constants.ApiConstants
 import uz.urinboydev.domproduct.app.databinding.ItemFeaturedProductBinding
 import uz.urinboydev.domproduct.app.fragments.ProductAction
 import uz.urinboydev.domproduct.app.models.Product
@@ -99,18 +100,27 @@ class FeaturedProductAdapter(
 
         private fun loadProductImage(imageUrl: String?) {
             try {
-                if (!imageUrl.isNullOrEmpty()) {
-                    Glide.with(binding.productImage.context)
-                        .load(imageUrl)
-                        .placeholder(R.drawable.placeholder_product)
-                        .error(R.drawable.placeholder_product)
-                        .into(binding.productImage)
-                } else {
-                    // Default product placeholder
-                    binding.productImage.setImageResource(R.drawable.placeholder_product)
+                when {
+                    !imageUrl.isNullOrEmpty() -> {
+                        // To'liq URL yoki nisbiy URL ekanligini tekshirish
+                        val fullUrl = if (imageUrl.startsWith("http")) {
+                            imageUrl
+                        } else {
+                            "${ApiConstants.BASE_URL}$imageUrl"
+                        }
+
+                        Glide.with(binding.productImage.context)
+                            .load(fullUrl)
+                            .placeholder(R.drawable.placeholder_product)
+                            .error(R.drawable.placeholder_product)
+                            .centerCrop()
+                            .into(binding.productImage)
+                    }
+                    else -> {
+                        binding.productImage.setImageResource(R.drawable.placeholder_product)
+                    }
                 }
             } catch (e: Exception) {
-                // Fallback to placeholder on any error
                 binding.productImage.setImageResource(R.drawable.placeholder_product)
             }
         }

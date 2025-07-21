@@ -29,6 +29,37 @@ object ApiConstants {
     const val CITIES = "cities"
     const val CITIES_DELIVERY = "cities/delivery-available"
 
+    // Addresses endpoints
+    const val ADDRESSES = "addresses"
+    const val ADDRESSES_SET_DEFAULT = "addresses/{id}/set-default"
+
+    // Orders endpoints
+    const val ORDERS = "orders"
+    const val ORDERS_CANCEL = "orders/{id}/cancel"
+    const val ORDERS_REORDER = "orders/{id}/reorder"
+    const val ORDERS_STATUS_HISTORY = "orders/{id}/status-history"
+
+    // Reviews endpoints
+    const val REVIEWS = "reviews"
+    const val PRODUCTS_REVIEWS = "products/{productId}/reviews"
+
+    // Pagination
+    const val DEFAULT_PAGE_SIZE = 20
+    const val MAX_PAGE_SIZE = 100
+
+    // Order statuses
+    const val ORDER_STATUS_PENDING = "pending"
+    const val ORDER_STATUS_CONFIRMED = "confirmed"
+    const val ORDER_STATUS_PROCESSING = "processing"
+    const val ORDER_STATUS_SHIPPED = "shipped"
+    const val ORDER_STATUS_DELIVERED = "delivered"
+    const val ORDER_STATUS_CANCELLED = "cancelled"
+
+    // Payment methods
+    const val PAYMENT_METHOD_CASH = "cash"
+    const val PAYMENT_METHOD_CARD = "card"
+    const val PAYMENT_METHOD_TRANSFER = "transfer"
+
     // Headers
     const val CONTENT_TYPE = "application/json"
     const val ACCEPT = "application/json"
@@ -55,4 +86,5 @@ object ApiConstants {
     const val ERROR_NETWORK = "Internet aloqasini tekshiring"
     const val ERROR_SERVER = "Server xatoligi"
     const val ERROR_UNKNOWN = "Noma'lum xato"
+
 }

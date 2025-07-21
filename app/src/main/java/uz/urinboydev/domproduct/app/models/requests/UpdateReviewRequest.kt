@@ -1,4 +1,11 @@
 package uz.urinboydev.domproduct.app.models.requests
 
-class UpdateReviewRequest {
-}
+import com.google.gson.annotations.SerializedName
+
+data class UpdateReviewRequest(
+    @SerializedName("rating")
+    val rating: Int,
+
+    @SerializedName("comment")
+    val comment: String? = null
+)
