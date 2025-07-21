@@ -1,0 +1,108 @@
+<resources>
+    <string name="app_name">Dom Product</string>
+    <string name="app_logo">Dom Product Logo</string>
+    <string name="app_slogan">Eng sifatli mahsulotlar</string>
+    <string name="loading">Yuklanmoqda…</string>
+    <string name="version_info">v1.0.0</string>
+
+    <!-- Language Selection -->
+    <string name="choose_language">Tilni tanlang</string>
+    <string name="choose_language_subtitle">Ilovadan foydalanish uchun tilni tanlang</string>
+    <string name="uzbek_language">O\'zbekcha</string>
+    <string name="uzbek_language_subtitle">Ona tilimiz</string>
+    <string name="russian_language">Русский</string>
+    <string name="russian_language_subtitle">Русский язык</string>
+    <string name="skip">O\'tkazib yuborish</string>
+    <string name="continue_text">Davom etish</string>
+    <string name="selected">Tanlangan</string>
+    <string name="language_icon">Til belgisi</string>
+
+    <!-- Login Activity -->
+    <string name="welcome_message">Xush kelibsiz!</string>
+    <string name="login_title">Tizimga kirish</string>
+    <string name="email_hint">Email manzil</string>
+    <string name="password_hint">Parol</string>
+    <string name="remember_me">Eslab qolish</string>
+    <string name="forgot_password">Parolni unutdingizmi?</string>
+    <string name="login_button">Kirish</string>
+    <string name="no_account">Hisobingiz yo\'qmi?</string>
+    <string name="register_link">Ro\'yxatdan o\'tish</string>
+    <string name="change_language">Tilni o\'zgartirish</string>
+
+    <!-- Validation Messages -->
+    <string name="email_required">Email talab qilinadi</string>
+    <string name="email_invalid">Email noto\'g\'ri formatda</string>
+    <string name="password_required">Parol talab qilinadi</string>
+    <string name="password_min_length">Parol kamida 6 ta belgidan iborat bo\'lishi kerak</string>
+
+    <!-- Messages -->
+    <string name="login_success">Muvaffaqiyatli kirildi!</string>
+    <string name="network_error">Internet aloqasini tekshiring</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Bottom Navigation -->
+    <string name="home">Bosh sahifa</string>
+    <string name="categories">Kategoriyalar</string>
+    <string name="cart">Savatcha</string>
+    <string name="profile">Profil</string>
+    <string name="search">Qidiruv</string>
+
+    <!-- Home Fragment -->
+    <string name="big_sale">Katta Chegirma</string>
+    <string name="sale_description">30% gacha chegirma</string>
+    <string name="groceries">Oziq-ovqat</string>
+    <string name="household">Uy-ro\'zg\'or</string>
+    <string name="womens_clothing">Ayollar kiyimi</string>
+    <string name="mens_clothing">Erkaklar kiyimi</string>
+    <string name="deal_of_day">Kun taklifi</string>
+    <string name="featured_products">Tavsiya etiladigan</string>
+    <string name="view_all">Hammasini ko\'rish</string>
+
+    <!-- Register Activity -->
+    <string name="create_account">Yangi hisob yaratish</string>
+    <string name="register_title">Ro\'yxatdan o\'tish</string>
+    <string name="name_hint">To\'liq ism</string>
+    <string name="confirm_password_hint">Parolni tasdiqlang</string>
+    <string name="register_button">Ro\'yxatdan o\'tish</string>
+    <string name="have_account">Hisobingiz bormi?</string>
+    <string name="login_link">Tizimga kirish</string>
+    <string name="terms_conditions">Men shartlar va qoidalar bilan roziman</string>
+    <string name="read_terms">O\'qish</string>
+
+    <!-- Validation Messages -->
+    <string name="name_required">Ism talab qilinadi</string>
+    <string name="name_min_length">Ism kamida 2 ta harfdan iborat bo\'lishi kerak</string>
+    <string name="confirm_password_required">Parol tasdiqi talab qilinadi</string>
+    <string name="passwords_not_match">Parollar mos kelmaydi</string>
+    <string name="terms_required">Shartlar va qoidalarni qabul qiling</string>
+
+    <!-- Messages -->
+    <string name="register_success">Muvaffaqiyatli ro\'yxatdan o\'tdingiz!</string>
+
+    <!-- Guest Mode -->
+    <string name="continue_as_guest">Mehmon sifatida davom etish</string>
+    <string name="or">yoki</string>
+    <string name="guest_mode_enabled">Mehmon sifatida kirildi</string>
+
+    <!-- Auth Manager -->
+    <string name="login_required">Tizimga kirish kerak</string>
+    <string name="login_required_message">Bu funksiya uchun tizimga kirish talab qilinadi</string>
+    <string name="unlock_features">Imkoniyatlardan foydalaning</string>
+    <string name="login_prompt_message">%s uchun tizimga kirish yoki ro\'yxatdan o\'tish kerak</string>
+    <string name="cancel">Bekor qilish</string>
+
+    <!-- Features -->
+    <string name="checkout_feature">Buyurtma berish</string>
+    <string name="profile_feature">Profil</string>
+    <string name="orders_feature">Buyurtmalar tarixi</string>
+    <string name="reviews_feature">Sharh yozish</string>
+
+    <!-- Product related -->
+    <string name="product_image">Mahsulot rasmi</string>
+    <string name="add_to_cart">Savatga qo\'shish</string>
+    <string name="out_of_stock">Tugagan</string>
+    <string name="added_to_cart">Savatga qo\'shildi</string>
+
+</resources>
