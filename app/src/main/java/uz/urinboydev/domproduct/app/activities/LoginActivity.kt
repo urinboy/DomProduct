@@ -1,5 +1,6 @@
 package uz.urinboydev.domproduct.app.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -225,6 +226,8 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         // Login ekranidan back button bilan chiqish
         finish()

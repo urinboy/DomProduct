@@ -62,10 +62,13 @@ class FeaturedProductAdapter(
             // Product image
             loadProductImage(product.image)
 
-            // Rating
-            if (product.averageRating > 0) {
+            // Rating - NULL SAFETY FIX
+            val avgRating = product.averageRating ?: 0.0
+            val reviewCount = product.reviewsCount ?: 0
+
+            if (avgRating > 0) {
                 binding.productRating.visibility = View.VISIBLE
-                binding.productRating.text = "${product.averageRating} ⭐ (${product.reviewsCount})"
+                binding.productRating.text = "$avgRating ⭐ ($reviewCount)"
             } else {
                 binding.productRating.visibility = View.GONE
             }

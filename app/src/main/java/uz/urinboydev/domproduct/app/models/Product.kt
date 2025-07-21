@@ -1,7 +1,10 @@
 package uz.urinboydev.domproduct.app.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Product(
     @SerializedName("id")
     val id: Int,
@@ -63,21 +66,13 @@ data class Product(
     @SerializedName("updated_at")
     val updatedAt: String,
 
-    // Category relationship
-    @SerializedName("category")
-    val category: Category? = null,
-
-    // Reviews relationship
-    @SerializedName("reviews")
-    val reviews: List<Review>? = null,
-
     // Calculated fields
     @SerializedName("average_rating")
-    val averageRating: Double = 0.0,
+    val averageRating: Double? = 0.0,
 
     @SerializedName("reviews_count")
-    val reviewsCount: Int = 0
-){
+    val reviewsCount: Int? = 0
+) : Parcelable {
     // Helper methods
     fun getCurrentPrice(): Double {
         return salePrice ?: price

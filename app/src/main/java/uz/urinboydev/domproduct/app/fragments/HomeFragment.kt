@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.activities.MainActivity
 import uz.urinboydev.domproduct.app.activities.OnProductAddedToCart
+import uz.urinboydev.domproduct.app.activities.ProductDetailActivity
 import uz.urinboydev.domproduct.app.adapters.CategoryAdapter
 import uz.urinboydev.domproduct.app.adapters.FeaturedProductAdapter
 import uz.urinboydev.domproduct.app.api.ApiHelper
@@ -39,6 +40,10 @@ class HomeFragment private constructor() : Fragment() {
     // Data lists
     private val categories = mutableListOf<Category>()
     private val featuredProducts = mutableListOf<Product>()
+
+    // Loading state
+    private var isLoadingCategories = false
+    private var isLoadingProducts = false
 
     companion object {
         private const val TAG = "HomeFragment"
@@ -156,6 +161,9 @@ class HomeFragment private constructor() : Fragment() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading home data: ${e.message}", e)
                 showError("Ma'lumotlarni yuklashda xato yuz berdi")
+
+                // Load dummy data on error
+                loadDummyData()
             } finally {
                 showLoading(false)
             }
@@ -163,6 +171,9 @@ class HomeFragment private constructor() : Fragment() {
     }
 
     private suspend fun loadCategories() {
+        if (isLoadingCategories) return
+        isLoadingCategories = true
+
         try {
             Log.d(TAG, "Loading categories from API")
 
@@ -197,10 +208,15 @@ class HomeFragment private constructor() : Fragment() {
             requireActivity().runOnUiThread {
                 loadDummyCategories()
             }
+        } finally {
+            isLoadingCategories = false
         }
     }
 
     private suspend fun loadFeaturedProducts() {
+        if (isLoadingProducts) return
+        isLoadingProducts = true
+
         try {
             Log.d(TAG, "Loading featured products from API")
 
@@ -235,7 +251,14 @@ class HomeFragment private constructor() : Fragment() {
             requireActivity().runOnUiThread {
                 loadDummyProducts()
             }
+        } finally {
+            isLoadingProducts = false
         }
+    }
+
+    private fun loadDummyData() {
+        loadDummyCategories()
+        loadDummyProducts()
     }
 
     private fun loadDummyCategories() {
@@ -243,12 +266,78 @@ class HomeFragment private constructor() : Fragment() {
 
         categories.clear()
         categories.addAll(listOf(
-            Category(1, "Oziq-ovqat", "groceries", "Oziq-ovqat mahsulotlari", null, null, 1, true, "", ""),
-            Category(2, "Uy-ro'zg'or", "household", "Uy-ro'zg'or buyumlari", null, null, 2, true, "", ""),
-            Category(3, "Ayollar kiyimi", "womens-clothing", "Ayollar uchun kiyim", null, null, 3, true, "", ""),
-            Category(4, "Erkaklar kiyimi", "mens-clothing", "Erkaklar uchun kiyim", null, null, 4, true, "", ""),
-            Category(5, "Elektronika", "electronics", "Elektron jihozlar", null, null, 5, true, "", ""),
-            Category(6, "Kitoblar", "books", "Kitoblar va darsliklar", null, null, 6, true, "", "")
+            Category(
+                id = 1,
+                name = "Oziq-ovqat",
+                slug = "groceries",
+                description = "Oziq-ovqat mahsulotlari",
+                image = null,
+                parentId = null,
+                sortOrder = 1,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            ),
+            Category(
+                id = 2,
+                name = "Uy-ro'zg'or",
+                slug = "household",
+                description = "Uy-ro'zg'or buyumlari",
+                image = null,
+                parentId = null,
+                sortOrder = 2,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            ),
+            Category(
+                id = 3,
+                name = "Ayollar kiyimi",
+                slug = "womens-clothing",
+                description = "Ayollar uchun kiyim",
+                image = null,
+                parentId = null,
+                sortOrder = 3,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            ),
+            Category(
+                id = 4,
+                name = "Erkaklar kiyimi",
+                slug = "mens-clothing",
+                description = "Erkaklar uchun kiyim",
+                image = null,
+                parentId = null,
+                sortOrder = 4,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            ),
+            Category(
+                id = 5,
+                name = "Elektronika",
+                slug = "electronics",
+                description = "Elektron jihozlar",
+                image = null,
+                parentId = null,
+                sortOrder = 5,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            ),
+            Category(
+                id = 6,
+                name = "Kitoblar",
+                slug = "books",
+                description = "Kitoblar va darsliklar",
+                image = null,
+                parentId = null,
+                sortOrder = 6,
+                isActive = true,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z"
+            )
         ))
 
         categoryAdapter.notifyDataSetChanged()
@@ -259,11 +348,126 @@ class HomeFragment private constructor() : Fragment() {
 
         featuredProducts.clear()
         featuredProducts.addAll(listOf(
-            Product(1, "Qizil olma", "apple", "Fresh red apple", "Yangi qizil olma", 4500.0, null, "APPLE001", 100, "1kg", null, null, null, 1, true, true, null, null, "", "", null, null, 4.5, 25),
-            Product(2, "Beige palto", "beige-coat", "Stylish beige coat", "Zamonaviy beige palto", 125000.0, 99000.0, "COAT001", 50, null, null, null, null, 3, true, true, null, null, "", "", null, null, 4.2, 18),
-            Product(3, "Futbolka", "t-shirt", "Comfortable t-shirt", "Qulay futbolka", 35000.0, null, "SHIRT001", 200, null, null, null, null, 4, true, true, null, null, "", "", null, null, 4.0, 32),
-            Product(4, "Samsung telefon", "samsung-phone", "Latest Samsung phone", "Yangi Samsung telefon", 2500000.0, 2200000.0, "PHONE001", 25, null, null, null, null, 5, true, true, null, null, "", "", null, null, 4.7, 156),
-            Product(5, "Dasturlash kitobi", "programming-book", "Learn programming", "Dasturlashni o'rganing", 75000.0, null, "BOOK001", 80, null, null, null, null, 6, true, true, null, null, "", "", null, null, 4.8, 42)
+            Product(
+                id = 1,
+                name = "Qizil olma",
+                slug = "apple",
+                description = "Yangi qizil olma, mazali va foydali",
+                shortDescription = "Fresh red apple",
+                price = 4500.0,
+                salePrice = null,
+                sku = "APPLE001",
+                stockQuantity = 100,
+                weight = "1kg",
+                dimensions = null,
+                image = "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400",
+                gallery = null,
+                categoryId = 1,
+                isFeatured = true,
+                isActive = true,
+                metaTitle = null,
+                metaDescription = null,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z",
+                averageRating = 4.5,
+                reviewsCount = 25
+            ),
+            Product(
+                id = 2,
+                name = "Beige palto",
+                slug = "beige-coat",
+                description = "Zamonaviy beige palto, yumshoq va issiq",
+                shortDescription = "Stylish beige coat",
+                price = 125000.0,
+                salePrice = 99000.0,
+                sku = "COAT001",
+                stockQuantity = 50,
+                weight = null,
+                dimensions = null,
+                image = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400",
+                gallery = null,
+                categoryId = 3,
+                isFeatured = true,
+                isActive = true,
+                metaTitle = null,
+                metaDescription = null,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z",
+                averageRating = 4.2,
+                reviewsCount = 18
+            ),
+            Product(
+                id = 3,
+                name = "Futbolka",
+                slug = "t-shirt",
+                description = "Qulay va yumshoq paxta futbolka",
+                shortDescription = "Comfortable t-shirt",
+                price = 35000.0,
+                salePrice = null,
+                sku = "SHIRT001",
+                stockQuantity = 200,
+                weight = null,
+                dimensions = null,
+                image = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
+                gallery = null,
+                categoryId = 4,
+                isFeatured = true,
+                isActive = true,
+                metaTitle = null,
+                metaDescription = null,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z",
+                averageRating = 4.0,
+                reviewsCount = 32
+            ),
+            Product(
+                id = 4,
+                name = "Samsung telefon",
+                slug = "samsung-phone",
+                description = "Eng yangi Samsung smartfoni, barcha imkoniyatlar bilan",
+                shortDescription = "Latest Samsung phone",
+                price = 2500000.0,
+                salePrice = 2200000.0,
+                sku = "PHONE001",
+                stockQuantity = 25,
+                weight = null,
+                dimensions = null,
+                image = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400",
+                gallery = null,
+                categoryId = 5,
+                isFeatured = true,
+                isActive = true,
+                metaTitle = null,
+                metaDescription = null,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z",
+                averageRating = 4.7,
+                reviewsCount = 156
+            ),
+            Product(
+                id = 5,
+                name = "Dasturlash kitobi",
+                slug = "programming-book",
+                description = "Dasturlashni o'rganish uchun eng yaxshi kitob",
+                shortDescription = "Learn programming",
+                price = 75000.0,
+                salePrice = null,
+                sku = "BOOK001",
+                stockQuantity = 80,
+                weight = null,
+                dimensions = null,
+                image = "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400",
+                gallery = null,
+                categoryId = 6,
+                isFeatured = true,
+                isActive = true,
+                metaTitle = null,
+                metaDescription = null,
+                createdAt = "2024-01-01T00:00:00Z",
+                updatedAt = "2024-01-01T00:00:00Z",
+                averageRating = 4.8,
+                reviewsCount = 42
+            )
         ))
 
         featuredProductAdapter.notifyDataSetChanged()
@@ -272,16 +476,16 @@ class HomeFragment private constructor() : Fragment() {
     private fun onCategoryClick(category: Category) {
         Log.d(TAG, "Category clicked: ${category.name}")
 
-        // Navigate to ProductsFragment with category filter
-        navigateToCategories()
+        // Navigate to CategoriesFragment with specific category
+        (requireActivity() as? MainActivity)?.navigateToCategories()
         showMessage("Kategoriya: ${category.name}")
     }
 
     private fun onProductClick(product: Product) {
         Log.d(TAG, "Product clicked: ${product.name}")
 
-        // TODO: Navigate to ProductDetailActivity
-        showMessage("Mahsulot tafsiloti: ${product.name}")
+        // Navigate to ProductDetailActivity
+        ProductDetailActivity.start(requireContext(), product)
     }
 
     private fun onAddToCartClick(product: Product) {
@@ -306,20 +510,27 @@ class HomeFragment private constructor() : Fragment() {
     }
 
     private fun navigateToCategories() {
+        Log.d(TAG, "Navigating to categories")
         (requireActivity() as? MainActivity)?.navigateToCategories()
     }
 
     private fun navigateToFeaturedProducts() {
-        // TODO: Navigate to products with featured filter
+        Log.d(TAG, "Navigating to featured products")
         showMessage("Tavsiya etiladigan mahsulotlar")
+        // TODO: Navigate to products with featured filter
+        // (requireActivity() as? MainActivity)?.navigateToProducts(featured = true)
     }
 
     private fun showDealOfDay() {
-        // TODO: Implement deal of the day functionality
+        Log.d(TAG, "Deal of day clicked")
         showMessage("Kun taklifi tez orada...")
+        // TODO: Implement deal of the day functionality
+        // Could navigate to a special deals page or show a dialog
     }
 
     private fun showLoading(show: Boolean) {
+        if (_binding == null) return
+
         if (show) {
             binding.homeScrollView.visibility = View.GONE
             binding.loadingProgressBar.visibility = View.VISIBLE
@@ -330,27 +541,40 @@ class HomeFragment private constructor() : Fragment() {
     }
 
     private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        if (context == null) return
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        Log.e(TAG, "Error: $message")
     }
 
     private fun showMessage(message: String) {
+        if (context == null) return
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     // Public method to refresh data
     fun refreshData() {
         Log.d(TAG, "Refreshing home data")
-        loadHomeData()
+        if (_binding != null && !isLoadingCategories && !isLoadingProducts) {
+            loadHomeData()
+        }
+    }
+
+    // Public method to update cart badge when returning to fragment
+    fun updateCartBadge() {
+        onProductAddedListener?.onProductAddedToCart()
     }
 
     override fun onResume() {
         super.onResume()
+        Log.d(TAG, "onResume called")
+
         // Update cart badge when returning to fragment
-        onProductAddedListener?.onProductAddedToCart()
+        updateCartBadge()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView called")
         _binding = null
     }
 }
