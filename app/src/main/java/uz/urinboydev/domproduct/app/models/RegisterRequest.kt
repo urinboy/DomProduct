@@ -9,9 +9,15 @@ data class RegisterRequest(
     @SerializedName("email")
     val email: String,
 
+    @SerializedName("phone")
+    val phone: String,
+
     @SerializedName("password")
     val password: String,
 
     @SerializedName("password_confirmation")
-    val passwordConfirmation: String
+    val passwordConfirmation: String,
+
+    @SerializedName("city_id")
+    val cityId: Int? = null
 )

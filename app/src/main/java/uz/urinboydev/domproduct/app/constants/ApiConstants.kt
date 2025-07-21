@@ -31,6 +31,8 @@ object ApiConstants {
 
     // Headers
     const val CONTENT_TYPE = "application/json"
+    const val ACCEPT = "application/json"
+    const val ACCEPT_LANGUAGE = "Accept-Language"
     const val AUTHORIZATION = "Authorization"
     const val BEARER = "Bearer "
 
@@ -40,6 +42,10 @@ object ApiConstants {
     const val PREF_USER_ID = "user_id"
     const val PREF_USER_NAME = "user_name"
     const val PREF_USER_EMAIL = "user_email"
+    const val PREF_USER_PHONE = "user_phone"
+    const val PREF_USER_ROLE = "user_role"
+    const val PREF_USER_AVATAR = "user_avatar"
+    const val PREF_USER_CITY_ID = "user_city_id"
 
     // Request codes
     const val REQUEST_LOGIN = 1001

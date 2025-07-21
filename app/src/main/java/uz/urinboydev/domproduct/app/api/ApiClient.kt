@@ -1,5 +1,6 @@
 package uz.urinboydev.domproduct.app.api
 
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,12 +12,28 @@ object ApiClient {
 
     private var retrofit: Retrofit? = null
 
+    // Header interceptor - default headerlarni qo'shish
+    private fun getHeaderInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val original = chain.request()
+            val requestBuilder = original.newBuilder()
+                .header(ApiConstants.CONTENT_TYPE, "application/json")
+                .header(ApiConstants.ACCEPT, "application/json")
+                .header(ApiConstants.ACCEPT_LANGUAGE, "uz") // Backend Accept-Language ni kutadi
+                .method(original.method, original.body)
+
+            val request = requestBuilder.build()
+            chain.proceed(request)
+        }
+    }
+
     // OkHttp Client yaratish
     private fun getOkHttpClient(): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder()
+            .addInterceptor(getHeaderInterceptor())
             .addInterceptor(loggingInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)

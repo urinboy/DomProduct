@@ -29,12 +29,6 @@
     <string name="register_link">Ro\'yxatdan o\'tish</string>
     <string name="change_language">Tilni o\'zgartirish</string>
 
-    <!-- Validation Messages -->
-    <string name="email_required">Email talab qilinadi</string>
-    <string name="email_invalid">Email noto\'g\'ri formatda</string>
-    <string name="password_required">Parol talab qilinadi</string>
-    <string name="password_min_length">Parol kamida 6 ta belgidan iborat bo\'lishi kerak</string>
-
     <!-- Messages -->
     <string name="login_success">Muvaffaqiyatli kirildi!</string>
     <string name="network_error">Internet aloqasini tekshiring</string>
@@ -61,25 +55,51 @@
     <string name="view_all">Hammasini ko\'rish</string>
 
     <!-- Register Activity -->
-    <string name="create_account">Yangi hisob yaratish</string>
-    <string name="register_title">Ro\'yxatdan o\'tish</string>
-    <string name="name_hint">To\'liq ism</string>
-    <string name="confirm_password_hint">Parolni tasdiqlang</string>
-    <string name="register_button">Ro\'yxatdan o\'tish</string>
-    <string name="have_account">Hisobingiz bormi?</string>
-    <string name="login_link">Tizimga kirish</string>
-    <string name="terms_conditions">Men shartlar va qoidalar bilan roziman</string>
-    <string name="read_terms">O\'qish</string>
+    <string name="phone_hint">Telefon raqam</string>
+    <string name="phone_required">Telefon raqam majburiy</string>
+    <string name="phone_min_length">Telefon raqam kamida 9 ta belgidan iborat bo‘lishi kerak</string>
 
-    <!-- Validation Messages -->
-    <string name="name_required">Ism talab qilinadi</string>
-    <string name="name_min_length">Ism kamida 2 ta harfdan iborat bo\'lishi kerak</string>
-    <string name="confirm_password_required">Parol tasdiqi talab qilinadi</string>
+    <!-- Validation messages -->
+    <string name="name_required">Ism majburiy</string>
+    <string name="name_min_length">Ism kamida 2 ta belgidan iborat bo‘lishi kerak</string>
+    <string name="email_required">Email majburiy</string>
+    <string name="email_invalid">Email noto‘g‘ri formatda</string>
+    <string name="password_required">Parol majburiy</string>
+    <string name="password_min_length">Parol kamida 6 ta belgidan iborat bo‘lishi kerak</string>
+    <string name="confirm_password_required">Parolni tasdiqlash majburiy</string>
     <string name="passwords_not_match">Parollar mos kelmaydi</string>
-    <string name="terms_required">Shartlar va qoidalarni qabul qiling</string>
+    <string name="terms_required">Shartlar va qoidalarni qabul qilish majburiy</string>
 
-    <!-- Messages -->
-    <string name="register_success">Muvaffaqiyatli ro\'yxatdan o\'tdingiz!</string>
+    <!-- Success messages -->
+    <string name="register_success">Ro‘yxatdan o‘tish muvaffaqiyatli</string>
+
+    <!-- Terms and conditions -->
+    <string name="terms_conditions">Men shartlar va qoidalarni qabul qilaman</string>
+    <string name="read_terms">O‘qish</string>
+
+    <!-- UI text -->
+    <string name="create_account">Yangi hisob yarating</string>
+    <string name="register_title">Ro‘yxatdan o‘tish</string>
+    <string name="register_button">Ro‘yxatdan o‘tish</string>
+    <string name="have_account">Hisobingiz bormi?</string>
+    <string name="login_link">Kirish</string>
+
+    <!-- Navigation -->
+    <string name="back">Orqaga</string>
+
+    <!-- Product Detail -->
+    <string name="product_details">Mahsulot tafsilotlari</string>
+    <string name="description">Tavsif</string>
+    <string name="quantity">Miqdor</string>
+    <string name="decrease_quantity">Miqdorni kamaytirish</string>
+    <string name="increase_quantity">Miqdorni ko\'paytirish</string>
+    <string name="reviews">Sharhlar</string>
+    <string name="related_products">O\'xshash mahsulotlar</string>
+
+    <!-- Register form -->
+    <string name="name_hint">To\'liq ismingiz</string>
+    <string name="confirm_password_hint">Parolni tasdiqlang</string>
+
 
     <!-- Guest Mode -->
     <string name="continue_as_guest">Mehmon sifatida davom etish</string>

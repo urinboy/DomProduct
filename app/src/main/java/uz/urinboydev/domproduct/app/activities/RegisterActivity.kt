@@ -1,5 +1,6 @@
 package uz.urinboydev.domproduct.app.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -75,11 +76,12 @@ class RegisterActivity : AppCompatActivity() {
 
         val name = binding.nameEditText.text.toString().trim()
         val email = binding.emailEditText.text.toString().trim()
+        val phone = binding.phoneEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
         val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
 
         // Validation
-        if (!validateInput(name, email, password, confirmPassword)) {
+        if (!validateInput(name, email, phone, password, confirmPassword)) {
             return
         }
 
@@ -95,7 +97,14 @@ class RegisterActivity : AppCompatActivity() {
         // API call
         lifecycleScope.launch {
             try {
-                val registerRequest = RegisterRequest(name, email, password, confirmPassword)
+                val registerRequest = RegisterRequest(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    password = password,
+                    passwordConfirmation = confirmPassword,
+                    cityId = null // Hozircha null, keyinroq city selection qo'shiladi
+                )
                 val response = ApiHelper.getApi().register(registerRequest)
 
                 if (ApiHelper.isSuccessful(response)) {
@@ -118,6 +127,9 @@ class RegisterActivity : AppCompatActivity() {
                     // Register failed
                     val errorMessage = ApiHelper.getErrorMessage(response)
                     Log.e(TAG, "Register failed: $errorMessage")
+
+                    // Validation errorlarini ko'rsatish
+                    showValidationErrors(response)
                     showMessage(errorMessage)
                 }
 
@@ -130,7 +142,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateInput(name: String, email: String, password: String, confirmPassword: String): Boolean {
+    private fun validateInput(name: String, email: String, phone: String, password: String, confirmPassword: String): Boolean {
         var isValid = true
 
         // Name validation
@@ -153,6 +165,17 @@ class RegisterActivity : AppCompatActivity() {
             isValid = false
         } else {
             binding.emailInputLayout.error = null
+        }
+
+        // Phone validation
+        if (phone.isEmpty()) {
+            binding.phoneInputLayout.error = getString(R.string.phone_required)
+            isValid = false
+        } else if (phone.length < 9) {
+            binding.phoneInputLayout.error = getString(R.string.phone_min_length)
+            isValid = false
+        } else {
+            binding.phoneInputLayout.error = null
         }
 
         // Password validation
@@ -178,6 +201,24 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun showValidationErrors(response: retrofit2.Response<uz.urinboydev.domproduct.app.models.ApiResponse<uz.urinboydev.domproduct.app.models.AuthResponse>>) {
+        val validationErrors = ApiHelper.getValidationErrors(response)
+        validationErrors?.let { errors ->
+            errors["name"]?.firstOrNull()?.let {
+                binding.nameInputLayout.error = it
+            }
+            errors["email"]?.firstOrNull()?.let {
+                binding.emailInputLayout.error = it
+            }
+            errors["phone"]?.firstOrNull()?.let {
+                binding.phoneInputLayout.error = it
+            }
+            errors["password"]?.firstOrNull()?.let {
+                binding.passwordInputLayout.error = it
+            }
+        }
     }
 
     private fun showLoading(show: Boolean) {
@@ -219,6 +260,8 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         // Register ekranidan Login ga qaytish
         openLoginActivity()

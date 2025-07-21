@@ -37,6 +37,10 @@ class PreferenceManager(context: Context) {
             .putInt(ApiConstants.PREF_USER_ID, user.id)
             .putString(ApiConstants.PREF_USER_NAME, user.name)
             .putString(ApiConstants.PREF_USER_EMAIL, user.email)
+            .putString(ApiConstants.PREF_USER_PHONE, user.phone ?: "")
+            .putString(ApiConstants.PREF_USER_ROLE, user.role)
+            .putString(ApiConstants.PREF_USER_AVATAR, user.avatar ?: "")
+            .putInt(ApiConstants.PREF_USER_CITY_ID, user.cityId ?: 0)
             .apply()
     }
 
@@ -50,6 +54,22 @@ class PreferenceManager(context: Context) {
 
     fun getUserEmail(): String? {
         return sharedPreferences.getString(ApiConstants.PREF_USER_EMAIL, null)
+    }
+
+    fun getUserPhone(): String? {
+        return sharedPreferences.getString(ApiConstants.PREF_USER_PHONE, null)
+    }
+
+    fun getUserRole(): String? {
+        return sharedPreferences.getString(ApiConstants.PREF_USER_ROLE, "customer")
+    }
+
+    fun getUserAvatar(): String? {
+        return sharedPreferences.getString(ApiConstants.PREF_USER_AVATAR, null)
+    }
+
+    fun getUserCityId(): Int {
+        return sharedPreferences.getInt(ApiConstants.PREF_USER_CITY_ID, 0)
     }
 
     // ===== AUTHENTICATION STATUS =====

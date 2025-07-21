@@ -15,12 +15,21 @@ data class User(
     @SerializedName("phone")
     val phone: String? = null,
 
+    @SerializedName("role")
+    val role: String = "customer",
+
+    @SerializedName("avatar")
+    val avatar: String? = null,
+
+    @SerializedName("city_id")
+    val cityId: Int? = null,
+
     @SerializedName("email_verified_at")
     val emailVerifiedAt: String? = null,
 
     @SerializedName("created_at")
-    val createdAt: String,
+    val createdAt: String? = null,
 
     @SerializedName("updated_at")
-    val updatedAt: String
+    val updatedAt: String? = null
 )

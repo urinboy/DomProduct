@@ -30,11 +30,7 @@
     <string name="register_link">Регистрация</string>
     <string name="change_language">Изменить язык</string>
 
-    <!-- Validation Messages -->
-    <string name="email_required">Email обязателен</string>
-    <string name="email_invalid">Неверный формат email</string>
-    <string name="password_required">Пароль обязателен</string>
-    <string name="password_min_length">Пароль должен содержать минимум 6 символов</string>
+
 
     <!-- Messages -->
     <string name="login_success">Успешный вход!</string>
@@ -62,25 +58,51 @@
     <string name="view_all">Смотреть все</string>
 
     <!-- Register Activity -->
-    <string name="create_account">Создать новый аккаунт</string>
-    <string name="register_title">Регистрация</string>
-    <string name="name_hint">Полное имя</string>
-    <string name="confirm_password_hint">Подтвердите пароль</string>
-    <string name="register_button">Зарегистрироваться</string>
-    <string name="have_account">Уже есть аккаунт?</string>
-    <string name="login_link">Войти</string>
-    <string name="terms_conditions">Я согласен с условиями и правилами</string>
-    <string name="read_terms">Читать</string>
+    <string name="phone_hint">Номер телефона</string>
+    <string name="phone_required">Номер телефона обязателен</string>
+    <string name="phone_min_length">Номер телефона должен содержать минимум 9 символов</string>
 
-    <!-- Validation Messages -->
+    <!-- Validation messages -->
     <string name="name_required">Имя обязательно</string>
     <string name="name_min_length">Имя должно содержать минимум 2 символа</string>
+    <string name="email_required">Email обязателен</string>
+    <string name="email_invalid">Email в неправильном формате</string>
+    <string name="password_required">Пароль обязателен</string>
+    <string name="password_min_length">Пароль должен содержать минимум 6 символов</string>
     <string name="confirm_password_required">Подтверждение пароля обязательно</string>
     <string name="passwords_not_match">Пароли не совпадают</string>
-    <string name="terms_required">Примите условия и правила</string>
+    <string name="terms_required">Принятие условий и правил обязательно</string>
 
-    <!-- Messages -->
-    <string name="register_success">Успешная регистрация!</string>
+    <!-- Success messages -->
+    <string name="register_success">Регистрация прошла успешно</string>
+
+
+    <!-- Terms and conditions -->
+    <string name="terms_conditions">Я принимаю условия и правила</string>
+    <string name="read_terms">Читать</string>
+
+    <!-- UI text -->
+    <string name="create_account">Создайте новый аккаунт</string>
+    <string name="register_title">Регистрация</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="have_account">У вас есть аккаунт?</string>
+    <string name="login_link">Войти</string>
+
+    <!-- Navigation -->
+    <string name="back">Назад</string>
+
+    <!-- Product Detail -->
+    <string name="product_details">Детали товара</string>
+    <string name="description">Описание</string>
+    <string name="quantity">Количество</string>
+    <string name="decrease_quantity">Уменьшить количество</string>
+    <string name="increase_quantity">Увеличить количество</string>
+    <string name="reviews">Отзывы</string>
+    <string name="related_products">Похожие товары</string>
+
+    <!-- Register form -->
+    <string name="name_hint">Ваше полное имя</string>
+    <string name="confirm_password_hint">Подтвердите пароль</string>
 
     <!-- Guest Mode -->
     <string name="continue_as_guest">Продолжить как гость</string>
@@ -105,4 +127,5 @@
     <string name="add_to_cart">В корзину</string>
     <string name="out_of_stock">Нет в наличии</string>
     <string name="added_to_cart">Добавлено в корзину</string>
+
 </resources>
