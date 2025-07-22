@@ -72,6 +72,19 @@ class PreferenceManager(context: Context) {
         return sharedPreferences.getInt(ApiConstants.PREF_USER_CITY_ID, 0)
     }
 
+    // YANGI: Foydalanuvchi ma'lumotlarini tozalash
+    fun clearUser() {
+        sharedPreferences.edit()
+            .remove(ApiConstants.PREF_USER_ID)
+            .remove(ApiConstants.PREF_USER_NAME)
+            .remove(ApiConstants.PREF_USER_EMAIL)
+            .remove(ApiConstants.PREF_USER_PHONE)
+            .remove(ApiConstants.PREF_USER_ROLE)
+            .remove(ApiConstants.PREF_USER_AVATAR)
+            .remove(ApiConstants.PREF_USER_CITY_ID)
+            .apply()
+    }
+
     // ===== AUTHENTICATION STATUS =====
     fun isLoggedIn(): Boolean {
         return hasToken() && getUserId() != -1
@@ -79,7 +92,11 @@ class PreferenceManager(context: Context) {
 
     // ===== LOGOUT =====
     fun logout() {
-        sharedPreferences.edit().clear().apply()
+        // Token va user ma'lumotlarini tozalash
+        clearToken()
+        clearUser()
+        // Boshqa ilova sozlamalarini o'chirmaslik uchun .clear() ishlatilmaydi
+        // sharedPreferences.edit().clear().apply()
     }
 
     // ===== APP SETTINGS =====

@@ -2,23 +2,23 @@ package uz.urinboydev.domproduct.app.api
 
 import retrofit2.Response
 import retrofit2.http.*
+import uz.urinboydev.domproduct.app.constants.ApiConstants // Bu qator mavjudligiga ishonch hosil qiling
 import uz.urinboydev.domproduct.app.models.*
 import uz.urinboydev.domproduct.app.models.requests.*
-import uz.urinboydev.domproduct.app.constants.ApiConstants
 
 interface ApiService {
 
     // ===== AUTHENTICATION =====
-    @POST(ApiConstants.LOGIN)
-    suspend fun login(@Body request: LoginRequest): Response<ApiResponse<AuthResponse>>
+    @POST(ApiConstants.LOGIN) // ApiConstants dan foydalanilgan
+    suspend fun login(@Body loginRequest: LoginRequest): Response<ApiResponse<AuthResponse>>
 
-    @POST(ApiConstants.REGISTER)
-    suspend fun register(@Body request: RegisterRequest): Response<ApiResponse<AuthResponse>>
+    @POST(ApiConstants.REGISTER) // ApiConstants dan foydalanilgan
+    suspend fun register(@Body registerRequest: RegisterRequest): Response<ApiResponse<AuthResponse>>
 
-    @POST(ApiConstants.LOGOUT)
+    @POST(ApiConstants.LOGOUT) // ApiConstants dan foydalanilgan
     suspend fun logout(@Header("Authorization") token: String): Response<ApiResponse<String>>
 
-    @GET(ApiConstants.ME)
+    @GET(ApiConstants.ME) // ApiConstants dan foydalanilgan
     suspend fun getMe(@Header("Authorization") token: String): Response<ApiResponse<User>>
 
     // ===== CATEGORIES =====

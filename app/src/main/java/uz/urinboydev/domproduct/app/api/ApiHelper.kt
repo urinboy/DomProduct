@@ -1,50 +1,56 @@
 package uz.urinboydev.domproduct.app.api
 
-import uz.urinboydev.domproduct.app.constants.ApiConstants
+import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import retrofit2.Response
+import uz.urinboydev.domproduct.app.models.ApiErrorResponse
 import uz.urinboydev.domproduct.app.models.ApiResponse
+import uz.urinboydev.domproduct.app.constants.ApiConstants // ApiConstants ni import qilish
 
 object ApiHelper {
 
-    private val apiService = ApiClient.getApiService()
-
-    // Token bilan header yaratish
-    fun createAuthHeader(token: String): String {
-        return ApiConstants.BEARER + token
+    private val apiService: ApiService by lazy {
+        ApiClient.getApiService()
     }
 
-    // ApiService olish
     fun getApi(): ApiService {
         return apiService
     }
 
-    // Response muvaffaqiyatlimi tekshirish
-    fun <T> isSuccessful(response: retrofit2.Response<ApiResponse<T>>): Boolean {
-        return response.isSuccessful && response.body()?.success == true
+    fun isSuccessful(response: Response<*>): Boolean {
+        return response.isSuccessful && response.body() != null
     }
 
-    // Error message olish
-    fun <T> getErrorMessage(response: retrofit2.Response<ApiResponse<T>>): String {
-        return when {
-            // Validation errors bo'lsa
-            response.body()?.errors != null -> {
-                val errors = response.body()!!.errors!!
-                val firstError = errors.values.firstOrNull()?.firstOrNull()
-                firstError ?: response.body()!!.message
-            }
-            // Backend dan kelgan message
-            response.body()?.message != null -> response.body()!!.message
-            // HTTP errors
-            response.code() == 422 -> "Ma'lumotlarni to'g'ri kiriting"
-            response.code() == 401 -> "Ruxsat berilmagan"
-            response.code() == 500 -> "Server xatoligi"
-            response.errorBody() != null -> "Server bilan aloqa xatoligi"
-            !response.isSuccessful -> "Tarmoq xatoligi"
-            else -> "Noma'lum xato"
+    // response.errorBody() ni bir marta o'qish uchun yangi metodlar
+    fun getErrorMessageFromRawBody(rawBody: String?): String {
+        return try {
+            rawBody?.let {
+                val type = object : TypeToken<ApiErrorResponse>() {}.type
+                val errorResponse: ApiErrorResponse? = Gson().fromJson(it, type)
+                errorResponse?.message ?: errorResponse?.errors?.values?.flatten()?.firstOrNull() ?: "Noma'lum xato"
+            } ?: "Noma'lum xato" // Bu yerda ogohlantirishni tuzatish uchun null o'rniga "Noma'lum xato"
+        } catch (e: Exception) {
+            Log.e("ApiHelper", "Error parsing error message from raw body: ${e.message}", e)
+            "Xato xabarini tahlil qilishda muammo: ${e.message}"
         }
     }
 
-    // Validation errorlarini olish
-    fun <T> getValidationErrors(response: retrofit2.Response<ApiResponse<T>>): Map<String, List<String>>? {
-        return response.body()?.errors
+    fun getValidationErrorsFromRawBody(rawBody: String?): Map<String, List<String>>? {
+        return try {
+            rawBody?.let {
+                val type = object : TypeToken<ApiErrorResponse>() {}.type
+                val errorResponse: ApiErrorResponse? = Gson().fromJson(it, type)
+                errorResponse?.errors
+            } ?: null
+        } catch (e: Exception) {
+            Log.e("ApiHelper", "Error parsing validation errors from raw body: ${e.message}", e)
+            null
+        }
+    }
+
+    // YANGI QO'SHILGAN METOD
+    fun createAuthHeader(token: String): String {
+        return "${ApiConstants.BEARER}$token"
     }
 }

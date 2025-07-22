@@ -32,6 +32,8 @@ object AuthManager {
     fun loginAsGuest(context: Context) {
         val preferenceManager = PreferenceManager(context)
         preferenceManager.saveAppSettings(GUEST_MODE_KEY, true)
+        preferenceManager.clearToken() // Mehmon bo'lganda token bo'lmasligi kerak
+        preferenceManager.clearUser() // Mehmon bo'lganda user ma'lumotlari bo'lmasligi kerak
     }
 
     /**
@@ -86,9 +88,9 @@ object AuthManager {
                 context.startActivity(intent)
             }
             .setNeutralButton(context.getString(R.string.register_button)) { _, _ ->
-                // Navigate to RegisterActivity
+                // RegisterActivity ga yo'naltirish
                 val intent = Intent(context, LoginActivity::class.java)
-                intent.putExtra("show_register", true)
+                intent.putExtra("show_register", true) // RegisterActivity ga o'tish uchun flag
                 context.startActivity(intent)
             }
             .setNegativeButton(context.getString(R.string.continue_as_guest)) { dialog, _ ->
@@ -102,8 +104,10 @@ object AuthManager {
      */
     fun logout(context: Context) {
         val preferenceManager = PreferenceManager(context)
-        preferenceManager.logout()
-        preferenceManager.saveAppSettings(GUEST_MODE_KEY, false)
+        preferenceManager.logout() // Token va user ma'lumotlarini tozalash
+        preferenceManager.saveAppSettings(GUEST_MODE_KEY, false) // Mehmon rejimini o'chirish
+        // Savatni ham tozalash (agar server savati bo'lsa, avval sinxronizatsiya qilish kerak)
+        LocalCartManager(context).clearCart()
     }
 
     /**
@@ -136,6 +140,7 @@ object AuthManager {
         return false
     }
 }
+
 
 /**
  * Authentication states

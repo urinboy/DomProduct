@@ -1,4 +1,5 @@
 <resources>
+    <!-- App Information -->
     <string name="app_name">Dom Product</string>
     <string name="app_logo">Dom Product Logo</string>
     <string name="app_slogan">Eng sifatli mahsulotlar</string>
@@ -8,121 +9,146 @@
     <!-- Language Selection -->
     <string name="choose_language">Tilni tanlang</string>
     <string name="choose_language_subtitle">Ilovadan foydalanish uchun tilni tanlang</string>
-    <string name="uzbek_language">O\'zbekcha</string>
-    <string name="uzbek_language_subtitle">Ona tilimiz</string>
+    <string name="language_icon">Til belgisi</string>
     <string name="russian_language">Русский</string>
     <string name="russian_language_subtitle">Русский язык</string>
-    <string name="skip">O\'tkazib yuborish</string>
-    <string name="continue_text">Davom etish</string>
     <string name="selected">Tanlangan</string>
-    <string name="language_icon">Til belgisi</string>
+    <string name="uzbek_language">O\'zbekcha</string>
+    <string name="uzbek_language_subtitle">Ona tilimiz</string>
+
+    <!-- General UI -->
+    <string name="back">Orqaga</string>
+    <string name="cancel">Bekor qilish</string>
+    <string name="continue_text">Davom etish</string>
+    <string name="no">Yo\'q</string>
+    <string name="or">yoki</string>
+    <string name="skip">O\'tkazib yuborish</string>
+    <string name="view_all">Hammasini ko\'rish</string>
+    <string name="yes">Ha</string>
 
     <!-- Login Activity -->
-    <string name="welcome_message">Xush kelibsiz!</string>
-    <string name="login_title">Tizimga kirish</string>
+    <string name="change_language">Tilni o\'zgartirish</string>
     <string name="email_hint">Email manzil</string>
-    <string name="password_hint">Parol</string>
-    <string name="remember_me">Eslab qolish</string>
     <string name="forgot_password">Parolni unutdingizmi?</string>
     <string name="login_button">Kirish</string>
+    <string name="login_title">Tizimga kirish</string>
     <string name="no_account">Hisobingiz yo\'qmi?</string>
+    <string name="password_hint">Parol</string>
     <string name="register_link">Ro\'yxatdan o\'tish</string>
-    <string name="change_language">Tilni o\'zgartirish</string>
+    <string name="remember_me">Eslab qolish</string>
+    <string name="welcome_message">Xush kelibsiz!</string>
 
-    <!-- Messages -->
-    <string name="login_success">Muvaffaqiyatli kirildi!</string>
-    <string name="network_error">Internet aloqasini tekshiring</string>
+    <!-- Register Activity -->
+    <string name="confirm_password_hint">Parolni tasdiqlang</string>
+    <string name="create_account">Yangi hisob yarating</string>
+    <string name="have_account">Hisobingiz bormi?</string>
+    <string name="login_link">Kirish</string>
+    <string name="name_hint">To\'liq ismingiz</string>
+    <string name="phone_hint">Telefon raqam</string>
+    <string name="read_terms">O\'qish</string>
+    <string name="register_button">Ro\'yxatdan o\'tish</string>
+    <string name="register_title">Ro\'yxatdan o\'tish</string>
+    <string name="terms_conditions">Men shartlar va qoidalarni qabul qilaman</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Guest Mode -->
+    <string name="continue_as_guest">Mehmon sifatida davom etish</string>
+    <string name="guest_mode_enabled">Mehmon rejimi yoqildi</string>
+    <string name="welcome_guest">Mehmon</string>
+    <string name="welcome_user">Salom, %s!</string>
+
+    <!-- Auth & Login Messages -->
+    <string name="login_failed_generic">Tizimga kirishda xato yuz berdi. Iltimos, ma\'lumotlaringizni tekshiring.</string>
+    <string name="login_prompt_message">«%s» funksiyasidan foydalanish uchun tizimga kiring yoki ro\'yxatdan o\'ting.</string>
+    <string name="login_required">Tizimga kirish talab qilinadi</string>
+    <string name="login_required_message">Ushbu funksiyadan foydalanish uchun tizimga kirishingiz kerak.</string>
+    <string name="login_success">Tizimga muvaffaqiyatli kirdingiz!</string>
+    <string name="register_success">Ro\'yxatdan o\'tish muvaffaqiyatli</string>
+    <string name="unlock_features">Xususiyatlarni ochish</string>
+
+    <!-- Validation Messages -->
+    <string name="confirm_password_required">Parolni tasdiqlash majburiy</string>
+    <string name="email_invalid">Noto\'g\'ri email formati</string>
+    <string name="email_required">Email majburiy</string>
+    <string name="name_min_length">Ism kamida 2 ta belgidan iborat bo\'lishi kerak</string>
+    <string name="name_required">Ism majburiy</string>
+    <string name="password_min_length">Parol kamida 6 ta belgidan iborat bo\'lishi kerak</string>
+    <string name="password_required">Parol majburiy</string>
+    <string name="passwords_not_match">Parollar mos kelmaydi</string>
+    <string name="phone_min_length">Telefon raqam kamida 9 ta belgidan iborat bo\'lishi kerak</string>
+    <string name="phone_required">Telefon raqam majburiy</string>
+    <string name="terms_required">Shartlar va qoidalarni qabul qilish majburiy</string>
+
+    <!-- Network & Error Messages -->
+    <string name="network_error">Internet aloqasini tekshiring.</string>
 
     <!-- Bottom Navigation -->
-    <string name="home">Bosh sahifa</string>
-    <string name="categories">Kategoriyalar</string>
     <string name="cart">Savatcha</string>
+    <string name="categories">Kategoriyalar</string>
+    <string name="home">Bosh sahifa</string>
     <string name="profile">Profil</string>
     <string name="search">Qidiruv</string>
 
     <!-- Home Fragment -->
     <string name="big_sale">Katta Chegirma</string>
-    <string name="sale_description">30% gacha chegirma</string>
-    <string name="groceries">Oziq-ovqat</string>
-    <string name="household">Uy-ro\'zg\'or</string>
-    <string name="womens_clothing">Ayollar kiyimi</string>
-    <string name="mens_clothing">Erkaklar kiyimi</string>
     <string name="deal_of_day">Kun taklifi</string>
     <string name="featured_products">Tavsiya etiladigan</string>
-    <string name="view_all">Hammasini ko\'rish</string>
+    <string name="groceries">Oziq-ovqat</string>
+    <string name="household">Uy-ro\'zg\'or</string>
+    <string name="mens_clothing">Erkaklar kiyimi</string>
+    <string name="sale_description">30% gacha chegirma</string>
+    <string name="womens_clothing">Ayollar kiyimi</string>
 
-    <!-- Register Activity -->
-    <string name="phone_hint">Telefon raqam</string>
-    <string name="phone_required">Telefon raqam majburiy</string>
-    <string name="phone_min_length">Telefon raqam kamida 9 ta belgidan iborat bo‘lishi kerak</string>
-
-    <!-- Validation messages -->
-    <string name="name_required">Ism majburiy</string>
-    <string name="name_min_length">Ism kamida 2 ta belgidan iborat bo‘lishi kerak</string>
-    <string name="email_required">Email majburiy</string>
-    <string name="email_invalid">Email noto‘g‘ri formatda</string>
-    <string name="password_required">Parol majburiy</string>
-    <string name="password_min_length">Parol kamida 6 ta belgidan iborat bo‘lishi kerak</string>
-    <string name="confirm_password_required">Parolni tasdiqlash majburiy</string>
-    <string name="passwords_not_match">Parollar mos kelmaydi</string>
-    <string name="terms_required">Shartlar va qoidalarni qabul qilish majburiy</string>
-
-    <!-- Success messages -->
-    <string name="register_success">Ro‘yxatdan o‘tish muvaffaqiyatli</string>
-
-    <!-- Terms and conditions -->
-    <string name="terms_conditions">Men shartlar va qoidalarni qabul qilaman</string>
-    <string name="read_terms">O‘qish</string>
-
-    <!-- UI text -->
-    <string name="create_account">Yangi hisob yarating</string>
-    <string name="register_title">Ro‘yxatdan o‘tish</string>
-    <string name="register_button">Ro‘yxatdan o‘tish</string>
-    <string name="have_account">Hisobingiz bormi?</string>
-    <string name="login_link">Kirish</string>
-
-    <!-- Navigation -->
-    <string name="back">Orqaga</string>
+    <!-- Profile Fragment -->
+    <string name="change_password_button">Parolni o\'zgartirish</string>
+    <string name="confirm_new_password_hint">Yangi parolni tasdiqlang</string>
+    <string name="current_password_hint">Joriy parol</string>
+    <string name="edit_profile">Profilni tahrirlash</string>
+    <string name="logout">Chiqish</string>
+    <string name="logout_confirmation_message">Haqiqatan ham hisobingizdan chiqmoqchimisiz?</string>
+    <string name="logout_confirmation_title">Chiqish</string>
+    <string name="my_addresses">Mening Manzillarim</string>
+    <string name="my_orders">Mening Buyurtmalarim</string>
+    <string name="my_profile">Mening Profilim</string>
+    <string name="new_password_hint">Yangi parol</string>
+    <string name="new_password_min_length">Yangi parol kamida 6 ta belgidan iborat bo\'lishi kerak</string>
+    <string name="new_password_required">Yangi parol majburiy</string>
+    <string name="new_passwords_not_match">Yangi parollar mos kelmaydi</string>
+    <string name="old_password_required">Joriy parol majburiy</string>
+    <string name="password_change_failed">Parolni o\'zgartirishda xato: %s</string>
+    <string name="password_change_success">Parol muvaffaqiyatli o\'zgartirildi!</string>
+    <string name="profile_avatar">Profil rasmi</string>
+    <string name="profile_city_label">Shahar:</string>
+    <string name="profile_email_label">Email:</string>
+    <string name="profile_name_label">Ism:</string>
+    <string name="profile_not_logged_in">Profilni ko\'rish uchun tizimga kiring.</string>
+    <string name="profile_phone_label">Telefon:</string>
+    <string name="profile_role_label">Rol:</string>
+    <string name="profile_updated_success">Profil muvaffaqiyatli yangilandi!</string>
+    <string name="update_profile_button">Profilni yangilash</string>
 
     <!-- Product Detail -->
-    <string name="product_details">Mahsulot tafsilotlari</string>
-    <string name="description">Tavsif</string>
-    <string name="quantity">Miqdor</string>
     <string name="decrease_quantity">Miqdorni kamaytirish</string>
+    <string name="description">Tavsif</string>
     <string name="increase_quantity">Miqdorni ko\'paytirish</string>
-    <string name="reviews">Sharhlar</string>
+    <string name="product_details">Mahsulot tafsilotlari</string>
+    <string name="quantity">Miqdor</string>
     <string name="related_products">O\'xshash mahsulotlar</string>
+    <string name="reviews">Sharhlar</string>
 
-    <!-- Register form -->
-    <string name="name_hint">To\'liq ismingiz</string>
-    <string name="confirm_password_hint">Parolni tasdiqlang</string>
-
-
-    <!-- Guest Mode -->
-    <string name="continue_as_guest">Mehmon sifatida davom etish</string>
-    <string name="or">yoki</string>
-    <string name="guest_mode_enabled">Mehmon sifatida kirildi</string>
-
-    <!-- Auth Manager -->
-    <string name="login_required">Tizimga kirish kerak</string>
-    <string name="login_required_message">Bu funksiya uchun tizimga kirish talab qilinadi</string>
-    <string name="unlock_features">Imkoniyatlardan foydalaning</string>
-    <string name="login_prompt_message">%s uchun tizimga kirish yoki ro\'yxatdan o\'tish kerak</string>
-    <string name="cancel">Bekor qilish</string>
+    <!-- Product Related -->
+    <string name="add_to_cart">Savatga qo\'shish</string>
+    <string name="added_to_cart">Savatga qo\'shildi</string>
+    <string name="out_of_stock">Tugagan</string>
+    <string name="product_image">Mahsulot rasmi</string>
+    <string name="search_hint">Maxsulot qidirish…</string>
 
     <!-- Features -->
-    <string name="checkout_feature">Buyurtma berish</string>
-    <string name="profile_feature">Profil</string>
+    <string name="checkout_feature">buyurtma berish</string>
     <string name="orders_feature">Buyurtmalar tarixi</string>
+    <string name="profile_feature">profil</string>
     <string name="reviews_feature">Sharh yozish</string>
 
-    <!-- Product related -->
-    <string name="product_image">Mahsulot rasmi</string>
-    <string name="add_to_cart">Savatga qo\'shish</string>
-    <string name="out_of_stock">Tugagan</string>
-    <string name="added_to_cart">Savatga qo\'shildi</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

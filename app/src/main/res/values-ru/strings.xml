@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Information -->
     <string name="app_name">Dom Product</string>
     <string name="app_logo">Dom Product Logo</string>
     <string name="app_slogan">Лучшие продукты</string>
@@ -13,31 +14,73 @@
     <string name="uzbek_language_subtitle">Узбекский язык</string>
     <string name="russian_language">Русский</string>
     <string name="russian_language_subtitle">Русский язык</string>
+    <string name="language_icon">Иконка языка</string>
+
+    <!-- General UI -->
     <string name="skip">Пропустить</string>
     <string name="continue_text">Продолжить</string>
     <string name="selected">Выбрано</string>
-    <string name="language_icon">Иконка языка</string>
+    <string name="back">Назад</string>
+    <string name="cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="or">или</string>
+    <string name="view_all">Смотреть все</string>
 
     <!-- Login Activity -->
     <string name="welcome_message">Добро пожаловать!</string>
     <string name="login_title">Вход в систему</string>
+    <string name="login_button">Войти</string>
     <string name="email_hint">Email адрес</string>
     <string name="password_hint">Пароль</string>
     <string name="remember_me">Запомнить меня</string>
     <string name="forgot_password">Забыли пароль?</string>
-    <string name="login_button">Войти</string>
     <string name="no_account">Нет аккаунта?</string>
     <string name="register_link">Регистрация</string>
     <string name="change_language">Изменить язык</string>
 
+    <!-- Register Activity -->
+    <string name="create_account">Создайте новый аккаунт</string>
+    <string name="register_title">Регистрация</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="name_hint">Ваше полное имя</string>
+    <string name="phone_hint">Номер телефона</string>
+    <string name="confirm_password_hint">Подтвердите пароль</string>
+    <string name="have_account">У вас есть аккаунт?</string>
+    <string name="login_link">Войти</string>
+    <string name="terms_conditions">Я принимаю условия и правила</string>
+    <string name="read_terms">Читать</string>
 
+    <!-- Guest Mode -->
+    <string name="continue_as_guest">Продолжить как гость</string>
+    <string name="guest_mode_enabled">Гостевой режим включен</string>
+    <string name="welcome_user">Привет, %s!</string>
+    <string name="welcome_guest">Гость</string>
 
-    <!-- Messages -->
-    <string name="login_success">Успешный вход!</string>
-    <string name="network_error">Проверьте интернет соединение</string>
+    <!-- Auth & Login Messages -->
+    <string name="login_success">Вы успешно вошли в систему!</string>
+    <string name="login_failed_generic">Произошла ошибка при входе в систему. Пожалуйста, проверьте ваши данные.</string>
+    <string name="register_success">Регистрация прошла успешно</string>
+    <string name="login_required">Требуется вход в систему</string>
+    <string name="login_required_message">Для использования этой функции необходимо войти в систему.</string>
+    <string name="unlock_features">Разблокировать функции</string>
+    <string name="login_prompt_message">Войдите в систему или зарегистрируйтесь для использования функции «%s».</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Привет, пустой фрагмент</string>
+    <!-- Validation Messages -->
+    <string name="name_required">Имя обязательно</string>
+    <string name="name_min_length">Имя должно содержать минимум 2 символа</string>
+    <string name="email_required">Email обязателен</string>
+    <string name="email_invalid">Неверный формат email</string>
+    <string name="password_required">Пароль обязателен</string>
+    <string name="password_min_length">Пароль должен содержать минимум 6 символов</string>
+    <string name="phone_required">Номер телефона обязателен</string>
+    <string name="phone_min_length">Номер телефона должен содержать минимум 9 символов</string>
+    <string name="confirm_password_required">Подтверждение пароля обязательно</string>
+    <string name="passwords_not_match">Пароли не совпадают</string>
+    <string name="terms_required">Принятие условий и правил обязательно</string>
+
+    <!-- Network & Error Messages -->
+    <string name="network_error">Проверьте подключение к интернету.</string>
 
     <!-- Bottom Navigation -->
     <string name="home">Главная</string>
@@ -55,41 +98,36 @@
     <string name="mens_clothing">Мужская одежда</string>
     <string name="deal_of_day">Предложение дня</string>
     <string name="featured_products">Рекомендуемые</string>
-    <string name="view_all">Смотреть все</string>
 
-    <!-- Register Activity -->
-    <string name="phone_hint">Номер телефона</string>
-    <string name="phone_required">Номер телефона обязателен</string>
-    <string name="phone_min_length">Номер телефона должен содержать минимум 9 символов</string>
+    <!-- Profile Fragment -->
+    <string name="my_profile">Мой профиль</string>
+    <string name="my_orders">Мои заказы</string>
+    <string name="my_addresses">Мои адреса</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="logout">Выйти</string>
+    <string name="profile_name_label">Имя:</string>
+    <string name="profile_email_label">Email:</string>
+    <string name="profile_phone_label">Телефон:</string>
+    <string name="profile_role_label">Роль:</string>
+    <string name="profile_city_label">Город:</string>
+    <string name="profile_not_logged_in">Войдите в систему для просмотра профиля.</string>
+    <string name="logout_confirmation_title">Выход</string>
+    <string name="logout_confirmation_message">Вы действительно хотите выйти из аккаунта?</string>
+    <string name="profile_updated_success">Профиль успешно обновлен!</string>
+    <string name="update_profile_button">Обновить профиль</string>
+    <string name="profile_avatar">Фото профиля</string>
 
-    <!-- Validation messages -->
-    <string name="name_required">Имя обязательно</string>
-    <string name="name_min_length">Имя должно содержать минимум 2 символа</string>
-    <string name="email_required">Email обязателен</string>
-    <string name="email_invalid">Email в неправильном формате</string>
-    <string name="password_required">Пароль обязателен</string>
-    <string name="password_min_length">Пароль должен содержать минимум 6 символов</string>
-    <string name="confirm_password_required">Подтверждение пароля обязательно</string>
-    <string name="passwords_not_match">Пароли не совпадают</string>
-    <string name="terms_required">Принятие условий и правил обязательно</string>
-
-    <!-- Success messages -->
-    <string name="register_success">Регистрация прошла успешно</string>
-
-
-    <!-- Terms and conditions -->
-    <string name="terms_conditions">Я принимаю условия и правила</string>
-    <string name="read_terms">Читать</string>
-
-    <!-- UI text -->
-    <string name="create_account">Создайте новый аккаунт</string>
-    <string name="register_title">Регистрация</string>
-    <string name="register_button">Зарегистрироваться</string>
-    <string name="have_account">У вас есть аккаунт?</string>
-    <string name="login_link">Войти</string>
-
-    <!-- Navigation -->
-    <string name="back">Назад</string>
+    <!-- Password Change -->
+    <string name="current_password_hint">Текущий пароль</string>
+    <string name="new_password_hint">Новый пароль</string>
+    <string name="confirm_new_password_hint">Подтвердите новый пароль</string>
+    <string name="change_password_button">Изменить пароль</string>
+    <string name="password_change_success">Пароль успешно изменен!</string>
+    <string name="password_change_failed">Ошибка при изменении пароля: %s</string>
+    <string name="old_password_required">Текущий пароль обязателен</string>
+    <string name="new_password_required">Новый пароль обязателен</string>
+    <string name="new_password_min_length">Новый пароль должен содержать минимум 6 символов</string>
+    <string name="new_passwords_not_match">Новые пароли не совпадают</string>
 
     <!-- Product Detail -->
     <string name="product_details">Детали товара</string>
@@ -99,33 +137,19 @@
     <string name="increase_quantity">Увеличить количество</string>
     <string name="reviews">Отзывы</string>
     <string name="related_products">Похожие товары</string>
-
-    <!-- Register form -->
-    <string name="name_hint">Ваше полное имя</string>
-    <string name="confirm_password_hint">Подтвердите пароль</string>
-
-    <!-- Guest Mode -->
-    <string name="continue_as_guest">Продолжить как гость</string>
-    <string name="or">или</string>
-    <string name="guest_mode_enabled">Вошли как гость</string>
-
-    <!-- Auth Manager -->
-    <string name="login_required">Необходима авторизация</string>
-    <string name="login_required_message">Для этой функции требуется авторизация</string>
-    <string name="unlock_features">Получите доступ к функциям</string>
-    <string name="login_prompt_message">Для %s необходимо войти в систему или зарегистрироваться</string>
-    <string name="cancel">Отмена</string>
-
-    <!-- Features -->
-    <string name="checkout_feature">Оформление заказа</string>
-    <string name="profile_feature">Профиль</string>
-    <string name="orders_feature">История заказов</string>
-    <string name="reviews_feature">Написание отзывов</string>
-
-    <!-- Product related -->
     <string name="product_image">Изображение товара</string>
     <string name="add_to_cart">В корзину</string>
     <string name="out_of_stock">Нет в наличии</string>
     <string name="added_to_cart">Добавлено в корзину</string>
+    <string name="search_hint">Поиск товара…</string>
+
+    <!-- Features -->
+    <string name="checkout_feature">оформление заказа</string>
+    <string name="profile_feature">профиль</string>
+    <string name="orders_feature">История заказов</string>
+    <string name="reviews_feature">Написание отзывов</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Привет, пустой фрагмент</string>
 
 </resources>

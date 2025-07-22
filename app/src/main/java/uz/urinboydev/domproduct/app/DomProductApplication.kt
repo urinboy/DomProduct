@@ -2,6 +2,7 @@ package uz.urinboydev.domproduct.app
 
 import android.app.Application
 import android.content.Context
+import uz.urinboydev.domproduct.app.api.ApiClient // ApiClient ni import qilish
 import uz.urinboydev.domproduct.app.utils.LanguageManager
 
 class DomProductApplication : Application() {
@@ -10,6 +11,9 @@ class DomProductApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // ApiClient ni initialize qilish
+        ApiClient.initialize(this)
 
         // Language Manager setup
         languageManager = LanguageManager(this)

@@ -1,5 +1,6 @@
 package uz.urinboydev.domproduct.app.activities
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -81,10 +82,11 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
     private fun initializeFragments() {
         Log.d(TAG, "Initializing fragments")
 
+        // HomeFragment ga listener uzatish
         homeFragment = HomeFragment.newInstance(this)
         categoriesFragment = CategoriesFragment()
         cartFragment = CartFragment()
-        profileFragment = ProfileFragment()
+        profileFragment = ProfileFragment() // ProfileFragment endi to'ldiriladi
     }
 
     private fun setupBottomNavigation() {
@@ -105,6 +107,13 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         // Cart tab click
         binding.navCart.setOnClickListener {
             Log.d(TAG, "Cart tab clicked")
+            // Savatga kirish uchun login talab qilinishi mumkin, agar server bilan sinxronizatsiya bo'lsa
+            // Hozircha LocalCartManager ishlatilgani uchun login shart emas.
+            // Agar server savati bo'lsa:
+            // if (AuthManager.requireLogin(this)) {
+            //     AuthManager.showLoginPrompt(this, getString(R.string.checkout_feature))
+            //     return@setOnClickListener
+            // }
             showFragment(cartFragment)
             updateTabSelection(TAB_CART)
         }
@@ -112,7 +121,7 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         // Profile tab click
         binding.navProfile.setOnClickListener {
             Log.d(TAG, "Profile tab clicked")
-            // Check if user needs to login for profile
+            // Profilga kirish uchun login talab qilish
             if (AuthManager.requireLogin(this)) {
                 AuthManager.showLoginPrompt(this, getString(R.string.profile_feature))
                 return@setOnClickListener
@@ -190,7 +199,7 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         binding.textProfile.setTextColor(unselectedColor)
     }
 
-    private fun updateCartBadge() {
+    fun updateCartBadge() { // Public qilib o'zgartirildi
         val cartCount = localCartManager.getItemCount()
 
         if (cartCount > 0) {
@@ -204,16 +213,19 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
     }
 
     private fun showUserGreeting() {
-        // Show user status in toolbar (optional)
+        // Toolbar'dagi foydalanuvchi holatini ko'rsatish
         when (AuthManager.getAuthState(this)) {
             AuthState.LOGGED_IN -> {
                 val userName = preferenceManager.getUserName() ?: "Foydalanuvchi"
+                binding.toolbarTitle.text = getString(R.string.welcome_user, userName) // Yangi string resursi kerak
                 Log.d(TAG, "Logged in user: $userName")
             }
             AuthState.GUEST -> {
+                binding.toolbarTitle.text = getString(R.string.welcome_guest) // Yangi string resursi kerak
                 Log.d(TAG, "Guest mode active")
             }
             AuthState.NOT_AUTHENTICATED -> {
+                binding.toolbarTitle.text = getString(R.string.app_name) // Default app nomi
                 Log.d(TAG, "No authentication")
             }
         }
@@ -223,15 +235,10 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
     }
 
-    // Public method to update cart badge from fragments
-    fun refreshCartBadge() {
-        updateCartBadge()
-    }
-
     // Interface implementation for product added to cart
     override fun onProductAddedToCart() {
         Log.d(TAG, "Product added to cart - refreshing badge")
-        refreshCartBadge()
+        updateCartBadge() // refreshCartBadge() o'rniga updateCartBadge()
     }
 
     // Navigation helper methods for fragments
@@ -257,7 +264,7 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
     override fun onResume() {
         super.onResume()
         updateCartBadge()
-        showUserGreeting()
+        showUserGreeting() // Har safar onResume da foydalanuvchi holatini yangilash
     }
 }
 
