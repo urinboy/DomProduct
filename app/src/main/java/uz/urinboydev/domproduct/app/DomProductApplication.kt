@@ -2,29 +2,32 @@ package uz.urinboydev.domproduct.app
 
 import android.app.Application
 import android.content.Context
-import uz.urinboydev.domproduct.app.api.ApiClient // ApiClient ni import qilish
-import uz.urinboydev.domproduct.app.utils.LanguageManager
 
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
 class DomProductApplication : Application() {
 
-    private lateinit var languageManager: LanguageManager
+    // Hilt avtomatik boshqaradi, shuning uchun bu qatorlar keraksiz
+    // private lateinit var languageManager: LanguageManager
 
     override fun onCreate() {
         super.onCreate()
 
-        // ApiClient ni initialize qilish
-        ApiClient.initialize(this)
+        // ApiClient ni initialize qilish (Hilt orqali amalga oshiriladi)
+        // ApiClient.initialize(this)
 
-        // Language Manager setup
-        languageManager = LanguageManager(this)
+        // Language Manager setup (Hilt orqali amalga oshiriladi)
+        // languageManager = LanguageManager(this)
 
-        // Saqlangan tilni o'rnatish
-        val currentLanguage = languageManager.getCurrentLanguage()
-        languageManager.setLanguage(currentLanguage)
+        // Saqlangan tilni o'rnatish (Hilt orqali olingan LanguageManager ishlatiladi)
+        // val currentLanguage = languageManager.getCurrentLanguage()
+        // languageManager.setLanguage(currentLanguage)
     }
 
     override fun attachBaseContext(base: Context) {
-        val languageManager = LanguageManager(base)
-        super.attachBaseContext(languageManager.attachBaseContext(base))
+        // Hilt orqali olingan LanguageManager ishlatiladi
+        // val languageManager = LanguageManager(base)
+        super.attachBaseContext(base)
     }
 }

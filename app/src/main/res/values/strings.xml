@@ -58,6 +58,7 @@
 
     <!-- Auth & Login Messages -->
     <string name="login_failed_generic">Tizimga kirishda xato yuz berdi. Iltimos, ma\'lumotlaringizni tekshiring.</string>
+    <string name="register_failed_generic">Ro\'yxatdan o\'tishda xatolik yuz berdi. Iltimos, keyinroq urinib ko\'ring.</string>
     <string name="login_prompt_message">«%s» funksiyasidan foydalanish uchun tizimga kiring yoki ro\'yxatdan o\'ting.</string>
     <string name="login_required">Tizimga kirish talab qilinadi</string>
     <string name="login_required_message">Ushbu funksiyadan foydalanish uchun tizimga kirishingiz kerak.</string>

@@ -1,6 +1,5 @@
 package uz.urinboydev.domproduct.app.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,20 +7,31 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import uz.urinboydev.domproduct.app.R
-import uz.urinboydev.domproduct.app.api.ApiHelper
 import uz.urinboydev.domproduct.app.databinding.ActivityRegisterBinding
-import uz.urinboydev.domproduct.app.models.RegisterRequest
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+import androidx.activity.viewModels
+import uz.urinboydev.domproduct.app.utils.Resource
+import uz.urinboydev.domproduct.app.viewmodel.AuthViewModel
+
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var preferenceManager: PreferenceManager
-    private lateinit var languageManager: LanguageManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var languageManager: LanguageManager
+
+    private val authViewModel: AuthViewModel by viewModels()
 
     companion object {
         private const val TAG = "RegisterActivity"
@@ -37,14 +47,21 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Managers setup
-        preferenceManager = PreferenceManager(this)
-        languageManager = LanguageManager(this)
+        // preferenceManager = PreferenceManager(this)
+        // languageManager = LanguageManager(this)
 
         // Status bar ni yashirish
         supportActionBar?.hide()
 
         // Setup UI
         setupClickListeners()
+
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Register ekranidan Login ga qaytish
+                openLoginActivity()
+            }
+        })
 
         Log.d(TAG, "onCreate completed")
     }
@@ -95,49 +112,36 @@ class RegisterActivity : AppCompatActivity() {
         showLoading(true)
 
         // API call
-        lifecycleScope.launch {
-            try {
-                val registerRequest = RegisterRequest(
-                    name = name,
-                    email = email,
-                    phone = phone,
-                    password = password,
-                    passwordConfirmation = confirmPassword,
-                    cityId = null // Hozircha null, keyinroq city selection qo'shiladi
-                )
-                val response = ApiHelper.getApi().register(registerRequest)
+        authViewModel.register(registerRequest).observe(this) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        showLoading(false)
+                        it.data?.let {
+                            // Save user data
+                            preferenceManager.saveToken(it.token)
+                            preferenceManager.saveUser(it.user)
 
-                if (ApiHelper.isSuccessful(response)) {
-                    // Register successful
-                    val authResponse = response.body()?.data
-                    if (authResponse != null) {
-                        // Save user data
-                        preferenceManager.saveToken(authResponse.token)
-                        preferenceManager.saveUser(authResponse.user)
+                            Log.d(TAG, "Register successful for user: ${it.user.email}")
 
-                        Log.d(TAG, "Register successful for user: ${authResponse.user.email}")
+                            // Show success message
+                            showMessage(getString(R.string.register_success))
 
-                        // Show success message
-                        showMessage(getString(R.string.register_success))
-
-                        // Navigate to MainActivity
-                        navigateToMainActivity()
+                            // Navigate to MainActivity
+                            navigateToMainActivity()
+                        }
                     }
-                } else {
-                    // Register failed
-                    val errorMessage = ApiHelper.getErrorMessage(response)
-                    Log.e(TAG, "Register failed: $errorMessage")
-
-                    // Validation errorlarini ko'rsatish
-                    showValidationErrors(response)
-                    showMessage(errorMessage)
+                    Resource.Status.ERROR -> {
+                        showLoading(false)
+                        Log.e(TAG, "Register failed: ${it.message}")
+                        // Validation errorlarini ko'rsatish
+                        showValidationErrors(it.errors)
+                        showMessage(it.message ?: getString(R.string.register_failed_generic))
+                    }
+                    Resource.Status.LOADING -> {
+                        showLoading(true)
+                    }
                 }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Register error: ${e.message}", e)
-                showMessage(getString(R.string.network_error))
-            } finally {
-                showLoading(false)
             }
         }
     }
@@ -203,20 +207,29 @@ class RegisterActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun showValidationErrors(response: retrofit2.Response<uz.urinboydev.domproduct.app.models.ApiResponse<uz.urinboydev.domproduct.app.models.AuthResponse>>) {
-        val validationErrors = ApiHelper.getValidationErrors(response)
-        validationErrors?.let { errors ->
-            errors["name"]?.firstOrNull()?.let {
+    private fun showValidationErrors(errors: Map<String, List<String>>?) {
+        // Avvalgi xatolarni tozalash
+        binding.nameInputLayout.error = null
+        binding.emailInputLayout.error = null
+        binding.phoneInputLayout.error = null
+        binding.passwordInputLayout.error = null
+        binding.confirmPasswordInputLayout.error = null
+
+        errors?.let {
+            it["name"]?.firstOrNull()?.let {
                 binding.nameInputLayout.error = it
             }
-            errors["email"]?.firstOrNull()?.let {
+            it["email"]?.firstOrNull()?.let {
                 binding.emailInputLayout.error = it
             }
-            errors["phone"]?.firstOrNull()?.let {
+            it["phone"]?.firstOrNull()?.let {
                 binding.phoneInputLayout.error = it
             }
-            errors["password"]?.firstOrNull()?.let {
+            it["password"]?.firstOrNull()?.let {
                 binding.passwordInputLayout.error = it
+            }
+            it["password_confirmation"]?.firstOrNull()?.let {
+                binding.confirmPasswordInputLayout.error = it
             }
         }
     }
@@ -240,14 +253,12 @@ class RegisterActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
     }
 
     private fun openLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
     }
 
     private fun showTermsDialog() {
@@ -260,10 +271,5 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        // Register ekranidan Login ga qaytish
-        openLoginActivity()
-    }
+    
 }

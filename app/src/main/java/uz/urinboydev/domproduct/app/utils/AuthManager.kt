@@ -1,28 +1,31 @@
 package uz.urinboydev.domproduct.app.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.activities.LoginActivity
 
-object AuthManager {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    private const val GUEST_MODE_KEY = "guest_mode"
+@Singleton
+class AuthManager @Inject constructor(private val preferenceManager: PreferenceManager) {
+
+    private val GUEST_MODE_KEY = "guest_mode"
 
     /**
      * Foydalanuvchi login qilganmi?
      */
-    fun isLoggedIn(context: Context): Boolean {
-        val preferenceManager = PreferenceManager(context)
+    fun isLoggedIn(): Boolean {
         return preferenceManager.isLoggedIn()
     }
 
     /**
      * Foydalanuvchi mehmon sifatida kirishni tanlaganmi?
      */
-    fun isGuest(context: Context): Boolean {
-        val preferenceManager = PreferenceManager(context)
+    fun isGuest(): Boolean {
         return preferenceManager.getAppSettings(GUEST_MODE_KEY, false)
     }
 
@@ -30,7 +33,6 @@ object AuthManager {
      * Mehmon sifatida kirish
      */
     fun loginAsGuest(context: Context) {
-        val preferenceManager = PreferenceManager(context)
         preferenceManager.saveAppSettings(GUEST_MODE_KEY, true)
         preferenceManager.clearToken() // Mehmon bo'lganda token bo'lmasligi kerak
         preferenceManager.clearUser() // Mehmon bo'lganda user ma'lumotlari bo'lmasligi kerak
@@ -41,8 +43,8 @@ object AuthManager {
      */
     fun getAuthState(context: Context): AuthState {
         return when {
-            isLoggedIn(context) -> AuthState.LOGGED_IN
-            isGuest(context) -> AuthState.GUEST
+            isLoggedIn() -> AuthState.LOGGED_IN
+            isGuest() -> AuthState.GUEST
             else -> AuthState.NOT_AUTHENTICATED
         }
     }
@@ -51,8 +53,8 @@ object AuthManager {
      * Login talab qiladigan funksiya uchun check
      * @return true agar login kerak bo'lsa
      */
-    fun requireLogin(context: Context): Boolean {
-        return !isLoggedIn(context)
+    fun requireLogin(context: Context, preferenceManager: PreferenceManager): Boolean {
+        return !preferenceManager.isLoggedIn()
     }
 
     /**
@@ -77,6 +79,7 @@ object AuthManager {
     /**
      * Login prompt dialog (benefits bilan)
      */
+    @SuppressLint("StringFormatInvalid")
     fun showLoginPrompt(context: Context, feature: String): AlertDialog {
         val message = context.getString(R.string.login_prompt_message, feature)
 
@@ -102,12 +105,11 @@ object AuthManager {
     /**
      * Logout (guest mode ham, login ham)
      */
-    fun logout(context: Context) {
-        val preferenceManager = PreferenceManager(context)
+    fun logout(localCartManager: LocalCartManager) {
         preferenceManager.logout() // Token va user ma'lumotlarini tozalash
         preferenceManager.saveAppSettings(GUEST_MODE_KEY, false) // Mehmon rejimini o'chirish
         // Savatni ham tozalash (agar server savati bo'lsa, avval sinxronizatsiya qilish kerak)
-        LocalCartManager(context).clearCart()
+        localCartManager.clearCart()
     }
 
     /**
@@ -119,12 +121,12 @@ object AuthManager {
             Permission.VIEW_CATEGORIES -> true
             Permission.SEARCH -> true
             Permission.LOCAL_CART -> true
-            Permission.CHECKOUT -> isLoggedIn(context)
-            Permission.PROFILE -> isLoggedIn(context)
-            Permission.ORDERS_HISTORY -> isLoggedIn(context)
-            Permission.WRITE_REVIEWS -> isLoggedIn(context)
-            Permission.SAVE_FAVORITES -> isLoggedIn(context)
-            Permission.SYNC_DATA -> isLoggedIn(context)
+            Permission.CHECKOUT -> isLoggedIn()
+            Permission.PROFILE -> isLoggedIn()
+            Permission.ORDERS_HISTORY -> isLoggedIn()
+            Permission.WRITE_REVIEWS -> isLoggedIn()
+            Permission.SAVE_FAVORITES -> isLoggedIn()
+            Permission.SYNC_DATA -> isLoggedIn()
         }
     }
 

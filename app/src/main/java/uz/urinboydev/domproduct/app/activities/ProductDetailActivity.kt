@@ -23,11 +23,25 @@ import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import java.text.NumberFormat
 import java.util.*
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+import androidx.activity.viewModels
+import uz.urinboydev.domproduct.app.viewmodel.ProductDetailViewModel
+
+@AndroidEntryPoint
 class ProductDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var localCartManager: LocalCartManager
-    private lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var localCartManager: LocalCartManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    private val productDetailViewModel: ProductDetailViewModel by viewModels()
 
     // Adapters
     private lateinit var imageAdapter: ProductImageAdapter
@@ -67,8 +81,8 @@ class ProductDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Managers setup
-        localCartManager = LocalCartManager(this)
-        preferenceManager = PreferenceManager(this)
+        // localCartManager = LocalCartManager(this)
+        // preferenceManager = PreferenceManager(this)
 
         // Setup UI
         setupToolbar()
@@ -162,35 +176,31 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun loadProductById(productId: Int) {
-        lifecycleScope.launch {
-            try {
-                Log.d(TAG, "Loading product by ID: $productId")
-
-                val response = ApiHelper.getApi().getProduct(productId)
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val product = response.body()?.data
-                    if (product != null) {
-                        currentProduct = product
-                        displayProduct(product)
-                        loadAdditionalData(productId)
-                    } else {
-                        showError("Mahsulot ma'lumotlari topilmadi")
+        productDetailViewModel.getProduct(productId).observe(this) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        showLoading(false)
+                        val product = it.data
+                        if (product != null) {
+                            currentProduct = product
+                            displayProduct(product)
+                            loadAdditionalData(productId)
+                        } else {
+                            showError("Mahsulot ma'lumotlari topilmadi")
+                            finish()
+                        }
+                    }
+                    Resource.Status.ERROR -> {
+                        showLoading(false)
+                        Log.e(TAG, "Failed to load product: ${it.message}")
+                        showError("Mahsulotni yuklashda xato: ${it.message}")
                         finish()
                     }
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessage(response)
-                    Log.e(TAG, "Failed to load product: $errorMessage")
-                    showError("Mahsulotni yuklashda xato")
-                    finish()
+                    Resource.Status.LOADING -> {
+                        showLoading(true)
+                    }
                 }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception loading product: ${e.message}", e)
-                showError("Internet aloqasini tekshiring")
-                finish()
-            } finally {
-                showLoading(false)
             }
         }
     }
@@ -311,14 +321,11 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun loadAdditionalData(productId: Int) {
         // Load related products
-        lifecycleScope.launch {
-            try {
-                currentProduct?.let { product ->
-                    // Load products from same category
-                    val response = ApiHelper.getApi().getProductsByCategory(product.categoryId)
-
-                    if (ApiHelper.isSuccessful(response)) {
-                        val categoryProducts = response.body()?.data?.data ?: emptyList()
+        productDetailViewModel.getProductsByCategory(currentProduct!!.categoryId).observe(this) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        val categoryProducts = it.data ?: emptyList()
 
                         // Filter out current product and take first 5
                         val filtered = categoryProducts.filter { it.id != productId }.take(5)
@@ -329,11 +336,15 @@ class ProductDetailActivity : AppCompatActivity() {
 
                         Log.d(TAG, "Related products loaded: ${filtered.size}")
                     }
+                    Resource.Status.ERROR -> {
+                        Log.e(TAG, "Error loading related products: ${it.message}")
+                        // Load dummy related products for demo
+                        loadDummyRelatedProducts()
+                    }
+                    Resource.Status.LOADING -> {
+                        // Show loading for related products if needed
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading related products: ${e.message}", e)
-                // Load dummy related products for demo
-                loadDummyRelatedProducts()
             }
         }
     }
@@ -341,7 +352,6 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun loadDummyRelatedProducts() {
         relatedProducts.clear()
 
-        // FIXED: Correct Product constructor arguments
         relatedProducts.addAll(listOf(
             Product(
                 id = 99,
@@ -446,32 +456,53 @@ class ProductDetailActivity : AppCompatActivity() {
                 return
             }
 
-            try {
-                // Add to local cart using LocalCartManager
-                localCartManager.addItem(product, selectedQuantity)
+            val token = preferenceManager.getToken()
+            if (token.isNullOrEmpty()) {
+                showMessage("Savatga qo'shish uchun tizimga kiring.")
+                return
+            }
 
-                // Update cart badge
-                updateCartBadge()
+            productDetailViewModel.addToCart(ApiHelper.createAuthHeader(token), product.id, selectedQuantity).observe(this) {
+                it?.let {
+                    when (it.status) {
+                        Resource.Status.SUCCESS -> {
+                            try {
+                                // Add to local cart using LocalCartManager
+                                localCartManager.addItem(product, selectedQuantity)
 
-                // Show success message
-                showMessage("${product.name} savatga qo'shildi!")
+                                // Update cart badge
+                                updateCartBadge()
 
-                // Update button temporarily
-                val originalText = binding.addToCartButton.text
-                binding.addToCartButton.text = "Qo'shildi ✓"
-                binding.addToCartButton.isEnabled = false
+                                // Show success message
+                                showMessage("${product.name} savatga qo'shildi!")
 
-                // Reset button after 2 seconds
-                binding.addToCartButton.postDelayed({
-                    binding.addToCartButton.text = originalText
-                    binding.addToCartButton.isEnabled = product.isInStock()
-                }, 2000)
+                                // Update button temporarily
+                                val originalText = binding.addToCartButton.text
+                                binding.addToCartButton.text = "Qo'shildi ✓"
+                                binding.addToCartButton.isEnabled = false
 
-                Log.d(TAG, "Product added to cart: ${product.name}, quantity: $selectedQuantity")
+                                // Reset button after 2 seconds
+                                binding.addToCartButton.postDelayed({
+                                    binding.addToCartButton.text = originalText
+                                    binding.addToCartButton.isEnabled = product.isInStock()
+                                }, 2000)
 
-            } catch (e: Exception) {
-                Log.e(TAG, "Error adding to cart: ${e.message}", e)
-                showMessage("Xatolik yuz berdi")
+                                Log.d(TAG, "Product added to cart: ${product.name}, quantity: $selectedQuantity")
+
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Error adding to cart: ${e.message}", e)
+                                showMessage("Xatolik yuz berdi")
+                            }
+                        }
+                        Resource.Status.ERROR -> {
+                            showMessage("Savatga qo'shishda xato: ${it.message}")
+                            Log.e(TAG, "Failed to add to cart: ${it.message}")
+                        }
+                        Resource.Status.LOADING -> {
+                            // Show loading if needed
+                        }
+                    }
+                }
             }
         }
     }

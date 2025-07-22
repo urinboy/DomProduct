@@ -1,13 +1,14 @@
 package uz.urinboydev.domproduct.app.utils
 
-import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import uz.urinboydev.domproduct.app.models.Product
 
-class LocalCartManager(private val context: Context) {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    private val preferenceManager = PreferenceManager(context)
+@Singleton
+class LocalCartManager @Inject constructor(private val preferenceManager: PreferenceManager) {
     private val gson = Gson()
 
     companion object {
@@ -175,11 +176,10 @@ class LocalCartManager(private val context: Context) {
             items = items
         )
     }
-
+}
     data class CartSummary(
         val itemCount: Int,
         val totalQuantity: Int,
         val totalPrice: Double,
-        val items: List<LocalCartItem>
+        val items: List<LocalCartManager.LocalCartItem>
     )
-}

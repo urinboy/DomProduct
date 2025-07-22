@@ -5,9 +5,11 @@ import android.content.res.Configuration
 import uz.urinboydev.domproduct.app.models.LanguageItem
 import java.util.*
 
-class LanguageManager(private val context: Context) {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    private val preferenceManager = PreferenceManager(context)
+@Singleton
+class LanguageManager @Inject constructor(private val preferenceManager: PreferenceManager) {
 
     companion object {
         const val UZBEK = "uz"

@@ -24,6 +24,14 @@ import uz.urinboydev.domproduct.app.utils.AuthManager
 import uz.urinboydev.domproduct.app.utils.LocalCartManager
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+import androidx.fragment.app.viewModels
+import uz.urinboydev.domproduct.app.viewmodel.HomeViewModel
+
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -33,8 +41,13 @@ class HomeFragment : Fragment() {
     private lateinit var featuredProductAdapter: ProductAdapter
     private lateinit var latestProductAdapter: ProductAdapter
 
-    private lateinit var localCartManager: LocalCartManager
-    private lateinit var preferenceManager: PreferenceManager
+    @Inject
+    lateinit var localCartManager: LocalCartManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    private val homeViewModel: HomeViewModel by viewModels()
     private var productAddedToCartListener: OnProductAddedToCart? = null
 
     companion object {
@@ -67,8 +80,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        localCartManager = LocalCartManager(requireContext())
-        preferenceManager = PreferenceManager(requireContext())
+        // localCartManager = LocalCartManager(requireContext())
+        // preferenceManager = PreferenceManager(requireContext())
 
         setupRecyclerViews()
         loadData()
@@ -121,86 +134,72 @@ class HomeFragment : Fragment() {
 
     private fun loadMainCategories() {
         binding.mainCategoriesProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-                val response = ApiHelper.getApi().getMainCategories()
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                Log.d(TAG, "Main Categories API Response Raw Body: $rawBody")
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val categories = response.body()?.data
-                    categories?.let {
-                        categoryAdapter.updateData(it)
+        homeViewModel.getMainCategories().observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.mainCategoriesProgressBar.visibility = View.GONE
+                        it.data?.let {
+                            categoryAdapter.updateData(it)
+                        }
                     }
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                    Toast.makeText(requireContext(), "Kategoriyalarni yuklashda xato: $errorMessage", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "Failed to load main categories: $errorMessage")
+                    Resource.Status.ERROR -> {
+                        binding.mainCategoriesProgressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), "Kategoriyalarni yuklashda xato: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "Failed to load main categories: ${it.message}")
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.mainCategoriesProgressBar.visibility = View.VISIBLE
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading main categories: ${e.message}", e)
-                Toast.makeText(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show()
-            } finally {
-                binding.mainCategoriesProgressBar.visibility = View.GONE
             }
         }
     }
 
     private fun loadFeaturedProducts() {
         binding.featuredProductsProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-                val response = ApiHelper.getApi().getFeaturedProducts()
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                Log.d(TAG, "Featured Products API Response Raw Body: $rawBody")
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val products = response.body()?.data
-                    products?.let {
-                        featuredProductAdapter.updateData(it)
+        homeViewModel.getFeaturedProducts().observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.featuredProductsProgressBar.visibility = View.GONE
+                        it.data?.let {
+                            featuredProductAdapter.updateData(it)
+                        }
                     }
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                    Toast.makeText(requireContext(), "Tavsiya etilgan mahsulotlarni yuklashda xato: $errorMessage", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "Failed to load featured products: $errorMessage")
+                    Resource.Status.ERROR -> {
+                        binding.featuredProductsProgressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), "Tavsiya etilgan mahsulotlarni yuklashda xato: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "Failed to load featured products: ${it.message}")
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.featuredProductsProgressBar.visibility = View.VISIBLE
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading featured products: ${e.message}", e)
-                Toast.makeText(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show()
-            } finally {
-                binding.featuredProductsProgressBar.visibility = View.GONE
             }
         }
     }
 
     private fun loadLatestProducts() {
         binding.latestProductsProgressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            try {
-                val response = ApiHelper.getApi().getProducts(
-                    page = 1,
-                    perPage = 10,
-                    sortBy = "created_at",
-                    sortOrder = "desc"
-                )
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                Log.d(TAG, "Latest Products API Response Raw Body: $rawBody")
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val products = response.body()?.data?.data // PaginatedResponse ichidagi data
-                    products?.let {
-                        latestProductAdapter.updateData(it)
+        homeViewModel.getLatestProducts().observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        binding.latestProductsProgressBar.visibility = View.GONE
+                        it.data?.let {
+                            latestProductAdapter.updateData(it)
+                        }
                     }
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                    Toast.makeText(requireContext(), "Yangi mahsulotlarni yuklashda xato: $errorMessage", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "Failed to load latest products: $errorMessage")
+                    Resource.Status.ERROR -> {
+                        binding.latestProductsProgressBar.visibility = View.GONE
+                        Toast.makeText(requireContext(), "Yangi mahsulotlarni yuklashda xato: ${it.message}", Toast.LENGTH_SHORT).show()
+                        Log.e(TAG, "Failed to load latest products: ${it.message}")
+                    }
+                    Resource.Status.LOADING -> {
+                        binding.latestProductsProgressBar.visibility = View.VISIBLE
+                    }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading latest products: ${e.message}", e)
-                Toast.makeText(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show()
-            } finally {
-                binding.latestProductsProgressBar.visibility = View.GONE
             }
         }
     }
@@ -211,42 +210,30 @@ class HomeFragment : Fragment() {
             return
         }
 
-        // Show loading (optional for individual item add to cart)
-        // binding.addToCartProgressBar.visibility = View.VISIBLE
-
         lifecycleScope.launch {
-            try {
-                val token = preferenceManager.getToken()
-                if (token.isNullOrEmpty()) {
-                    Toast.makeText(requireContext(), "Tizimga kirilmagan.", Toast.LENGTH_SHORT).show()
-                    // binding.addToCartProgressBar.visibility = View.GONE
-                    return@launch
+            val token = preferenceManager.getToken()
+            if (token.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "Tizimga kirilmagan.", Toast.LENGTH_SHORT).show()
+                return@launch
+            }
+
+            homeViewModel.addToCart(ApiHelper.createAuthHeader(token), product.id, 1).observe(viewLifecycleOwner) {
+                it?.let {
+                    when (it.status) {
+                        Resource.Status.SUCCESS -> {
+                            Toast.makeText(requireContext(), "Mahsulot savatga qo'shildi!", Toast.LENGTH_SHORT).show()
+                            localCartManager.addItem(product.id, 1, product.price)
+                            productAddedToCartListener?.onProductAddedToCart() // Callback to MainActivity
+                        }
+                        Resource.Status.ERROR -> {
+                            Toast.makeText(requireContext(), "Savatga qo'shishda xato: ${it.message}", Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, "Failed to add to cart: ${it.message}")
+                        }
+                        Resource.Status.LOADING -> {
+                            // Optional: show loading for individual item add to cart
+                        }
+                    }
                 }
-
-                val request = uz.urinboydev.domproduct.app.models.AddToCartRequest(
-                    productId = product.id,
-                    quantity = 1
-                )
-
-                val authHeader = ApiHelper.createAuthHeader(token)
-                val response = ApiHelper.getApi().addToCart(authHeader, request)
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                Log.d(TAG, "Add to cart API Response Raw Body: $rawBody")
-
-                if (ApiHelper.isSuccessful(response)) {
-                    Toast.makeText(requireContext(), "Mahsulot savatga qo'shildi!", Toast.LENGTH_SHORT).show()
-                    localCartManager.addItem(product.id, 1, product.price)
-                    productAddedToCartListener?.onProductAddedToCart() // Callback to MainActivity
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                    Toast.makeText(requireContext(), "Savatga qo'shishda xato: $errorMessage", Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, "Failed to add to cart: $errorMessage")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error adding to cart: ${e.message}", e)
-                Toast.makeText(requireContext(), getString(R.string.network_error), Toast.LENGTH_SHORT).show()
-            } finally {
-                // binding.addToCartProgressBar.visibility = View.GONE
             }
         }
     }

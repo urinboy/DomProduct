@@ -5,10 +5,11 @@ import android.content.SharedPreferences
 import uz.urinboydev.domproduct.app.constants.ApiConstants
 import uz.urinboydev.domproduct.app.models.User
 
-class PreferenceManager(context: Context) {
+import javax.inject.Inject
+import javax.inject.Singleton
 
-    private val sharedPreferences: SharedPreferences =
-        context.getSharedPreferences(ApiConstants.PREF_NAME, Context.MODE_PRIVATE)
+@Singleton
+class PreferenceManager @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     // ===== TOKEN MANAGEMENT =====
     fun saveToken(token: String) {

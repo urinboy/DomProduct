@@ -18,11 +18,23 @@ import uz.urinboydev.domproduct.app.utils.AuthManager
 import uz.urinboydev.domproduct.app.utils.AuthState
 import uz.urinboydev.domproduct.app.utils.LocalCartManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), OnProductAddedToCart {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var preferenceManager: PreferenceManager
-    private lateinit var localCartManager: LocalCartManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var localCartManager: LocalCartManager
+
+    @Inject
+    lateinit var authManager: AuthManager
 
     // Fragments
     private lateinit var homeFragment: HomeFragment
@@ -51,8 +63,8 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         setContentView(binding.root)
 
         // Managers setup
-        preferenceManager = PreferenceManager(this)
-        localCartManager = LocalCartManager(this)
+        // preferenceManager = PreferenceManager(this)
+        // localCartManager = LocalCartManager(this)
 
         // Remove default action bar
         supportActionBar?.hide()
@@ -122,8 +134,8 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         binding.navProfile.setOnClickListener {
             Log.d(TAG, "Profile tab clicked")
             // Profilga kirish uchun login talab qilish
-            if (AuthManager.requireLogin(this)) {
-                AuthManager.showLoginPrompt(this, getString(R.string.profile_feature))
+            if (authManager.requireLogin(this, preferenceManager)) {
+                authManager.showLoginPrompt(this, getString(R.string.profile_feature))
                 return@setOnClickListener
             }
             showFragment(profileFragment)
@@ -165,26 +177,26 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
         // Highlight selected tab
         when (selectedTabIndex) {
             TAB_HOME -> {
-                binding.iconHome.setColorFilter(Color.parseColor("#2E7D32"))
-                binding.textHome.setTextColor(Color.parseColor("#2E7D32"))
+                binding.iconHome.setColorFilter(getColor(R.color.success_dark))
+                binding.textHome.setTextColor(getColor(R.color.success_dark))
             }
             TAB_CATEGORIES -> {
-                binding.iconCategories.setColorFilter(Color.parseColor("#2E7D32"))
-                binding.textCategories.setTextColor(Color.parseColor("#2E7D32"))
+                binding.iconCategories.setColorFilter(getColor(R.color.success_dark))
+                binding.textCategories.setTextColor(getColor(R.color.success_dark))
             }
             TAB_CART -> {
-                binding.iconCart.setColorFilter(Color.parseColor("#2E7D32"))
-                binding.textCart.setTextColor(Color.parseColor("#2E7D32"))
+                binding.iconCart.setColorFilter(getColor(R.color.success_dark))
+                binding.textCart.setTextColor(getColor(R.color.success_dark))
             }
             TAB_PROFILE -> {
-                binding.iconProfile.setColorFilter(Color.parseColor("#2E7D32"))
-                binding.textProfile.setTextColor(Color.parseColor("#2E7D32"))
+                binding.iconProfile.setColorFilter(getColor(R.color.success_dark))
+                binding.textProfile.setTextColor(getColor(R.color.success_dark))
             }
         }
     }
 
     private fun resetTabColors() {
-        val unselectedColor = Color.parseColor("#757575")
+        val unselectedColor = getColor(R.color.text_secondary)
 
         binding.iconHome.setColorFilter(unselectedColor)
         binding.textHome.setTextColor(unselectedColor)
@@ -214,7 +226,7 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
 
     private fun showUserGreeting() {
         // Toolbar'dagi foydalanuvchi holatini ko'rsatish
-        when (AuthManager.getAuthState(this)) {
+        when (authManager.getAuthState(this)) {
             AuthState.LOGGED_IN -> {
                 val userName = preferenceManager.getUserName() ?: "Foydalanuvchi"
                 binding.toolbarTitle.text = getString(R.string.welcome_user, userName) // Yangi string resursi kerak
@@ -253,8 +265,8 @@ class MainActivity : AppCompatActivity(), OnProductAddedToCart {
     }
 
     fun navigateToProfile() {
-        if (AuthManager.requireLogin(this)) {
-            AuthManager.showLoginPrompt(this, getString(R.string.profile_feature))
+        if (authManager.requireLogin(this, preferenceManager)) {
+            authManager.showLoginPrompt(this, getString(R.string.profile_feature))
             return
         }
         showFragment(profileFragment)

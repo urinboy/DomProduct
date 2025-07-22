@@ -20,11 +20,26 @@ import uz.urinboydev.domproduct.app.utils.AuthManager
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+import javax.inject.Inject
+
+import androidx.activity.viewModels
+import uz.urinboydev.domproduct.app.viewmodel.AuthViewModel
+
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var preferenceManager: PreferenceManager
-    private lateinit var languageManager: LanguageManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var languageManager: LanguageManager
+
+    private val authViewModel: AuthViewModel by viewModels()
 
     companion object {
         private const val TAG = "LoginActivity"
@@ -38,8 +53,8 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        preferenceManager = PreferenceManager(this)
-        languageManager = LanguageManager(this)
+        // preferenceManager = PreferenceManager(this)
+        // languageManager = LanguageManager(this)
 
         supportActionBar?.hide()
 
@@ -86,59 +101,39 @@ class LoginActivity : AppCompatActivity() {
         showLoading(true)
 
         // API call
-        lifecycleScope.launch {
-            try {
-                val loginRequest = LoginRequest(email, password)
-                // Yuborilayotgan requestni loglash
-                Log.d(TAG, "Sending LoginRequest: ${Gson().toJson(loginRequest)}")
+        authViewModel.login(LoginRequest(email, password)).observe(this) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        showLoading(false)
+                        it.data?.let {
+                            preferenceManager.saveToken(it.token)
+                            preferenceManager.saveUser(it.user)
 
-                val response = ApiHelper.getApi().login(loginRequest)
+                            if (binding.rememberMeCheckBox.isChecked) {
+                                preferenceManager.saveAppSettings("remember_login", true)
+                            } else {
+                                preferenceManager.saveAppSettings("remember_login", false)
+                            }
 
-                // API javobini loglash
-                Log.d(TAG, "API Response Status Code: ${response.code()}")
-                // response.errorBody()?.string() ni bir marta o'qish kerak, aks holda keyingi chaqiruvlarda null bo'ladi.
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString()
-                Log.d(TAG, "API Response Raw Body: $rawBody")
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val authResponse = response.body()?.data
-                    if (authResponse != null) {
-                        preferenceManager.saveToken(authResponse.token)
-                        preferenceManager.saveUser(authResponse.user)
-
-                        if (binding.rememberMeCheckBox.isChecked) {
-                            preferenceManager.saveAppSettings("remember_login", true)
-                        } else {
-                            preferenceManager.saveAppSettings("remember_login", false)
+                            authManager.logout(localCartManager) // Mehmon rejimini o'chirish
+                            Log.d(TAG, "Login successful for user: ${it.user.email}")
+                            showMessage(getString(R.string.login_success))
+                            navigateToMainActivity()
                         }
-
-                        AuthManager.logout(this@LoginActivity) // Mehmon rejimini o'chirish
-                        Log.d(TAG, "Login successful for user: ${authResponse.user.email}")
-                        showMessage(getString(R.string.login_success))
-                        navigateToMainActivity()
-                    } else {
-                        Log.e(TAG, "AuthResponse data is null after successful API call.")
-                        showMessage(getString(R.string.login_failed_generic)) // Umumiy xato xabari
                     }
-                } else {
-                    // Xato body ni qayta o'qish uchun yangi response yaratish kerak bo'ladi,
-                    // yoki getErrorMessage va getValidationErrors metodlarini errorBody() ni iste'mol qilmasdan yozish kerak.
-                    // Hozircha rawBody dan foydalanamiz
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // Yangi metod
-                    Log.e(TAG, "Login failed with error: $errorMessage")
-                    // Backenddan kelgan validation xatolarini ko'rsatish
-                    ApiHelper.getValidationErrorsFromRawBody(rawBody)?.let { errors ->
-                        showValidationErrors(errors)
+                    Resource.Status.ERROR -> {
+                        showLoading(false)
+                        Log.e(TAG, "Login failed with error: ${it.message}")
+                        // Backenddan kelgan validation xatolarini ko'rsatish
+                        // Hozircha bu yerda validation errorsni to'g'ridan-to'g'ri Resource ichidan olish imkoni yo'q.
+                        // Agar kerak bo'lsa, Resource sinfini o'zgartirishimiz kerak bo'ladi.
+                        showMessage(it.message ?: getString(R.string.login_failed_generic))
                     }
-                    // Agar maxsus xabar bo'lmasa, umumiy xabar ko'rsatish
-                    showMessage(errorMessage.ifEmpty { getString(R.string.login_failed_generic) })
+                    Resource.Status.LOADING -> {
+                        showLoading(true)
+                    }
                 }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Login network error: ${e.message}", e)
-                showMessage(getString(R.string.network_error))
-            } finally {
-                showLoading(false)
             }
         }
     }
@@ -169,25 +164,25 @@ class LoginActivity : AppCompatActivity() {
         return isValid
     }
 
-    // Backenddan kelgan validation xatolarini ko'rsatish uchun
-    // Endi Map<String, List<String>> ni to'g'ridan-to'g'ri qabul qiladi
-    private fun showValidationErrors(errors: Map<String, List<String>>) {
+    private fun showValidationErrors(errors: Map<String, List<String>>?) {
         // Avvalgi xatolarni tozalash
         binding.emailInputLayout.error = null
         binding.passwordInputLayout.error = null
 
-        errors["email"]?.firstOrNull()?.let {
-            binding.emailInputLayout.error = it
-            Log.d(TAG, "Validation error for email: $it")
-        }
-        errors["password"]?.firstOrNull()?.let {
-            binding.passwordInputLayout.error = it
-            Log.d(TAG, "Validation error for password: $it")
-        }
-        // Agar boshqa umumiy xatolar bo'lsa, ularni ham ko'rsatish
-        errors["error"]?.firstOrNull()?.let {
-            showMessage(it)
-            Log.d(TAG, "General validation error: $it")
+        errors?.let {
+            it["email"]?.firstOrNull()?.let {
+                binding.emailInputLayout.error = it
+                Log.d(TAG, "Validation error for email: $it")
+            }
+            it["password"]?.firstOrNull()?.let {
+                binding.passwordInputLayout.error = it
+                Log.d(TAG, "Validation error for password: $it")
+            }
+            // Agar boshqa umumiy xatolar bo'lsa, ularni ham ko'rsatish
+            it["error"]?.firstOrNull()?.let {
+                showMessage(it)
+                Log.d(TAG, "General validation error: $it")
+            }
         }
     }
 
@@ -219,13 +214,11 @@ class LoginActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
-        // overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right) // Deprecated, olib tashlandi
     }
 
     private fun openRegisterActivity() {
         val intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
-        // overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right) // Deprecated, olib tashlandi
     }
 
     private fun showForgotPasswordDialog() {
@@ -243,9 +236,5 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        finish()
-    }
+    
 }

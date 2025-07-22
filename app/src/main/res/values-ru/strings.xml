@@ -60,6 +60,7 @@
     <!-- Auth & Login Messages -->
     <string name="login_success">Вы успешно вошли в систему!</string>
     <string name="login_failed_generic">Произошла ошибка при входе в систему. Пожалуйста, проверьте ваши данные.</string>
+    <string name="register_failed_generic">Ошибка при регистрации. Пожалуйста, попробуйте позже.</string>
     <string name="register_success">Регистрация прошла успешно</string>
     <string name="login_required">Требуется вход в систему</string>
     <string name="login_required_message">Для использования этой функции необходимо войти в систему.</string>

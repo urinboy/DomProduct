@@ -13,11 +13,20 @@ import uz.urinboydev.domproduct.app.databinding.ActivityLanguageSelectionBinding
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class LanguageSelectionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLanguageSelectionBinding
-    private lateinit var preferenceManager: PreferenceManager
-    private lateinit var languageManager: LanguageManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var languageManager: LanguageManager
 
     // Hozir tanlangan til - default emas, saqlanganni olish
     private var selectedLanguageCode = ""
@@ -37,8 +46,8 @@ class LanguageSelectionActivity : AppCompatActivity() {
             setContentView(binding.root)
 
             // Managers setup
-            preferenceManager = PreferenceManager(this)
-            languageManager = LanguageManager(this)
+            // preferenceManager = PreferenceManager(this)
+            // languageManager = LanguageManager(this)
 
             // Status bar ni yashirish
             supportActionBar?.hide()
@@ -135,29 +144,29 @@ class LanguageSelectionActivity : AppCompatActivity() {
             // O'zbek tili kardi
             if (selectedLanguageCode == "uz") {
                 // Tanlangan - ko'k background
-                binding.uzbekLanguageCard.setCardBackgroundColor(Color.parseColor("#2196F3"))
+                binding.uzbekLanguageCard.setCardBackgroundColor(getColor(R.color.primary_color))
                 binding.uzbekCheckIcon.visibility = View.VISIBLE
-                binding.uzbekLanguageText.setTextColor(Color.WHITE)
-                binding.uzbekLanguageSubtext.setTextColor(Color.WHITE)
+                binding.uzbekLanguageText.setTextColor(getColor(R.color.white))
+                binding.uzbekLanguageSubtext.setTextColor(getColor(R.color.white))
 
                 // Rus tili - tanlanmagan
-                binding.russianLanguageCard.setCardBackgroundColor(Color.WHITE)
+                binding.russianLanguageCard.setCardBackgroundColor(getColor(R.color.white))
                 binding.russianCheckIcon.visibility = View.GONE
-                binding.russianLanguageText.setTextColor(Color.BLACK)
-                binding.russianLanguageSubtext.setTextColor(Color.GRAY)
+                binding.russianLanguageText.setTextColor(getColor(R.color.black))
+                binding.russianLanguageSubtext.setTextColor(getColor(R.color.gray))
 
             } else if (selectedLanguageCode == "ru") {
                 // Rus tili tanlangan
-                binding.russianLanguageCard.setCardBackgroundColor(Color.parseColor("#2196F3"))
+                binding.russianLanguageCard.setCardBackgroundColor(getColor(R.color.primary_color))
                 binding.russianCheckIcon.visibility = View.VISIBLE
-                binding.russianLanguageText.setTextColor(Color.WHITE)
-                binding.russianLanguageSubtext.setTextColor(Color.WHITE)
+                binding.russianLanguageText.setTextColor(getColor(R.color.white))
+                binding.russianLanguageSubtext.setTextColor(getColor(R.color.white))
 
                 // O'zbek tili - tanlanmagan
-                binding.uzbekLanguageCard.setCardBackgroundColor(Color.WHITE)
+                binding.uzbekLanguageCard.setCardBackgroundColor(getColor(R.color.white))
                 binding.uzbekCheckIcon.visibility = View.GONE
-                binding.uzbekLanguageText.setTextColor(Color.BLACK)
-                binding.uzbekLanguageSubtext.setTextColor(Color.GRAY)
+                binding.uzbekLanguageText.setTextColor(getColor(R.color.black))
+                binding.uzbekLanguageSubtext.setTextColor(getColor(R.color.gray))
             }
 
             Log.d(TAG, "Language cards updated successfully for: $selectedLanguageCode")
@@ -192,9 +201,6 @@ class LanguageSelectionActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
 
-            // Simple transition
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
             Log.d(TAG, "Navigation completed")
 
         } catch (e: Exception) {
@@ -211,11 +217,5 @@ class LanguageSelectionActivity : AppCompatActivity() {
         }
     }
 
-    // Back button ni disable qilish
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        Log.d(TAG, "Back button pressed - ignoring")
-        // Language selection da back button ishlamasin
-    }
+    
 }

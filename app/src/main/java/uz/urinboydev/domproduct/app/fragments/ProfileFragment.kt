@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.launch
 import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.activities.LoginActivity
 import uz.urinboydev.domproduct.app.api.ApiHelper
@@ -22,12 +20,31 @@ import uz.urinboydev.domproduct.app.utils.AuthManager
 import uz.urinboydev.domproduct.app.utils.AuthState
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+import androidx.fragment.app.viewModels
+import uz.urinboydev.domproduct.app.utils.LocalCartManager
+import uz.urinboydev.domproduct.app.utils.Resource
+import uz.urinboydev.domproduct.app.viewmodel.ProfileViewModel
+
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var preferenceManager: PreferenceManager
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var authManager: AuthManager
+
+    @Inject
+    lateinit var localCartManager: LocalCartManager
+
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     companion object {
         private const val TAG = "ProfileFragment"
@@ -45,7 +62,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        preferenceManager = PreferenceManager(requireContext())
+        // preferenceManager = PreferenceManager(requireContext())
 
         setupUI()
         setupClickListeners()
@@ -54,7 +71,7 @@ class ProfileFragment : Fragment() {
 
     private fun setupUI() {
         // Foydalanuvchi login qilganmi yoki yo'qligiga qarab UI ni ko'rsatish/yashirish
-        when (AuthManager.getAuthState(requireContext())) {
+        when (authManager.getAuthState(requireContext())) {
             AuthState.LOGGED_IN -> {
                 binding.profileHeaderCard.visibility = View.VISIBLE
                 binding.profileDetailsCard.visibility = View.VISIBLE
@@ -98,59 +115,55 @@ class ProfileFragment : Fragment() {
 
     private fun loadUserProfile() {
         // Agar foydalanuvchi login qilmagan bo'lsa, ma'lumotlarni yuklamaslik
-        if (!AuthManager.isLoggedIn(requireContext())) {
+        if (!authManager.isLoggedIn()) {
             showLoading(false)
             return
         }
 
         showLoading(true)
-        lifecycleScope.launch {
-            try {
-                val token = preferenceManager.getToken()
-                if (token.isNullOrEmpty()) {
-                    Log.e(TAG, "Token not found, cannot load profile.")
-                    showMessage("Tizimga kirilmagan.")
-                    showLoading(false)
-                    AuthManager.logout(requireContext()) // Token yo'q bo'lsa, logout qilish
-                    setupUI() // UI ni yangilash
-                    return@launch
-                }
+        val token = preferenceManager.getToken()
+        if (token.isNullOrEmpty()) {
+            Log.e(TAG, "Token not found, cannot load profile.")
+            showMessage("Tizimga kirilmagan.")
+            showLoading(false)
+            authManager.logout(localCartManager) // Token yo'q bo'lsa, logout qilish
+            setupUI() // UI ni yangilash
+            return
+        }
 
-                val authHeader = ApiHelper.createAuthHeader(token)
-                val response = ApiHelper.getApi().getMe(authHeader)
-                val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                Log.d(TAG, "User Profile API Response Raw Body: $rawBody")
-
-
-                if (ApiHelper.isSuccessful(response)) {
-                    val user = response.body()?.data
-                    if (user != null) {
-                        displayUserProfile(user)
-                        // Ma'lumotlar yangilangan bo'lsa, PreferenceManagerga ham saqlash
-                        preferenceManager.saveUser(user)
-                        Log.d(TAG, "User profile loaded successfully: ${user.email}")
-                    } else {
-                        showMessage("Foydalanuvchi ma'lumotlari topilmadi.")
-                        Log.e(TAG, "User data is null in getMe response.")
-                        AuthManager.logout(requireContext()) // Xato bo'lsa, logout qilish
-                        setupUI() // UI ni yangilash
+        profileViewModel.getMe(ApiHelper.createAuthHeader(token)).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
+                        val user = it.data
+                        if (user != null) {
+                            displayUserProfile(user)
+                            // Ma'lumotlar yangilangan bo'lsa, PreferenceManagerga ham saqlash
+                            preferenceManager.saveUser(user)
+                            Log.d(TAG, "User profile loaded successfully: ${user.email}")
+                        } else {
+                            showMessage("Foydalanuvchi ma'lumotlari topilmadi.")
+                            Log.e(TAG, "User data is null in getMe response.")
+                            authManager.logout(localCartManager) // Xato bo'lsa, logout qilish
+                            setupUI() // UI ni yangilash
+                        }
+                        showLoading(false)
                     }
-                } else {
-                    val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                    showMessage("Profilni yuklashda xato: $errorMessage")
-                    Log.e(TAG, "Failed to load profile: $errorMessage")
-                    // Agar 401 Unauthorized bo'lsa, token muddati tugagan bo'lishi mumkin
-                    if (response.code() == 401) {
-                        AuthManager.logout(requireContext())
-                        setupUI()
-                        navigateToLogin() // Login sahifasiga yo'naltirish
+                    Resource.Status.ERROR -> {
+                        showMessage("Profilni yuklashda xato: ${it.message}")
+                        Log.e(TAG, "Failed to load profile: ${it.message}")
+                        // Agar 401 Unauthorized bo'lsa, token muddati tugagan bo'lishi mumkin
+                        if (it.message?.contains("401") == true) { // Oddiy tekshiruv, yaxshiroq usul bo'lishi mumkin
+                            authManager.logout(localCartManager)
+                            setupUI()
+                            navigateToLogin() // Login sahifasiga yo'naltirish
+                        }
+                        showLoading(false)
+                    }
+                    Resource.Status.LOADING -> {
+                        showLoading(true)
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error loading user profile: ${e.message}", e)
-                showMessage(getString(R.string.network_error))
-            } finally {
-                showLoading(false)
             }
         }
     }
@@ -194,31 +207,38 @@ class ProfileFragment : Fragment() {
 
     private fun performLogout() {
         showLoading(true)
-        lifecycleScope.launch {
-            try {
-                val token = preferenceManager.getToken()
-                if (!token.isNullOrEmpty()) {
-                    val authHeader = ApiHelper.createAuthHeader(token)
-                    val response = ApiHelper.getApi().logout(authHeader)
-                    val rawBody = response.errorBody()?.string() ?: response.body()?.toString() // rawBody ni olish
-                    Log.d(TAG, "Logout API Response Raw Body: $rawBody")
+        val token = preferenceManager.getToken()
+        if (token.isNullOrEmpty()) {
+            Log.e(TAG, "Token not found, cannot perform logout.")
+            AuthManager.logout(requireContext())
+            showMessage("Tizimdan chiqildi.")
+            navigateToLogin()
+            showLoading(false)
+            return
+        }
 
-                    if (ApiHelper.isSuccessful(response)) {
+        profileViewModel.logout(ApiHelper.createAuthHeader(token)).observe(viewLifecycleOwner) {
+            it?.let {
+                when (it.status) {
+                    Resource.Status.SUCCESS -> {
                         Log.d(TAG, "Logout successful from backend.")
-                    } else {
-                        val errorMessage = ApiHelper.getErrorMessageFromRawBody(rawBody) // O'zgartirildi
-                        Log.e(TAG, "Backend logout failed: $errorMessage")
+                        AuthManager.logout(requireContext())
+                        showMessage("Tizimdan chiqildi.")
+                        navigateToLogin()
+                        showLoading(false)
+                    }
+                    Resource.Status.ERROR -> {
+                        Log.e(TAG, "Backend logout failed: ${it.message}")
                         // Backendda xato bo'lsa ham, ilovadan chiqishimiz kerak
+                        AuthManager.logout(requireContext())
+                        showMessage("Tizimdan chiqildi.")
+                        navigateToLogin()
+                        showLoading(false)
+                    }
+                    Resource.Status.LOADING -> {
+                        showLoading(true)
                     }
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error during backend logout: ${e.message}", e)
-            } finally {
-                // Har doim lokal ma'lumotlarni tozalash va LoginActivity ga o'tish
-                AuthManager.logout(requireContext())
-                showMessage("Tizimdan chiqildi.")
-                navigateToLogin()
-                showLoading(false)
             }
         }
     }

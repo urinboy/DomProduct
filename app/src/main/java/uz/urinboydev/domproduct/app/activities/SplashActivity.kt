@@ -11,11 +11,20 @@ import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
 
 @SuppressLint("CustomSplashScreen")
+import dagger.hilt.android.AndroidEntryPoint
+
+import javax.inject.Inject
+
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private lateinit var preferenceManager: PreferenceManager
-    private lateinit var languageManager: LanguageManager
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
+
+    @Inject
+    lateinit var languageManager: LanguageManager
 
     // Splash screen ko'rsatish vaqti (millisekund)
     private val SPLASH_DELAY = 2000L
@@ -28,8 +37,8 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Managers setup
-        preferenceManager = PreferenceManager(this)
-        languageManager = LanguageManager(this)
+        // preferenceManager = PreferenceManager(this)
+        // languageManager = LanguageManager(this)
 
         // Saqlangan tilni o'rnatish
         setupLanguage()
@@ -150,10 +159,5 @@ class SplashActivity : AppCompatActivity() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
 
-    // Back button ni disable qilish
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        // Splash screen da back button ishlamasin
-    }
+    
 }

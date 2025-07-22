@@ -7,9 +7,14 @@ import uz.urinboydev.domproduct.app.databinding.ItemCategoryBinding
 import uz.urinboydev.domproduct.app.models.Category
 
 class CategoryAdapter(
-    private val categories: List<Category>,
+    private var categories: List<Category>,
     private val onCategoryClick: (Category) -> Unit
 ) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
+
+    fun updateData(newCategories: List<Category>) {
+        categories = newCategories
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val binding = ItemCategoryBinding.inflate(
