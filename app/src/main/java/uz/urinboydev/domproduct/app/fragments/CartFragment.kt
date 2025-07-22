@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.adapters.CartAdapter
+import uz.urinboydev.domproduct.app.activities.MainActivity
 import uz.urinboydev.domproduct.app.api.ApiHelper
 import uz.urinboydev.domproduct.app.databinding.FragmentCartBinding
 import uz.urinboydev.domproduct.app.models.CartItem
@@ -38,6 +39,9 @@ class CartFragment : Fragment() {
 
     @Inject
     lateinit var apiHelper: ApiHelper // ApiHelper ni inject qilish
+
+    @Inject
+    lateinit var authManager: AuthManager
 
     private val cartViewModel: CartViewModel by viewModels()
     private lateinit var cartAdapter: CartAdapter
@@ -80,11 +84,11 @@ class CartFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.checkoutButton.setOnClickListener {
-            if (AuthManager.isLoggedIn(requireContext())) {
+            if (authManager.isLoggedIn()) {
                 showMessage("Buyurtma berish sahifasiga o'tish")
                 // TODO: Navigate to CheckoutActivity
             } else {
-                AuthManager.showLoginPrompt(requireContext(), getString(R.string.checkout_feature))
+                authManager.showLoginPrompt(requireContext(), getString(R.string.checkout_feature))
             }
         }
 
@@ -94,7 +98,7 @@ class CartFragment : Fragment() {
     }
 
     private fun loadCartData() {
-        if (AuthManager.isLoggedIn(requireContext())) {
+        if (authManager.isLoggedIn()) {
             // Load from server cart
             loadServerCart()
         } else {
@@ -115,20 +119,20 @@ class CartFragment : Fragment() {
         binding.progressBar.visibility = View.VISIBLE
         cartViewModel.getCart(apiHelper.createAuthHeader(token)).observe(viewLifecycleOwner) {
             it?.let {
-                when (it.status) {
-                    Resource.Status.SUCCESS -> {
+                when (it) {
+                    is Resource.Success -> {
                         binding.progressBar.visibility = View.GONE
                         it.data?.let {
                             updateUI(it)
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
                         showMessage("Savatni yuklashda xato: ${it.message}")
                         Log.e(TAG, "Failed to load server cart: ${it.message}")
                         updateUI(emptyList())
                     }
-                    Resource.Status.LOADING -> {
+                    is Resource.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                     }
                 }
@@ -163,7 +167,7 @@ class CartFragment : Fragment() {
     }
 
     private fun updateCartItemQuantity(cartItem: CartItem, newQuantity: Int) {
-        if (AuthManager.isLoggedIn(requireContext())) {
+        if (authManager.isLoggedIn()) {
             // Update server cart
             val token = preferenceManager.getToken()
             if (token.isNullOrEmpty()) {
@@ -172,16 +176,16 @@ class CartFragment : Fragment() {
             }
             cartViewModel.updateCartItem(cartItem.id, apiHelper.createAuthHeader(token), newQuantity).observe(viewLifecycleOwner) {
                 it?.let {
-                    when (it.status) {
-                        Resource.Status.SUCCESS -> {
+                    when (it) {
+                        is Resource.Success -> {
                             showMessage("Savat yangilandi.")
                             loadServerCart() // Refresh cart
                         }
-                        Resource.Status.ERROR -> {
+                        is Resource.Error -> {
                             showMessage("Savatni yangilashda xato: ${it.message}")
                             Log.e(TAG, "Failed to update server cart: ${it.message}")
                         }
-                        Resource.Status.LOADING -> {
+                        is Resource.Loading -> {
                             // Show loading
                         }
                     }
@@ -196,26 +200,25 @@ class CartFragment : Fragment() {
     }
 
     private fun removeCartItem(cartItem: CartItem) {
-        if (AuthManager.isLoggedIn(requireContext())) {
+        if (authManager.isLoggedIn()) {
             // Remove from server cart
             val token = preferenceManager.getToken()
             if (token.isNullOrEmpty()) {
-                showMessage("Tizimga kiring yoki mehmon sifatida davom eting.
-")
+                showMessage("Tizimga kiring yoki mehmon sifatida davom eting.")
                 return
             }
             cartViewModel.removeFromCart(cartItem.id, apiHelper.createAuthHeader(token)).observe(viewLifecycleOwner) {
                 it?.let {
-                    when (it.status) {
-                        Resource.Status.SUCCESS -> {
+                    when (it) {
+                        is Resource.Success -> {
                             showMessage("Mahsulot savatdan o'chirildi.")
                             loadServerCart() // Refresh cart
                         }
-                        Resource.Status.ERROR -> {
+                        is Resource.Error -> {
                             showMessage("Mahsulotni o'chirishda xato: ${it.message}")
                             Log.e(TAG, "Failed to remove server cart item: ${it.message}")
                         }
-                        Resource.Status.LOADING -> {
+                        is Resource.Loading -> {
                             // Show loading
                         }
                     }
@@ -230,7 +233,7 @@ class CartFragment : Fragment() {
     }
 
     private fun clearCart() {
-        if (AuthManager.isLoggedIn(requireContext())) {
+        if (authManager.isLoggedIn()) {
             // Clear server cart
             val token = preferenceManager.getToken()
             if (token.isNullOrEmpty()) {
@@ -239,17 +242,17 @@ class CartFragment : Fragment() {
             }
             cartViewModel.clearCart(apiHelper.createAuthHeader(token)).observe(viewLifecycleOwner) {
                 it?.let {
-                    when (it.status) {
-                        Resource.Status.SUCCESS -> {
+                    when (it) {
+                        is Resource.Success -> {
                             showMessage("Savat tozalandi.")
                             loadServerCart() // Refresh cart
                             localCartManager.clearCart() // Lokal savatni ham tozalash
                         }
-                        Resource.Status.ERROR -> {
+                        is Resource.Error -> {
                             showMessage("Savatni tozalashda xato: ${it.message}")
                             Log.e(TAG, "Failed to clear server cart: ${it.message}")
                         }
-                        Resource.Status.LOADING -> {
+                        is Resource.Loading -> {
                             // Show loading
                         }
                     }

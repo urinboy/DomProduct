@@ -15,8 +15,11 @@ import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.adapters.FeaturedProductAdapter
 import uz.urinboydev.domproduct.app.adapters.ProductImageAdapter
 import uz.urinboydev.domproduct.app.api.ApiHelper
+import uz.urinboydev.domproduct.app.utils.AuthManager
+import uz.urinboydev.domproduct.app.utils.Resource
 import uz.urinboydev.domproduct.app.databinding.ActivityProductDetailBinding
 import uz.urinboydev.domproduct.app.fragments.ProductAction
+import uz.urinboydev.domproduct.app.activities.MainActivity
 import uz.urinboydev.domproduct.app.models.Product
 import uz.urinboydev.domproduct.app.utils.LocalCartManager
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
@@ -42,6 +45,9 @@ class ProductDetailActivity : AppCompatActivity() {
     lateinit var preferenceManager: PreferenceManager
 
     private val productDetailViewModel: ProductDetailViewModel by viewModels()
+
+    @Inject
+    lateinit var apiHelper: ApiHelper
 
     // Adapters
     private lateinit var imageAdapter: ProductImageAdapter
@@ -178,8 +184,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun loadProductById(productId: Int) {
         productDetailViewModel.getProduct(productId).observe(this) {
             it?.let {
-                when (it.status) {
-                    Resource.Status.SUCCESS -> {
+                when (it) {
+                    is Resource.Success -> {
                         showLoading(false)
                         val product = it.data
                         if (product != null) {
@@ -191,13 +197,13 @@ class ProductDetailActivity : AppCompatActivity() {
                             finish()
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is Resource.Error -> {
                         showLoading(false)
                         Log.e(TAG, "Failed to load product: ${it.message}")
                         showError("Mahsulotni yuklashda xato: ${it.message}")
                         finish()
                     }
-                    Resource.Status.LOADING -> {
+                    is Resource.Loading -> {
                         showLoading(true)
                     }
                 }
@@ -462,10 +468,10 @@ class ProductDetailActivity : AppCompatActivity() {
                 return
             }
 
-            productDetailViewModel.addToCart(ApiHelper.createAuthHeader(token), product.id, selectedQuantity).observe(this) {
+            productDetailViewModel.addToCart(apiHelper.createAuthHeader(token), product.id, selectedQuantity).observe(this) {
                 it?.let {
-                    when (it.status) {
-                        Resource.Status.SUCCESS -> {
+                    when (it) {
+                        is Resource.Success -> {
                             try {
                                 // Add to local cart using LocalCartManager
                                 localCartManager.addItem(product, selectedQuantity)
@@ -494,11 +500,11 @@ class ProductDetailActivity : AppCompatActivity() {
                                 showMessage("Xatolik yuz berdi")
                             }
                         }
-                        Resource.Status.ERROR -> {
+                        is Resource.Error -> {
                             showMessage("Savatga qo'shishda xato: ${it.message}")
                             Log.e(TAG, "Failed to add to cart: ${it.message}")
                         }
-                        Resource.Status.LOADING -> {
+                        is Resource.Loading -> {
                             // Show loading if needed
                         }
                     }

@@ -19,12 +19,10 @@ import uz.urinboydev.domproduct.app.models.LoginRequest
 import uz.urinboydev.domproduct.app.utils.AuthManager
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
-
+import uz.urinboydev.domproduct.app.utils.Resource
+import uz.urinboydev.domproduct.app.utils.LocalCartManager
 import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
 import javax.inject.Inject
-
 import androidx.activity.viewModels
 import uz.urinboydev.domproduct.app.viewmodel.AuthViewModel
 
@@ -41,6 +39,12 @@ class LoginActivity : AppCompatActivity() {
 
     private val authViewModel: AuthViewModel by viewModels()
 
+    @Inject
+    lateinit var authManager: AuthManager
+
+    @Inject
+    lateinit var localCartManager: LocalCartManager
+
     companion object {
         private const val TAG = "LoginActivity"
     }
@@ -52,9 +56,6 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // preferenceManager = PreferenceManager(this)
-        // languageManager = LanguageManager(this)
 
         supportActionBar?.hide()
 
@@ -103,8 +104,8 @@ class LoginActivity : AppCompatActivity() {
         // API call
         authViewModel.login(LoginRequest(email, password)).observe(this) {
             it?.let {
-                when (it.status) {
-                    Resource.Status.SUCCESS -> {
+                when (it) {
+                    is Resource.Success -> {
                         showLoading(false)
                         it.data?.let {
                             preferenceManager.saveToken(it.token)
@@ -122,7 +123,7 @@ class LoginActivity : AppCompatActivity() {
                             navigateToMainActivity()
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is Resource.Error -> {
                         showLoading(false)
                         Log.e(TAG, "Login failed with error: ${it.message}")
                         // Backenddan kelgan validation xatolarini ko'rsatish
@@ -130,7 +131,7 @@ class LoginActivity : AppCompatActivity() {
                         // Agar kerak bo'lsa, Resource sinfini o'zgartirishimiz kerak bo'ladi.
                         showMessage(it.message ?: getString(R.string.login_failed_generic))
                     }
-                    Resource.Status.LOADING -> {
+                    is Resource.Loading -> {
                         showLoading(true)
                     }
                 }
@@ -155,9 +156,6 @@ class LoginActivity : AppCompatActivity() {
 
         if (password.isEmpty()) {
             binding.passwordInputLayout.error = getString(R.string.password_required)
-            isValid = false
-        } else if (password.length < 6) { // Parol uzunligi kamida 6 ta belgi bo'lishi kerak
-            binding.passwordInputLayout.error = getString(R.string.password_min_length)
             isValid = false
         }
 
@@ -204,7 +202,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun continueAsGuest() {
         Log.d(TAG, "Continue as guest clicked")
-        AuthManager.loginAsGuest(this)
+        authManager.loginAsGuest(this)
         showMessage(getString(R.string.guest_mode_enabled))
         navigateToMainActivity()
     }

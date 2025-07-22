@@ -11,13 +11,11 @@ import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.databinding.ActivityRegisterBinding
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
-
-import dagger.hilt.android.AndroidEntryPoint
-
-import javax.inject.Inject
-
-import androidx.activity.viewModels
 import uz.urinboydev.domproduct.app.utils.Resource
+import uz.urinboydev.domproduct.app.models.RegisterRequest
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import androidx.activity.viewModels
 import uz.urinboydev.domproduct.app.viewmodel.AuthViewModel
 
 @AndroidEntryPoint
@@ -112,10 +110,11 @@ class RegisterActivity : AppCompatActivity() {
         showLoading(true)
 
         // API call
+        val registerRequest = RegisterRequest(name, email, phone, password, confirmPassword)
         authViewModel.register(registerRequest).observe(this) {
             it?.let {
-                when (it.status) {
-                    Resource.Status.SUCCESS -> {
+                when (it) {
+                    is Resource.Success -> {
                         showLoading(false)
                         it.data?.let {
                             // Save user data
@@ -131,14 +130,14 @@ class RegisterActivity : AppCompatActivity() {
                             navigateToMainActivity()
                         }
                     }
-                    Resource.Status.ERROR -> {
+                    is Resource.Error -> {
                         showLoading(false)
                         Log.e(TAG, "Register failed: ${it.message}")
                         // Validation errorlarini ko'rsatish
                         showValidationErrors(it.errors)
                         showMessage(it.message ?: getString(R.string.register_failed_generic))
                     }
-                    Resource.Status.LOADING -> {
+                    is Resource.Loading -> {
                         showLoading(true)
                     }
                 }

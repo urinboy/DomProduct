@@ -9,11 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import uz.urinboydev.domproduct.app.databinding.ActivitySplashBinding
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
 import uz.urinboydev.domproduct.app.utils.LanguageManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
-import dagger.hilt.android.AndroidEntryPoint
-
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
