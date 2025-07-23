@@ -1,38 +1,14 @@
 package uz.urinboydev.domproduct.app.models
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class User(
-    @SerializedName("id")
     val id: Int,
-
-    @SerializedName("name")
     val name: String,
-
-    @SerializedName("email")
     val email: String,
-
-    @SerializedName("phone")
-    val phone: String? = null,
-
-    @SerializedName("role")
-    val role: String = "customer",
-
-    @SerializedName("avatar")
-    val avatar: String? = null,
-
-    @SerializedName("city_id")
-    val cityId: Int? = null,
-
-    @SerializedName("email_verified_at")
-    val emailVerifiedAt: String? = null,
-
-    @SerializedName("created_at")
-    val createdAt: String? = null,
-
-    @SerializedName("updated_at")
-    val updatedAt: String? = null
-) : Parcelable
+    val phone: String?,
+    val email_verified_at: String?,
+    val phone_verified_at: String?,
+    val role: String,
+    val status: String,
+    val created_at: String,
+    val updated_at: String
+)

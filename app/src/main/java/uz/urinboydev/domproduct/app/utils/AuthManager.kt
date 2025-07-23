@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.appcompat.app.AlertDialog
 import uz.urinboydev.domproduct.app.R
 import uz.urinboydev.domproduct.app.activities.LoginActivity
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +40,7 @@ class AuthManager @Inject constructor(private val preferenceManager: PreferenceM
     /**
      * Authentication holati
      */
-    fun getAuthState(context: Context): AuthState {
+    fun getAuthState(): AuthState {
         return when {
             isLoggedIn() -> AuthState.LOGGED_IN
             isGuest() -> AuthState.GUEST
@@ -53,8 +52,8 @@ class AuthManager @Inject constructor(private val preferenceManager: PreferenceM
      * Login talab qiladigan funksiya uchun check
      * @return true agar login kerak bo'lsa
      */
-    fun requireLogin(context: Context, preferenceManager: PreferenceManager): Boolean {
-        return !preferenceManager.isLoggedIn()
+    fun requireLogin(): Boolean {
+        return !isLoggedIn()
     }
 
     /**
@@ -115,7 +114,7 @@ class AuthManager @Inject constructor(private val preferenceManager: PreferenceM
     /**
      * Guest user uchun permission check
      */
-    fun hasPermission(context: Context, permission: Permission): Boolean {
+    fun hasPermission(permission: Permission): Boolean {
         return when (permission) {
             Permission.VIEW_PRODUCTS -> true
             Permission.VIEW_CATEGORIES -> true
@@ -134,7 +133,7 @@ class AuthManager @Inject constructor(private val preferenceManager: PreferenceM
      * Feature access check with automatic dialog
      */
     fun checkFeatureAccess(context: Context, permission: Permission, feature: String): Boolean {
-        if (hasPermission(context, permission)) {
+        if (hasPermission(permission)) {
             return true
         }
 

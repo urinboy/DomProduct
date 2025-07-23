@@ -1,7 +1,8 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
+    // Apply the Android Application plugin to the app module
     alias(libs.plugins.android.application) apply false
+    // Apply the Kotlin Android plugin to Kotlin modules
     alias(libs.plugins.kotlin.android) apply false
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false
-
+    // Apply the Hilt plugin for dependency injection
+    alias(libs.plugins.dagger.hilt.android) apply false
 }

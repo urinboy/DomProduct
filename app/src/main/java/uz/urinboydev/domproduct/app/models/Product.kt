@@ -1,79 +1,29 @@
 package uz.urinboydev.domproduct.app.models
 
-import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class Product(
-    @SerializedName("id")
     val id: Int,
-
-    @SerializedName("name")
     val name: String,
-
-    @SerializedName("slug")
     val slug: String,
-
-    @SerializedName("description")
-    val description: String? = null,
-
-    @SerializedName("short_description")
-    val shortDescription: String? = null,
-
-    @SerializedName("price")
+    val description: String?,
+    val shortDescription: String?,
     val price: Double,
-
-    @SerializedName("sale_price")
-    val salePrice: Double? = null,
-
-    @SerializedName("sku")
-    val sku: String? = null,
-
-    @SerializedName("stock_quantity")
-    val stockQuantity: Int = 0,
-
-    @SerializedName("weight")
-    val weight: String? = null,
-
-    @SerializedName("dimensions")
-    val dimensions: String? = null,
-
-    @SerializedName("image")
-    val image: String? = null,
-
-    @SerializedName("gallery")
-    val gallery: List<String>? = null,
-
-    @SerializedName("category_id")
+    val salePrice: Double?,
+    val sku: String?,
+    val stockQuantity: Int,
+    val weight: Double?,
+    val dimensions: String?,
+    val image: String?,
+    val gallery: List<String>?,
     val categoryId: Int,
-
-    @SerializedName("is_featured")
-    val isFeatured: Boolean = false,
-
-    @SerializedName("is_active")
-    val isActive: Boolean = true,
-
-    @SerializedName("meta_title")
-    val metaTitle: String? = null,
-
-    @SerializedName("meta_description")
-    val metaDescription: String? = null,
-
-    @SerializedName("created_at")
+    val isFeatured: Boolean,
+    val isActive: Boolean,
+    val metaTitle: String?,
+    val metaDescription: String?,
     val createdAt: String,
-
-    @SerializedName("updated_at")
     val updatedAt: String,
-
-    // Calculated fields
-    @SerializedName("average_rating")
-    val averageRating: Double? = 0.0,
-
-    @SerializedName("reviews_count")
-    val reviewsCount: Int? = 0
-) : Parcelable {
-    // Helper methods
+    val averageRating: Double?,
+    val reviewsCount: Int?
+) {
     fun getCurrentPrice(): Double {
         return salePrice ?: price
     }
@@ -83,9 +33,10 @@ data class Product(
     }
 
     fun getDiscountPercentage(): Int {
-        return if (hasDiscount()) {
-            ((price - getCurrentPrice()) / price * 100).toInt()
-        } else 0
+        if (hasDiscount()) {
+            return ((price - salePrice!!) / price * 100).toInt()
+        }
+        return 0
     }
 
     fun isInStock(): Boolean {

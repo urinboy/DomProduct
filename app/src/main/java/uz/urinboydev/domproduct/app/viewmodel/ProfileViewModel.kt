@@ -1,47 +1,56 @@
 package uz.urinboydev.domproduct.app.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import uz.urinboydev.domproduct.app.api.ApiHelper
-import uz.urinboydev.domproduct.app.repository.AuthRepository
+import uz.urinboydev.domproduct.app.models.User
 import uz.urinboydev.domproduct.app.utils.Resource
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
     private val apiHelper: ApiHelper
 ) : ViewModel() {
 
-    fun getMe(token: String) = liveData(Dispatchers.IO) {
-        emit(Resource.loading(data = null))
-        try {
-            val response = authRepository.getMe(token)
-            val rawBody = if (!response.isSuccessful) response.errorBody()?.string() else response.body().toString()
-            if (apiHelper.isSuccessful(response)) {
-                emit(Resource.success(data = response.body()?.data))
-            } else {
-                emit(Resource.error(data = null, message = apiHelper.getErrorMessageFromRawBody(rawBody)))
+    private val _userProfile = MutableLiveData<Resource<User>>()
+    val userProfile: LiveData<Resource<User>> = _userProfile
+
+    private val _updateProfileStatus = MutableLiveData<Resource<User>>()
+    val updateProfileStatus: LiveData<Resource<User>> = _updateProfileStatus
+
+    fun getUserProfile(token: String) {
+        viewModelScope.launch {
+            _userProfile.postValue(Resource.Loading)
+            try {
+                val response = apiHelper.getApi().getProfile(token)
+                if (response.isSuccessful) {
+                    response.body()?.let { _userProfile.postValue(Resource.Success(it)) }
+                } else {
+                    _userProfile.postValue(Resource.Error(apiHelper.getErrorMessageFromRawBody(response.errorBody()?.string())))
+                }
+            } catch (e: Exception) {
+                _userProfile.postValue(Resource.Error(e.message ?: "Tarmoq xatosi"))
             }
-        } catch (exception: Exception) {
-            emit(Resource.error(data = null, message = exception.message ?: "Xatolik yuz berdi!"))
         }
     }
 
-    fun logout(token: String) = liveData(Dispatchers.IO) {
-        emit(Resource.loading(data = null))
-        try {
-            val response = authRepository.logout(token)
-            val rawBody = if (!response.isSuccessful) response.errorBody()?.string() else response.body().toString()
-            if (apiHelper.isSuccessful(response)) {
-                emit(Resource.success(data = response.body()?.message))
-            } else {
-                emit(Resource.error(data = null, message = apiHelper.getErrorMessageFromRawBody(rawBody)))
+    fun updateUserProfile(token: String, user: User) {
+        viewModelScope.launch {
+            _updateProfileStatus.postValue(Resource.Loading)
+            try {
+                val response = apiHelper.getApi().updateProfile(token, user)
+                if (response.isSuccessful) {
+                    response.body()?.let { _updateProfileStatus.postValue(Resource.Success(it)) }
+                } else {
+                    _updateProfileStatus.postValue(Resource.Error(apiHelper.getErrorMessageFromRawBody(response.errorBody()?.string())))
+                }
+            } catch (e: Exception) {
+                _updateProfileStatus.postValue(Resource.Error(e.message ?: "Tarmoq xatosi"))
             }
-        } catch (exception: Exception) {
-            emit(Resource.error(data = null, message = exception.message ?: "Xatolik yuz berdi!"))
         }
     }
 }

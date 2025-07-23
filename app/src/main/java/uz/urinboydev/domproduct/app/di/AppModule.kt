@@ -1,15 +1,16 @@
 package uz.urinboydev.domproduct.app.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import uz.urinboydev.domproduct.app.constants.ApiConstants
-import uz.urinboydev.domproduct.app.utils.LocalCartManager
+import uz.urinboydev.domproduct.app.api.ApiConstants
+import uz.urinboydev.domproduct.app.api.ApiService
 import uz.urinboydev.domproduct.app.utils.PreferenceManager
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -18,19 +19,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences(ApiConstants.PREF_NAME, Context.MODE_PRIVATE)
+    fun provideRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(ApiConstants.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     @Provides
     @Singleton
-    fun providePreferenceManager(sharedPreferences: SharedPreferences): PreferenceManager {
-        return PreferenceManager(sharedPreferences)
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideLocalCartManager(@ApplicationContext context: Context): LocalCartManager {
-        return LocalCartManager(context)
+    fun providePreferenceManager(@ApplicationContext context: Context): PreferenceManager {
+        return PreferenceManager(context)
     }
 }

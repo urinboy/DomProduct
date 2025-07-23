@@ -2,143 +2,67 @@ package uz.urinboydev.domproduct.app.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import uz.urinboydev.domproduct.app.constants.ApiConstants
+import com.google.gson.Gson
 import uz.urinboydev.domproduct.app.models.User
-
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PreferenceManager @Inject constructor(private val sharedPreferences: SharedPreferences) {
+class PreferenceManager @Inject constructor(private val context: Context) {
 
-    // ===== TOKEN MANAGEMENT =====
-    fun saveToken(token: String) {
-        sharedPreferences.edit()
-            .putString(ApiConstants.PREF_TOKEN, token)
-            .apply()
+    private val PREF_NAME = "DomProductPrefs"
+    private val PRIVATE_MODE = Context.MODE_PRIVATE
+
+    private val KEY_TOKEN = "token"
+    private val KEY_USER = "user"
+
+    private val prefs: SharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
+    private val editor: SharedPreferences.Editor = prefs.edit()
+    private val gson = Gson()
+
+    fun saveToken(token: String?) {
+        editor.putString(KEY_TOKEN, token)
+        editor.apply()
     }
 
     fun getToken(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_TOKEN, null)
+        return prefs.getString(KEY_TOKEN, null)
     }
 
-    fun clearToken() {
-        sharedPreferences.edit()
-            .remove(ApiConstants.PREF_TOKEN)
-            .apply()
+    fun saveUser(user: User?) {
+        if (user != null) {
+            editor.putString(KEY_USER, gson.toJson(user))
+        } else {
+            editor.remove(KEY_USER)
+        }
+        editor.apply()
     }
 
-    fun hasToken(): Boolean {
-        return !getToken().isNullOrEmpty()
+    fun getUser(): User? {
+        val userJson = prefs.getString(KEY_USER, null)
+        return if (userJson != null) {
+            gson.fromJson(userJson, User::class.java)
+        } else {
+            null
+        }
     }
 
-    // ===== USER DATA MANAGEMENT =====
-    fun saveUser(user: User) {
-        sharedPreferences.edit()
-            .putInt(ApiConstants.PREF_USER_ID, user.id)
-            .putString(ApiConstants.PREF_USER_NAME, user.name)
-            .putString(ApiConstants.PREF_USER_EMAIL, user.email)
-            .putString(ApiConstants.PREF_USER_PHONE, user.phone ?: "")
-            .putString(ApiConstants.PREF_USER_ROLE, user.role)
-            .putString(ApiConstants.PREF_USER_AVATAR, user.avatar ?: "")
-            .putInt(ApiConstants.PREF_USER_CITY_ID, user.cityId ?: 0)
-            .apply()
-    }
-
-    fun getUserId(): Int {
-        return sharedPreferences.getInt(ApiConstants.PREF_USER_ID, -1)
-    }
-
-    fun getUserName(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_USER_NAME, null)
-    }
-
-    fun getUserEmail(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_USER_EMAIL, null)
-    }
-
-    fun getUserPhone(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_USER_PHONE, null)
-    }
-
-    fun getUserRole(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_USER_ROLE, "customer")
-    }
-
-    fun getUserAvatar(): String? {
-        return sharedPreferences.getString(ApiConstants.PREF_USER_AVATAR, null)
-    }
-
-    fun getUserCityId(): Int {
-        return sharedPreferences.getInt(ApiConstants.PREF_USER_CITY_ID, 0)
-    }
-
-    // YANGI: Foydalanuvchi ma'lumotlarini tozalash
-    fun clearUser() {
-        sharedPreferences.edit()
-            .remove(ApiConstants.PREF_USER_ID)
-            .remove(ApiConstants.PREF_USER_NAME)
-            .remove(ApiConstants.PREF_USER_EMAIL)
-            .remove(ApiConstants.PREF_USER_PHONE)
-            .remove(ApiConstants.PREF_USER_ROLE)
-            .remove(ApiConstants.PREF_USER_AVATAR)
-            .remove(ApiConstants.PREF_USER_CITY_ID)
-            .apply()
-    }
-
-    // ===== AUTHENTICATION STATUS =====
     fun isLoggedIn(): Boolean {
-        return hasToken() && getUserId() != -1
-    }
-
-    // ===== LOGOUT =====
-    fun logout() {
-        // Token va user ma'lumotlarini tozalash
-        clearToken()
-        clearUser()
-        // Boshqa ilova sozlamalarini o'chirmaslik uchun .clear() ishlatilmaydi
-        // sharedPreferences.edit().clear().apply()
-    }
-
-    // ===== APP SETTINGS =====
-    fun saveAppSettings(key: String, value: String) {
-        sharedPreferences.edit()
-            .putString(key, value)
-            .apply()
-    }
-
-    fun getAppSettings(key: String, defaultValue: String = ""): String {
-        return sharedPreferences.getString(key, defaultValue) ?: defaultValue
+        return getToken() != null && getUser() != null
     }
 
     fun saveAppSettings(key: String, value: Boolean) {
-        sharedPreferences.edit()
-            .putBoolean(key, value)
-            .apply()
+        editor.putBoolean(key, value)
+        editor.apply()
     }
 
-    fun getAppSettings(key: String, defaultValue: Boolean = false): Boolean {
-        return sharedPreferences.getBoolean(key, defaultValue)
+    fun getAppSettings(key: String, defaultValue: Boolean): Boolean {
+        return prefs.getBoolean(key, defaultValue)
     }
 
-    fun saveAppSettings(key: String, value: Int) {
-        sharedPreferences.edit()
-            .putInt(key, value)
-            .apply()
-    }
-
-    fun getAppSettings(key: String, defaultValue: Int = 0): Int {
-        return sharedPreferences.getInt(key, defaultValue)
-    }
-
-    // ===== CART SETTINGS =====
-    fun saveCartCount(count: Int) {
-        sharedPreferences.edit()
-            .putInt("cart_count", count)
-            .apply()
-    }
-
-    fun getCartCount(): Int {
-        return sharedPreferences.getInt("cart_count", 0)
+    fun logout() {
+        editor.remove(KEY_TOKEN)
+        editor.remove(KEY_USER)
+        editor.apply()
     }
 }
