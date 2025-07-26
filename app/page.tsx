@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { products, categories } from './data/products';
 import { useCart } from './contexts/CartContext';
 import { useWishlist } from './contexts/WishlistContext';
+import { useToast } from './components/Toast/ToastProvider';
 import ImageSlider from './components/ImageSlider';
 import ProductImage from './components/ProductImage';
 
@@ -14,6 +15,7 @@ const HomePage = () => {
   const { t } = useTranslation();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { showSuccess, showInfo } = useToast();
 
   // Bosh sahifa uchun cheklangan kategoriyalar va mahsulotlar
   const featuredCategories = categories.slice(0, 5);
@@ -22,14 +24,17 @@ const HomePage = () => {
   // Savatga qo'shish funksiyasi
   const handleAddToCart = (product: any) => {
     addToCart(product);
+    showSuccess("Mahsulot savatga qo'shildi!");
   };
 
   // Sevimlilar ro'yxatini boshqarish
   const handleToggleWishlist = (product: any) => {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id);
+      showInfo("Mahsulot sevimlilardan o'chirildi");
     } else {
       addToWishlist(product);
+      showSuccess("Mahsulot sevimlilarga qo'shildi!");
     }
   };
 
@@ -131,6 +136,7 @@ const HomePage = () => {
                   href={`/products/${product.id}`} 
                   className="btn btn-primary btn-sm"
                 >
+                  <i className="fas fa-eye"></i>
                   {t('details') || 'Batafsil'}
                 </Link>
                 

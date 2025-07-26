@@ -32,7 +32,7 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }) => {
 
   return (
     <div className={`fixed top-4 right-4 z-50 max-w-sm p-4 border-l-4 rounded shadow-lg ${typeClasses[type]} animate-slide-in-right`}>
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <span className="mr-2 text-lg">{icons[type]}</span>
         <p className="text-sm font-medium">{message}</p>
         <button

@@ -172,6 +172,7 @@ const CartPage = () => {
             e.currentTarget.style.boxShadow = '0 4px 15px rgba(220, 53, 69, 0.3)';
           }}
         >
+          <i className="fas fa-trash"></i>
           {isUzbek ? "Barchasini o'chirish" : "Очистить все"}
         </button>
       </div>
@@ -197,14 +198,14 @@ const CartPage = () => {
                     onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
                     className="quantity-btn"
                   >
-                    −
+                    <i className="fas fa-minus"></i>
                   </button>
                   <span className="quantity">{item.quantity}</span>
                   <button 
                     onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
                     className="quantity-btn"
                   >
-                    +
+                    <i className="fas fa-plus"></i>
                   </button>
                 </div>
                 
@@ -213,7 +214,7 @@ const CartPage = () => {
                   className="remove-btn"
                   title={isUzbek ? "O'chirish" : "Удалить"}
                 >
-                  🗑️
+                  <i className="fas fa-trash"></i>
                 </button>
               </div>
               

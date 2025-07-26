@@ -453,6 +453,7 @@ export default function ProductsPage() {
                     onClick={() => handleAddToCart(product)}
                     disabled={!product.inStock}
                   >
+                    <i className="fas fa-shopping-cart"></i>
                     {product.inStock ? t('add_to_cart') : 
                       (isUzbek ? "Tugagan" : "Нет в наличии")
                     }

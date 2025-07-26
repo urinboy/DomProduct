@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useCart } from '../../contexts/CartContext';
 import { useWishlist } from '../../contexts/WishlistContext';
+import { useToast } from '../../components/Toast/ToastProvider';
 import ProductImage from '../../components/ProductImage';
 import './product-detail.css';
 
@@ -43,6 +44,7 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { addToCart } = useCart();
   const { items: wishlistItems, addToWishlist, removeFromWishlist } = useWishlist();
+  const { showSuccess, showInfo } = useToast();
   
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -128,14 +130,17 @@ export default function ProductDetailPage() {
   const handleWishlistToggle = () => {
     if (isInWishlist) {
       removeFromWishlist(product.id);
+      showInfo("Mahsulot sevimlilardan o'chirildi");
     } else {
       addToWishlist(product);
+      showSuccess("Mahsulot sevimlilarga qo'shildi!");
     }
   };
 
   const handleAddToCart = () => {
     const cartProduct = { ...product, quantity };
     addToCart(cartProduct);
+    showSuccess("Mahsulot savatga qo'shildi!");
   };
 
   if (isLoading) {

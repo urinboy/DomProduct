@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface ProductImageProps {
@@ -33,13 +33,9 @@ export default function ProductImage({
   onMouseOver,
   onMouseOut
 }: ProductImageProps) {
-  const [imageSrc, setImageSrc] = useState(src);
-  const [hasError, setHasError] = useState(false);
-
-  // Brend placeholder rasmi
+  // Agar src bo'sh yoki yo'q bo'lsa, darhol placeholder ishlat
   const placeholderSrc = '/images/domproduct-placeholder.png';
   
-  // Agar placeholder ham yo'q bo'lsa, SVG placeholder
   const fallbackSVG = `data:image/svg+xml;base64,${btoa(`
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect width="100%" height="100%" fill="#f8f9fa"/>
@@ -53,6 +49,18 @@ export default function ProductImage({
       </text>
     </svg>
   `)}`;
+
+  // Xavfsiz src - agar bo'sh bo'lsa placeholder ishlatamiz
+  const safeSrc = src && src.trim() !== '' ? src : placeholderSrc;
+  const [imageSrc, setImageSrc] = useState(safeSrc);
+  const [hasError, setHasError] = useState(false);
+
+  // src o'zgarganda imageSrc ni yangilaymiz
+  useEffect(() => {
+    const newSafeSrc = src && src.trim() !== '' ? src : placeholderSrc;
+    setImageSrc(newSafeSrc);
+    setHasError(false);
+  }, [src, placeholderSrc]);
 
   const handleError = () => {
     if (!hasError) {

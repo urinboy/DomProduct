@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
+import { useToast } from '../components/Toast/ToastProvider';
 import ProductImage from '../components/ProductImage';
 
 interface Product {
@@ -31,6 +32,7 @@ const SearchPage = () => {
   const searchParams = useSearchParams();
   const { addToCart } = useCart();
   const { items: wishlistItems, addToWishlist, removeFromWishlist } = useWishlist();
+  const { showSuccess, showInfo } = useToast();
   
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [sortBy, setSortBy] = useState('relevance');
@@ -176,14 +178,17 @@ const SearchPage = () => {
 
   const handleAddToCart = (product: Product) => {
     addToCart(product);
+    showSuccess("Mahsulot savatga qo'shildi!");
   };
 
   const handleWishlistToggle = (product: Product) => {
     const isInWishlist = wishlistItems.some((item: any) => item.id === product.id);
     if (isInWishlist) {
       removeFromWishlist(product.id);
+      showInfo("Mahsulot sevimlilardan o'chirildi");
     } else {
       addToWishlist(product);
+      showSuccess("Mahsulot sevimlilarga qo'shildi!");
     }
   };
 
@@ -436,7 +441,7 @@ const SearchPage = () => {
               alignItems: 'center',
               background: 'white',
               borderRadius: '10px',
-              padding: '8px',
+              padding: '4px',
               border: '2px solid #e9ecef'
             }}>
               <div style={{ position: 'relative', flex: 1 }}>
@@ -447,7 +452,7 @@ const SearchPage = () => {
                   onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
                   style={{
                     width: '100%',
-                    padding: '8px 12px',
+                    padding: '8px 16px',
                     border: '1px solid #dee2e6',
                     borderRadius: '6px',
                     fontSize: '13px',
@@ -472,7 +477,7 @@ const SearchPage = () => {
                   onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 1000000])}
                   style={{
                     width: '100%',
-                    padding: '8px 12px',
+                    padding: '8px 16px',
                     border: '1px solid #dee2e6',
                     borderRadius: '6px',
                     fontSize: '13px',
@@ -484,14 +489,7 @@ const SearchPage = () => {
                 />
               </div>
             </div>
-            <div style={{ 
-              fontSize: '12px', 
-              color: '#6c757d', 
-              marginTop: '5px',
-              textAlign: 'center'
-            }}>
-              {(priceRange[0] || 0).toLocaleString()} - {(priceRange[1] || 1000000).toLocaleString()} so'm
-            </div>
+            
           </div>
 
           {/* Filtrlarni tozalash tugmasi */}
