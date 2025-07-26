@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import ProductImage from '../components/ProductImage';
+import { useToast } from '../components/Toast/ToastProvider';
+import './categories.css';
 
 interface Category {
   id: number;
@@ -111,148 +114,151 @@ const CategoriesPage = () => {
     }
   ];
 
-  // Kategoriyalarni qidirish
-  const filteredCategories = categories.filter(category => {
-    const searchText = isUzbek ? category.nameUz : category.name;
-    return searchText.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  // Kategoriyalarni qidirish va filterlash
+  const filteredCategories = useMemo(() => {
+    return categories.filter(category => {
+      const searchText = isUzbek ? category.nameUz : category.name;
+      return searchText.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+  }, [categories, searchQuery, isUzbek]);
+
+  // Umumiy statistikalar
+  const totalProducts = categories.reduce((sum, cat) => sum + cat.count, 0);
+  const totalCategories = categories.length;
 
   return (
     <div id="categoriesPage">
-      {/* Sahifa header */}
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ marginBottom: '1rem' }}>
+      {/* Zamonaviy header */}
+      <div className="categories-header">
+        <h1>
+          <i className="fas fa-th-large" style={{ marginRight: '1rem' }}></i>
           {isUzbek ? 'Kategoriyalar' : 'Категории'}
-        </h2>
-        <p style={{ color: 'var(--gray-600)', margin: 0 }}>
+        </h1>
+        <p>
           {isUzbek ? 
-            'Barcha mahsulot kategoriyalarini ko\'ring va kerakli mahsulotni toping' : 
-            'Просматривайте все категории товаров и находите нужные продукты'
+            'Barcha mahsulot kategoriyalarini kashf eting va kerakli mahsulotni toping' : 
+            'Исследуйте все категории товаров и найдите нужные продукты'
           }
         </p>
       </div>
 
-      {/* Qidiruv */}
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ position: 'relative', maxWidth: '400px' }}>
+      {/* Qidiruv bo'limi */}
+      <div className="categories-search">
+        <div className="search-container">
+          <i className="fas fa-search search-icon"></i>
           <input
             type="text"
+            className="search-input"
             placeholder={isUzbek ? 'Kategoriyalar ichida qidirish...' : 'Поиск по категориям...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.75rem 1rem 0.75rem 3rem',
-              border: '1px solid var(--gray-300)',
-              borderRadius: 'var(--radius-md)',
-              fontSize: '1rem',
-              backgroundColor: 'white'
-            }}
           />
-          <i 
-            className="fas fa-search" 
-            style={{
-              position: 'absolute',
-              left: '1rem',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              color: 'var(--gray-500)'
-            }}
-          ></i>
         </div>
       </div>
 
-      {/* Kategoriyalar grid */}
-      {filteredCategories.length === 0 ? (
-        <div className="cart-empty" style={{ textAlign: 'center', padding: '3rem' }}>
-          <i className="fas fa-search cart-empty-icon"></i>
-          <div className="cart-empty-title">
-            {isUzbek ? "Kategoriya topilmadi" : "Категория не найдена"}
-          </div>
-          <p className="cart-empty-message">
-            {isUzbek ? 
-              "Qidiruv so'zini o'zgartirib, qayta urinib ko'ring" : 
-              "Попробуйте изменить поисковый запрос"
-            }
-          </p>
+      {/* Statistikalar */}
+      <div className="categories-stats">
+        <div className="stat-item">
+          <span className="stat-number">{totalCategories}</span>
+          <span className="stat-label">
+            {isUzbek ? 'Kategoriya' : 'Категорий'}
+          </span>
         </div>
-      ) : (
-        <div className="category-grid">
-          {filteredCategories.map((category) => (
-            <div key={category.id} className="category-card">
-              {/* Kategoriya rasmi */}
-              <div className="category-image">
-                <img 
-                  src={category.image} 
-                  alt={isUzbek ? category.nameUz : category.name}
-                  loading="lazy"
-                />
-                <div className="category-overlay">
-                  <i className={category.icon}></i>
+        <div className="stat-item">
+          <span className="stat-number">{totalProducts.toLocaleString()}</span>
+          <span className="stat-label">
+            {isUzbek ? 'Mahsulot' : 'Товаров'}
+          </span>
+        </div>
+        <div className="stat-item">
+          <span className="stat-number">{filteredCategories.length}</span>
+          <span className="stat-label">
+            {isUzbek ? 'Topildi' : 'Найдено'}
+          </span>
+        </div>
+      </div>
+
+      {/* Asosiy kontent */}
+      <div className="categories-content">
+        {filteredCategories.length === 0 ? (
+          <div className="categories-empty">
+            <i className="fas fa-search"></i>
+            <h3>
+              {isUzbek ? "Kategoriya topilmadi" : "Категория не найдена"}
+            </h3>
+            <p>
+              {isUzbek ? 
+                "Qidiruv so'rovingizni o'zgartirib, qayta urinib ko'ring yoki barcha kategoriyalarni ko'rib chiqing" : 
+                "Попробуйте изменить поисковый запрос или просмотрите все категории"
+              }
+            </p>
+          </div>
+        ) : (
+          <div className="categories-grid">
+            {filteredCategories.map((category) => (
+              <div key={category.id} className="category-card">
+                {/* Kategoriya rasmi va icon */}
+                <div className="category-image">
+                  <div className="category-overlay">
+                    <i className={`${category.icon} category-icon`}></i>
+                  </div>
+                  <div className="category-count">
+                    {category.count} {isUzbek ? 'ta' : 'шт'}
+                  </div>
                 </div>
-              </div>
 
-              {/* Kategoriya ma'lumotlari */}
-              <div className="category-info">
-                <h3 className="category-title">
-                  {isUzbek ? category.nameUz : category.name}
-                </h3>
-                <p className="category-count">
-                  {category.count} {isUzbek ? 'mahsulot' : 'товаров'}
-                </p>
+                {/* Kategoriya ma'lumotlari */}
+                <div className="category-info">
+                  <h3 className="category-title">
+                    {isUzbek ? category.nameUz : category.name}
+                  </h3>
+                  <p className="category-description">
+                    {isUzbek 
+                      ? `${category.count} ta mahsulot mavjud` 
+                      : `Доступно ${category.count} товаров`}
+                  </p>
 
-                {/* Subkategoriyalar */}
-                <div className="subcategories">
-                  {category.subcategories.slice(0, 3).map((sub) => (
-                    <Link 
-                      key={sub.id}
-                      href={`/products?category=${category.id}&subcategory=${sub.id}`}
-                      className="subcategory-link"
-                    >
-                      {isUzbek ? sub.nameUz : sub.name} ({sub.count})
-                    </Link>
-                  ))}
-                  {category.subcategories.length > 3 && (
-                    <span className="subcategory-more">
-                      +{category.subcategories.length - 3} {isUzbek ? 'ko\'proq' : 'еще'}
-                    </span>
+                  {/* Subkategoriyalar */}
+                  {category.subcategories && category.subcategories.length > 0 && (
+                    <div className="subcategories">
+                      <div className="subcategories-title">
+                        <i className="fas fa-list"></i>
+                        {isUzbek ? 'Subkategoriyalar' : 'Подкатегории'}
+                      </div>
+                      <div className="subcategories-grid">
+                        {category.subcategories.map((sub) => (
+                          <Link
+                            key={sub.id}
+                            href={`/products?category=${category.id}&subcategory=${sub.id}`}
+                            className="subcategory-item"
+                          >
+                            <div className="subcategory-name">
+                              {isUzbek ? sub.nameUz : sub.name}
+                            </div>
+                            <div className="subcategory-count">
+                              {sub.count}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
 
-                {/* Kategoriya tugmasi */}
-                <Link 
-                  href={`/products?category=${category.id}`}
-                  className="btn btn-primary btn-sm category-btn"
-                >
-                  {isUzbek ? 'Barcha mahsulotlar' : 'Все товары'}
-                  <i className="fas fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
-                </Link>
+                {/* Kategoriya actionlari */}
+                <div className="category-actions">
+                  <Link
+                    href={`/products?category=${category.id}`}
+                    className="btn-view-category"
+                  >
+                    <i className="fas fa-eye"></i>
+                    {isUzbek ? 'Ko\'rish' : 'Просмотреть'}
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Qo'shimcha ma'lumot */}
-      <div style={{ 
-        marginTop: '3rem',
-        padding: '2rem',
-        backgroundColor: 'var(--gray-100)',
-        borderRadius: 'var(--radius-lg)',
-        textAlign: 'center'
-      }}>
-        <h3 style={{ marginBottom: '1rem', color: 'var(--gray-800)' }}>
-          {isUzbek ? "Kerakli mahsulot topa olmadingizmi?" : "Не нашли нужный товар?"}
-        </h3>
-        <p style={{ marginBottom: '1.5rem', color: 'var(--gray-600)' }}>
-          {isUzbek ? 
-            "Qidiruv orqali barcha mahsulotlar ichidan kerakli mahsulotni toping" :
-            "Используйте поиск, чтобы найти нужный товар среди всех продуктов"
-          }
-        </p>
-        <Link href="/search" className="btn btn-primary">
-          {isUzbek ? "Umumiy qidiruv" : "Общий поиск"}
-        </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
