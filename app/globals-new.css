@@ -6,8 +6,6 @@
 @import '../src/assets/css/variables.css';
 @import '../src/assets/css/base.css';
 @import '../src/assets/css/components.css';
-@import '../src/assets/css/pages.css';
-@import '../src/assets/css/responsive.css';
 
 /* Mobil responsive uchun qo'shimcha stillar */
 @media (max-width: 768px) {

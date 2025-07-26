@@ -1,0 +1,55 @@
+/* Asosiy rangli o'zgaruvchilar va dizayn elementlari - avvalgi loyihadagiga to'liq mos keladi */
+:root {
+    /* Font Family - Fruktur shrifti logo uchun */
+    --font-logo: 'Fruktur', cursive;
+
+    /* Z-index qiymatlar - elementlar ustma-ust joylashish tartibi uchun */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 9999;
+
+    /* Asosiy brand ranglari - yashil rang sxemasi */
+    --primary-color: #087c36;      /* Asosiy yashil rang */
+    --secondary-color: #116128;    /* To'q yashil rang */
+    --success-color: #087c36;      /* Muvaffaqiyat uchun yashil */
+    --danger-color: #e53e3e;       /* Xato uchun qizil rang */
+    --warning-color: #dd6b20;      /* Ogohlantirish uchun sariq-jigarrang */
+    --info-color: #3b82f6;         /* Ma'lumot uchun ko'k rang */
+    --light-color: #f8f9fa;        /* Och kulrang */
+    --dark-color: #343a40;         /* To'q kulrang */
+    --splash-bg-color: #ebf2ee;    /* Yuklanish ekrani uchun fon */
+
+    /* Kulrang va oq ranglar spektri */
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f5;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #868e96;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --white: #ffffff;
+    --black: #000000;
+
+    /* Zamonaviy UI xususiyatlari */
+    --radius-sm: 4px;           /* Kichik radius */
+    --radius-md: 8px;           /* O'rta radius */
+    --radius-lg: 16px;          /* Katta radius */
+    --radius-full: 9999px;      /* To'liq yumaloq */
+    
+    /* Soya effektlari */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* O'tish effektlari */
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-normal: all 0.3s ease-in-out;
+}

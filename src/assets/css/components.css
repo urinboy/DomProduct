@@ -1,0 +1,421 @@
+/* Komponentlar uchun stillar - header, navigation, modal va boshqalar */
+
+/* Toast (xabarlar) konteyneri */
+.toast-container {
+    position: fixed !important;
+    top: 1.5rem !important;
+    right: 1.5rem !important;
+    z-index: var(--z-toast) !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 400px;
+}
+
+/* Toast stillari */
+.toast {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    box-shadow: var(--shadow-lg);
+    pointer-events: auto;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-left: 5px solid var(--info-color);
+    position: relative;
+    z-index: var(--z-toast) !important;
+    overflow: hidden;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.success {
+    border-left-color: var(--success-color);
+}
+
+.toast.error {
+    border-left-color: var(--danger-color);
+}
+
+.toast.warning {
+    border-left-color: var(--warning-color);
+}
+
+.toast.info {
+    border-left-color: var(--info-color);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toast-icon {
+    font-size: 1.3rem;
+}
+
+.toast.success .toast-icon {
+    color: var(--success-color);
+}
+
+.toast.error .toast-icon {
+    color: var(--danger-color);
+}
+
+.toast.warning .toast-icon {
+    color: var(--warning-color);
+}
+
+.toast.info .toast-icon {
+    color: var(--info-color);
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--gray-800);
+    font-weight: 500;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    font-size: 1.2rem;
+}
+
+.toast-close:hover {
+    color: var(--gray-600);
+}
+
+/* Header stillari */
+.header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-md);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Logo stillari */
+.logo {
+    font-family: var(--font-logo);
+    font-size: 1.8rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+}
+
+.logo-image {
+    height: 40px;
+}
+
+/* Qidiruv konteyneri */
+.search-container {
+    flex: 1;
+    position: relative;
+    max-width: 450px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 1.2rem 0.6rem 3.2rem;
+    border: none;
+    border-radius: var(--radius-full);
+    outline: none;
+    background: rgba(255, 255, 255, 0.95);
+    transition: var(--transition-fast);
+    font-size: 1rem;
+    color: var(--gray-700);
+}
+
+.search-input::placeholder {
+    color: var(--gray-500);
+}
+
+.search-input:focus {
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-600);
+    font-size: 1.1rem;
+}
+
+/* Header harakatlari */
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.35rem;
+    cursor: pointer;
+    padding: 0.6rem;
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Badge (son ko'rsatkichi) */
+.badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--danger-color);
+    color: white;
+    border-radius: var(--radius-full);
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Til almashtiruvchi */
+.language-switcher {
+    position: relative;
+}
+
+.language-btn {
+    font-size: 1.5rem;
+}
+
+.language-flag {
+    font-size: 1.2rem;
+}
+
+.language-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    width: 180px;
+    z-index: var(--z-dropdown);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+}
+
+.dropdown-header {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--gray-200);
+    margin: 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-800);
+    transition: var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: var(--gray-100);
+}
+
+.dropdown-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+    background-color: rgba(8, 124, 54, 0.1);
+}
+
+.language-name {
+    flex-grow: 1;
+}
+
+/* Pastki navigatsiya */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    padding: 0.6rem 0;
+    z-index: var(--z-fixed);
+    box-shadow: 0 -4px 8px -2px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-decoration: none;
+    font-size: 0.75rem;
+    position: relative;
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem;
+}
+
+.nav-text {
+    display: block;
+    transition: var(--transition-fast);
+}
+
+/* Savatcha badge pastki navigatsiyada */
+.cart-nav-item .badge {
+    top: -5px;
+    right: 15px;
+    box-shadow: none;
+    border: 2px solid white;
+}
+
+/* Modal stillari */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: var(--z-modal);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(3px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 0 0;
+    box-shadow: var(--shadow-lg);
+    max-width: 550px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.confirm-modal-container.modal-content {
+    padding: 0;
+}
+
+.modal-close {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    top: 1rem;
+    right: 1rem;
+    background: #ccc;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--danger-color);
+    transition: var(--transition-fast);
+    z-index: 10;
+}
+
+.modal-close:hover {
+    color: var(--gray-600);
+}
+
+/* Form stillari */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(17, 190, 73, 0.25);
+}
+
+.btn-block {
+    width: 100%;
+}

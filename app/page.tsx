@@ -1,103 +1,159 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import { products, categories } from '../src/data/products';
+import { useCart } from '../src/contexts/CartContext';
+import { useWishlist } from '../src/contexts/WishlistContext';
+import ImageSlider from '../src/components/ImageSlider';
+
+/* Avvalgi loyihadagi bosh sahifani to'liq takrorlash */
+const HomePage = () => {
+  const { t } = useTranslation();
+  const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+
+  // Bosh sahifa uchun cheklangan kategoriyalar va mahsulotlar
+  const featuredCategories = categories.slice(0, 5);
+  const featuredProducts = products.slice(0, 4);
+
+  // Savatga qo'shish funksiyasi
+  const handleAddToCart = (product: any) => {
+    addToCart(product);
+  };
+
+  // Sevimlilar ro'yxatini boshqarish
+  const handleToggleWishlist = (product: any) => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div id="homePage">
+      {/* Rasm slayderi */}
+      <ImageSlider />
+      
+      {/* Kategoriyalar bo'limi */}
+      <div className="section-header">
+        <h2>{t('categories')}</h2>
+        <Link href="/categories" className="see-all-link">
+          {t('see_all') || 'Barchasini ko\'rish'}
+        </Link>
+      </div>
+      
+      <div className="category-grid" id="categoriesGrid">
+        {featuredCategories.map(category => (
+          <Link 
+            href={`/products?category=${category.id}`}
+            key={category.id}
+            className="category-card"
+          >
+            <div className="category-icon">
+              {category.icon}
+            </div>
+            <span className="category-name">
+              {category.name}
+            </span>
+          </Link>
+        ))}
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* Yangi mahsulotlar bo'limi */}
+      <div className="section-header">
+        <h2>{t('new_products') || 'Yangi mahsulotlar'}</h2>
+        <Link href="/products" className="see-all-link">
+          {t('see_all') || 'Barchasini ko\'rish'}
+        </Link>
+      </div>
+
+      <div className="product-grid" id="featuredProducts">
+        {featuredProducts.map(product => (
+          <div className="product-card" key={product.id}>
+            {/* Mahsulot rasmi */}
+            <Link href={`/products/${product.id}`} className="product-image-link">
+              <div className="product-image">
+                <img 
+                  src={product.images[0]} 
+                  alt={product.nameUz} 
+                  loading="lazy"
+                />
+                {/* Chegirma badge */}
+                {product.discount > 0 && (
+                  <div className="discount-badge">
+                    -{product.discount}%
+                  </div>
+                )}
+              </div>
+            </Link>
+
+            {/* Mahsulot ma'lumotlari */}
+            <div className="product-info">
+              <div className="product-title">
+                {product.nameUz}
+              </div>
+              
+              <div className="product-price">
+                {product.originalPrice && (
+                  <span className="original-price">
+                    {product.originalPrice.toLocaleString()} so'm
+                  </span>
+                )}
+                <span className="current-price">
+                  {product.price.toLocaleString()} so'm
+                </span>
+              </div>
+
+              {/* Rating */}
+              <div className="product-rating">
+                <div className="stars">
+                  {[...Array(5)].map((_, i) => (
+                    <i 
+                      key={i} 
+                      className={`fas fa-star ${i < Math.floor(product.rating) ? 'filled' : ''}`}
+                    ></i>
+                  ))}
+                </div>
+                <span className="rating-text">
+                  {product.rating} ({product.reviewsCount})
+                </span>
+              </div>
+
+              {/* Mahsulot tugmalari */}
+              <div className="product-card-actions">
+                <Link 
+                  href={`/products/${product.id}`} 
+                  className="btn btn-primary btn-sm"
+                >
+                  {t('details') || 'Batafsil'}
+                </Link>
+                
+                <button 
+                  className="btn-icon"
+                  onClick={() => handleAddToCart(product)}
+                  disabled={!product.inStock}
+                  title={t('add_to_cart')}
+                >
+                  <i className="fas fa-shopping-cart"></i>
+                </button>
+                
+                <button 
+                  className={`btn-icon ${isInWishlist(product.id) ? 'active' : ''}`}
+                  onClick={() => handleToggleWishlist(product)}
+                  title={t('add_to_wishlist')}
+                >
+                  <i className={`${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart`}></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
+};
+
+export default HomePage;

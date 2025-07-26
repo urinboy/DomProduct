@@ -1,0 +1,4586 @@
+Repository: urinboy/domproduct
+Files analyzed: 52
+
+Estimated tokens: 33.1k
+
+Directory structure:
+└── urinboy-domproduct/
+    ├── README.md
+    ├── eslint.config.js
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js
+    ├── public/
+    │   ├── .htaccess
+    │   ├── emblems/
+    │   ├── loadings/
+    │   └── logos/
+    └── src/
+        ├── App.css
+        ├── App.jsx
+        ├── i18n.js
+        ├── index.css
+        ├── main.jsx
+        ├── assets/
+        │   └── css/
+        │       ├── base.css
+        │       ├── components.css
+        │       ├── pages.css
+        │       ├── responsive.css
+        │       ├── slider.css
+        │       └── variables.css
+        ├── components/
+        │   ├── ConfirmModal.jsx
+        │   ├── EditProfileModal.jsx
+        │   ├── ImageSlider.jsx
+        │   ├── LanguageSwitcher.jsx
+        │   ├── Loading.jsx
+        │   ├── LoginModal.jsx
+        │   ├── Meta.jsx
+        │   ├── RegisterModal.jsx
+        │   ├── ScrollToTop.jsx
+        │   ├── SearchOverlay.jsx
+        │   ├── SplashScreen.jsx
+        │   └── Toast.jsx
+        ├── contexts/
+        │   ├── AuthContext.jsx
+        │   ├── CartContext.jsx
+        │   ├── ModalContext.jsx
+        │   └── WishlistContext.jsx
+        ├── data/
+        │   ├── addresses.js
+        │   ├── categories.js
+        │   ├── cities.js
+        │   ├── languages.js
+        │   ├── payments.js
+        │   ├── products.js
+        │   ├── reviews.js
+        │   ├── sliders.js
+        │   ├── translations.js
+        │   └── users.js
+        └── pages/
+            ├── CartPage.jsx
+            ├── CategoriesPage.jsx
+            ├── HomePage.jsx
+            ├── OrdersPage.jsx
+            ├── ProductDetailPage.jsx
+            ├── ProductsPage.jsx
+            ├── ProfilePage.jsx
+            ├── SearchResultsPage.jsx
+            └── WishlistPage.jsx
+
+
+================================================
+FILE: README.md
+================================================
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+================================================
+FILE: eslint.config.js
+================================================
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{js,jsx}'],
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
+      },
+    },
+    rules: {
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'react-refresh/only-export-components': 'off',
+    },
+  },
+])
+
+
+
+================================================
+FILE: index.html
+================================================
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dom Product 🛍️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fruktur:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+
+
+================================================
+FILE: package.json
+================================================
+{
+  "name": "react-dpl",
+  "private": true,
+  "version": "1.3.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.9",
+    "i18next": "^25.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.6.1",
+    "react-router-dom": "^7.7.0",
+    "swiper": "^11.2.10"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "^9.30.1",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "vite": "^7.0.4",
+    "vite-plugin-pwa": "^1.0.1"
+  }
+}
+
+
+
+================================================
+FILE: vite.config.js
+================================================
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+      manifest: {
+        name: 'Dom Product',
+        short_name: 'DPL',
+        description: 'Dom Product - O`zbekistondagi eng yaxshi onlayn do`kon.',
+        theme_color: '#ffffff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
+    }),
+  ],
+});
+
+
+
+================================================
+FILE: public/.htaccess
+================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+
+
+
+
+================================================
+FILE: src/App.css
+================================================
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+
+
+================================================
+FILE: src/App.jsx
+================================================
+
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Import useTranslation
+import HomePage from './pages/HomePage';
+import ProductsPage from './pages/ProductsPage';
+import CartPage from './pages/CartPage';
+import OrdersPage from './pages/OrdersPage';
+import ProfilePage from './pages/ProfilePage';
+import WishlistPage from './pages/WishlistPage';
+// import LoginModalContent from './components/LoginModal';
+import { useLoading } from './components/Loading';
+import { useCart } from './contexts/CartContext';
+import ProductDetailPage from './pages/ProductDetailPage';
+import SearchResultsPage from './pages/SearchResultsPage';
+import SearchOverlay from './components/SearchOverlay';
+import SplashScreen from './components/SplashScreen';
+import LanguageSwitcher from './components/LanguageSwitcher'; // Import LanguageSwitcher
+
+import CategoriesPage from './pages/CategoriesPage'; // Import CategoriesPage
+
+function App() {
+    const { t } = useTranslation(); // Initialize translation hook
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { showLoading, hideLoading } = useLoading();
+    const { cartItems } = useCart();
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isAppLoading, setIsAppLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setIsAppLoading(false), 2000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    useEffect(() => {
+        if (!isAppLoading) {
+            showLoading();
+        }
+    }, [location.pathname, showLoading, isAppLoading]);
+
+    useEffect(() => {
+        if (!isAppLoading) {
+            hideLoading();
+        }
+    }, [location.pathname, hideLoading, isAppLoading]);
+
+    const handleSearch = (query) => {
+        setIsSearchOpen(false);
+        navigate(`/search?q=${encodeURIComponent(query)}`);
+    };
+
+    const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+    if (isAppLoading) {
+        return <SplashScreen />;
+    }
+
+    const isDetailPage = location.pathname.startsWith('/products/') && location.pathname.split('/').length === 3;
+
+    return (
+        <div className="app-container" id="app">
+            {isSearchOpen && <SearchOverlay onClose={() => setIsSearchOpen(false)} onSearch={handleSearch} />}
+
+            {!isDetailPage && (
+                <header className="header">
+                    <div className="header-content">
+                        <h1 className="logo">
+                            <img src="/logos/white.png" alt="White Logo" className='logo-image'/>
+                            {/* <i className="fas fa-shopping-cart"></i> Dom Product 🛍️ */}
+                        </h1>
+                        <div className="search-container desktop-search">
+                            <i className="fas fa-search search-icon"></i>
+                            <input 
+                                type="text" 
+                                className="search-input" 
+                                placeholder={t('search_placeholder')} 
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearch(e.target.value)} 
+                            />
+                        </div>
+                        <div className="header-actions">
+                            <button className="icon-btn mobile-search-btn" onClick={() => setIsSearchOpen(true)}>
+                                <i className="fas fa-search"></i>
+                            </button>
+                            <LanguageSwitcher /> 
+                        </div>
+                    </div>
+                </header>
+            )}
+
+            <main className={`main-content ${isDetailPage ? 'detail-page-content' : ''}`}>
+                <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/products" element={<ProductsPage />} />
+                    <Route path="/products/:id" element={<ProductDetailPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/orders" element={<OrdersPage />} />
+                    <Route path="/wishlist" element={<WishlistPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/search" element={<SearchResultsPage />} />
+                    <Route path="/categories" element={<CategoriesPage />} />
+                </Routes>
+            </main>
+
+            {!isDetailPage && (
+                <nav className="bottom-nav">
+                    <NavLink to="/" className="nav-item">
+                        <i className="fas fa-home nav-icon"></i>
+                        <span className="nav-text">{t('home')}</span>
+                    </NavLink>
+                    <NavLink to="/products" className="nav-item">
+                        <i className="fas fa-cubes nav-icon"></i>
+                        <span className="nav-text">{t('products')}</span>
+                    </NavLink>
+                    <NavLink to="/wishlist" className="nav-item">
+                        <i className="fas fa-heart nav-icon"></i>
+                        <span className="nav-text">{t('wishlist')}</span>
+                    </NavLink>
+                    <NavLink to="/cart" className="nav-item cart-nav-item">
+                        <i className="fas fa-shopping-cart nav-icon"></i>
+                        {totalCartItems > 0 && <span className="badge" id="cartBadge">{totalCartItems}</span>}
+                        <span className="nav-text">{t('cart')}</span>
+                    </NavLink>
+                    <NavLink to="/profile" className="nav-item">
+                        <i className="fas fa-user nav-icon"></i>
+                        <span className="nav-text">{t('profile')}</span>
+                    </NavLink>
+                </nav>
+            )}
+        </div>
+    );
+}
+
+export default App;
+
+
+
+================================================
+FILE: src/i18n.js
+================================================
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { resources } from './data/translations';
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources,
+    lng: 'uz', // default language
+    fallbackLng: 'uz',
+
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage'],
+    },
+  });
+
+export default i18n;
+
+
+
+================================================
+FILE: src/index.css
+================================================
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+
+
+================================================
+FILE: src/main.jsx
+================================================
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './i18n'; // Import i18n configuration
+
+// Global CSS stillarini import qilish
+import './assets/css/variables.css';
+import './assets/css/base.css';
+import './assets/css/components.css';
+import './assets/css/pages.css';
+import './assets/css/responsive.css';
+import './assets/css/slider.css'; // Import slider styles
+
+import { BrowserRouter } from 'react-router-dom';
+import { ToastProvider } from './components/Toast';
+import { LoadingProvider } from './components/Loading';
+import { ModalProvider } from './contexts/ModalContext';
+import { AuthProvider } from './contexts/AuthContext'; // Import AuthProvider
+import { CartProvider } from './contexts/CartContext';
+import { WishlistProvider } from './contexts/WishlistContext'; // Import WishlistProvider
+import ScrollToTop from './components/ScrollToTop';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <BrowserRouter>
+        <AuthProvider>
+            <ToastProvider>
+                <CartProvider>
+                    <WishlistProvider>
+                        <LoadingProvider>
+                            <ModalProvider>
+                                <ScrollToTop />
+                                <App />
+                            </ModalProvider>
+                        </LoadingProvider>
+                    </WishlistProvider>
+                </CartProvider>
+            </ToastProvider>
+        </AuthProvider>
+    </BrowserRouter>
+);
+
+
+
+================================================
+FILE: src/assets/css/base.css
+================================================
+/* Other essential styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: var(--transition-fast);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--secondary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-danger:hover {
+    background: #c53030; /* Darker red */
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--gray-300);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Page layout */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Loading and error states */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--gray-600);
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--danger-color);
+    background: #fed7d7; /* Lighter red */
+    border-radius: var(--radius-lg);
+    margin: 1.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Empty states */
+.cart-empty,
+.orders-empty,
+.profile-guest {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--gray-600);
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.cart-empty-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    color: var(--gray-300);
+}
+
+.cart-empty-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--gray-700);
+    margin-bottom: 0.75rem;
+}
+
+.cart-empty-message {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    color: var(--gray-500);
+}
+
+/* Loading Overlay Styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+
+================================================
+FILE: src/assets/css/components.css
+================================================
+/* Toast Container - Fixed z-index */
+.toast-container {
+    position: fixed !important;
+    top: 1.5rem !important;
+    right: 1.5rem !important;
+    z-index: var(--z-toast) !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+    max-width: 400px;
+}
+
+/* Toast Styles */
+.toast {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 1.2rem;
+    box-shadow: var(--shadow-lg);
+    pointer-events: auto;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-left: 5px solid var(--info-color);
+    position: relative;
+    z-index: var(--z-toast) !important;
+    overflow: hidden;
+}
+
+.toast.show {
+    transform: translateX(0);
+}
+
+.toast.success {
+    border-left-color: var(--success-color);
+}
+
+.toast.error {
+    border-left-color: var(--danger-color);
+}
+
+.toast.warning {
+    border-left-color: var(--warning-color);
+}
+
+.toast.info {
+    border-left-color: var(--info-color);
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toast-icon {
+    font-size: 1.3rem;
+}
+
+.toast.success .toast-icon {
+    color: var(--success-color);
+}
+
+.toast.error .toast-icon {
+    color: var(--danger-color);
+}
+
+.toast.warning .toast-icon {
+    color: var(--warning-color);
+}
+
+.toast.info .toast-icon {
+    color: var(--info-color);
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--gray-800);
+    font-weight: 500;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    font-size: 1.2rem;
+}
+
+.toast-close:hover {
+    color: var(--gray-600);
+}
+
+/* Header with fixed z-index */
+.header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    box-shadow: var(--shadow-md);
+}
+
+/* Modal with proper z-index */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: var(--z-modal);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    backdrop-filter: blur(3px);
+}
+
+.modal.active {
+    display: flex;
+}
+
+/* Loading overlay with proper z-index */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 8888; /* Lower than toast */
+    backdrop-filter: blur(3px);
+}
+
+/* Header styles */
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-family: var(--font-logo);
+    font-size: 1.8rem; /* Increased base size */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0; /* Prevent logo from shrinking */
+}
+
+.logo-image {
+    height: 40px; /* Adjusted height for better visibility */
+}
+
+.search-container {
+    flex: 1;
+    position: relative;
+    max-width: 450px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 1.2rem 0.6rem 3.2rem;
+    border: none;
+    border-radius: var(--radius-full);
+    outline: none;
+    background: rgba(255, 255, 255, 0.95);
+    transition: var(--transition-fast);
+    font-size: 1rem;
+    color: var(--gray-700);
+}
+
+.search-input::placeholder {
+    color: var(--gray-500);
+}
+
+.search-input:focus {
+    background: white;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-600);
+    font-size: 1.1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.5rem; /* Reduced gap */
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.35rem;
+    cursor: pointer;
+    padding: 0.6rem;
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--danger-color);
+    color: white;
+    border-radius: var(--radius-full);
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Language Switcher */
+.language-switcher {
+    position: relative;
+}
+
+.language-btn {
+    font-size: 1.5rem; /* Increased size for better visibility */
+}
+
+.language-flag {
+    font-size: 1.2rem; /* Adjust flag size */
+}
+
+.language-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background-color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    width: 180px; /* Increased width */
+    z-index: var(--z-dropdown);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+}
+
+.dropdown-header {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--gray-200);
+    margin: 0;
+}
+
+.dropdown-item {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    gap: 0.5rem; /* Add gap between flag and name */
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--gray-800);
+    transition: var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background-color: var(--gray-100);
+}
+
+.dropdown-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+    background-color: var(--primary-light-color);
+}
+
+.language-name {
+    flex-grow: 1; /* Allow name to take up space */
+}
+
+/* Bottom navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    padding: 0.6rem 0;
+    z-index: var(--z-fixed);
+    box-shadow: 0 -4px 8px -2px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-decoration: none;
+    font-size: 0.75rem; /* Adjusted font size for text */
+    position: relative; /* For badge positioning */
+}
+
+.nav-item:hover {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.nav-icon {
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem; /* Reduced margin */
+}
+
+.nav-text {
+    display: block;
+    transition: var(--transition-fast);
+}
+
+/* Cart badge in bottom nav */
+.cart-nav-item .badge {
+    top: -5px; /* Adjusted position */
+    right: 15px; /* Adjusted position */
+    box-shadow: none;
+    border: 2px solid white;
+}
+
+/* Modal styles */
+.modal-content {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 0 0;
+    box-shadow: var(--shadow-lg);
+    max-width: 550px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Confirm Modal uchun maxsus stil, umumiy modal-content paddingini bekor qilish */
+.confirm-modal-container.modal-content {
+    padding: 0; /* ConfirmModal uchun paddingni olib tashlash */
+}
+
+.modal-close {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    top: 1rem;
+    right: 1rem;
+    background: #ccc;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--danger-color);
+    transition: var(--transition-fast);
+    z-index: 10;
+}
+
+.modal-close:hover {
+    color: var(--gray-600);
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(17, 190, 73, 0.25);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+/* Category grid */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2.5rem;
+}
+
+.category-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.8rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.category-icon {
+    font-size: 2.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.see-all-link {
+    font-size: 1rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.see-all-link:hover {
+    text-decoration: underline;
+}
+
+/* Category Grid Full for CategoriesPage */
+.category-grid-full {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.category-card-full {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--gray-800);
+}
+
+.category-card-full:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    color: var(--primary-color);
+}
+
+.category-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.category-card-name {
+    font-weight: 600;
+}
+
+/* Product grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.product-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.product-image {
+    width: 100%;
+    height: 220px;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: var(--gray-400);
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 1.2rem;
+}
+
+.product-title {
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--gray-900);
+    font-size: 1.1rem;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+}
+
+.current-price {
+    font-size: 1.35rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: var(--gray-500);
+    font-size: 0.95rem;
+}
+
+.btn-sm {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: var(--radius-md);
+}
+
+/* Cart items */
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.2rem;
+    background: white;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-md);
+}
+
+.cart-item-image {
+    width: 90px;
+    height: 90px;
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.cart-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-title {
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: var(--gray-900);
+    font-size: 1.05rem;
+}
+
+.cart-item-price {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.quantity-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--gray-200);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    font-size: 1.1rem;
+}
+
+.quantity-btn:hover {
+    background: var(--gray-300);
+}
+
+.quantity-display {
+    padding: 0 1rem;
+    font-weight: 600;
+    min-width: 45px;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+
+/* New Cart Summary Styles */
+.cart-summary {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-top: 1.5rem;
+    box-shadow: var(--shadow-md);
+    position: sticky;
+    top: 80px; /* Adjust based on header height */
+}
+
+.summary-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.summary-label {
+    color: var(--gray-600);
+}
+
+.summary-value {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.summary-divider {
+    height: 1px;
+    background-color: var(--gray-200);
+    margin: 1.5rem 0;
+}
+
+.summary-total-row {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.summary-total-value {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* New Order Card Styles */
+.order-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border-left: 5px solid;
+    transition: var(--transition-fast);
+}
+
+.order-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+    margin-bottom: 1rem;
+}
+
+.order-id {
+    font-weight: 700;
+    color: var(--gray-800);
+    font-size: 1.1rem;
+}
+
+.order-date {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+}
+
+.order-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.order-detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-detail-label {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.order-detail-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.order-detail-value.total-price {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.order-card-footer {
+    padding-top: 1rem;
+    border-top: 1px dashed var(--gray-200);
+}
+
+.order-items-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 0.75rem;
+}
+
+.order-items-list {
+    list-style: none;
+    padding: 0;
+    font-size: 0.95rem;
+    color: var(--gray-600);
+}
+
+.order-items-list li {
+    padding: 0.25rem 0;
+}
+
+/* Profile Info Card */
+.profile-info-card {
+    background: white;
+    padding: 1.8rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.profile-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+}
+
+.profile-info-row strong {
+    color: var(--gray-800);
+}
+
+/* Profile Guest Card */
+.profile-guest-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.profile-guest-card .cart-empty-icon {
+    font-size: 6rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.profile-guest-card .cart-empty-title {
+    font-size: 2rem;
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+}
+
+.profile-guest-card .cart-empty-message {
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    margin-bottom: 2rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-guest-card .btn {
+    margin: 0 0.5rem;
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.profile-actions .btn {
+    flex: 1;
+    max-width: 180px;
+}
+
+/* Filament-style Confirm Modal */
+.confirm-modal-container {
+    background: white;
+    border-radius: var(--radius-lg); /* Katta yumaloq burchaklar */
+    max-width: 450px; /* Kenglikni biroz kamaytirdim */
+    width: 100%;
+    position: relative;
+    box-shadow: var(--shadow-lg); /* Kattaroq soya */
+    overflow: hidden;
+}
+
+.confirm-modal-header {
+    padding: 1.5rem 2rem; /* Paddingni oshirdim */
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.confirm-modal-title {
+    font-size: 1.5rem; /* Katta sarlavha */
+    font-weight: 700;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.confirm-modal-body {
+    padding: 1.5rem 2rem; /* Paddingni oshirdim */
+}
+
+.confirm-modal-message {
+    font-size: 1.05rem; /* Matn o'lchamini kattalashtirdim */
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.confirm-modal-footer {
+    padding: 1.25rem 2rem; /* Paddingni oshirdim */
+    background-color: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Tugmalar uchun umumiy stillar */
+.confirm-modal-footer .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+.confirm-modal-footer .btn-secondary {
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+    border: none;
+}
+
+.confirm-modal-footer .btn-secondary:hover {
+    background-color: var(--gray-300);
+}
+
+.confirm-modal-footer .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.confirm-modal-footer .btn-primary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* New Product Card Actions */
+.product-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.btn-icon {
+    background-color: var(--gray-200);
+    color: var(--gray-600);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background-color: var(--gray-300);
+}
+
+.btn-icon.active {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* New Profile Page Styles */
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.profile-user-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.profile-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    color: var(--gray-800);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition-fast);
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.profile-menu-item:hover {
+    background-color: var(--gray-50);
+    transform: translateX(5px);
+}
+
+.profile-menu-icon {
+    font-size: 1.2rem;
+    color: var(--gray-500);
+    margin-right: 1.5rem;
+    width: 20px;
+}
+
+.profile-menu-item span {
+    flex-grow: 1;
+}
+
+.profile-menu-item .fa-chevron-right {
+    color: var(--gray-400);
+    font-size: 0.9rem;
+}
+
+.profile-menu-item.danger {
+    color: var(--danger-color);
+}
+
+.profile-menu-item.danger .profile-menu-icon {
+    color: var(--danger-color);
+}
+
+
+/* Wishlist Page Specific */
+.wishlist-btn-remove {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.wishlist-btn-remove:hover {
+    background-color: var(--danger-color);
+}
+
+
+/* Product Detail Page Styles */
+.product-detail-page {
+    background-color: var(--white);
+    min-height: 100vh;
+}
+
+.detail-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: var(--z-sticky);
+}
+
+.header-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-800);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+}
+
+.header-btn:hover {
+    background-color: var(--gray-100);
+}
+
+.detail-content {
+    padding: 6rem 1.5rem 8rem; /* Padding top for fixed header, bottom for footer */
+}
+
+.product-image-gallery {
+    margin-bottom: 2rem;
+}
+
+.main-product-image {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.product-detail-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 1rem;
+}
+
+.product-detail-price {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.product-detail-price .current-price {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.product-detail-price .original-price {
+    font-size: 1.25rem;
+    text-decoration: line-through;
+    color: var(--gray-500);
+}
+
+.product-description {
+    margin-bottom: 2rem;
+}
+
+.description-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    display: inline-block;
+}
+
+.product-description p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--gray-700);
+}
+
+.detail-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem 1.5rem;
+    background-color: var(--white);
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.08);
+    z-index: var(--z-fixed);
+}
+
+.add-to-cart-btn {
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.main-content.detail-page-content {
+    padding: 0;
+    max-width: none;
+}
+
+/* Filters Container */
+.filters-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.search-form-group {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.search-form-group .fas {
+    position: absolute;
+    left: 1rem;
+    color: var(--gray-400);
+    font-size: 1rem;
+}
+
+.filter-input, .filter-select {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.5rem; /* Add padding for icon */
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: var(--transition-fast);
+}
+
+.filter-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(17, 190, 73, 0.25);
+}
+
+.filter-select {
+    cursor: pointer;
+}
+
+/* Search Overlay */
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.search-overlay-content {
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+}
+
+.search-overlay .close-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.search-form {
+    display: flex;
+    width: 100%;
+}
+
+.search-input-overlay {
+    flex: 1;
+    padding: 1.2rem;
+    font-size: 1.2rem;
+    border: 2px solid var(--primary-color);
+    border-right: none;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    outline: none;
+}
+
+.search-btn-overlay {
+    padding: 0 1.5rem;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    font-size: 1.5rem;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    cursor: pointer;
+}
+
+/* SplashScreen Styles */
+@keyframes pulse-fade {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--splash-bg-color); /* Primary color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+}
+
+.splash-icon {
+    width: 240px;
+    height: 240px;
+    animation: pulse-fade 2s infinite ease-in-out;
+}
+
+
+
+
+================================================
+FILE: src/assets/css/pages.css
+================================================
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Ensures the link takes up the full card space */
+    transition: var(--transition-normal);
+}
+
+.product-card-link:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+
+================================================
+FILE: src/assets/css/responsive.css
+================================================
+/* Responsive */
+
+/* Mobil qidiruv tugmasi (boshida ko'rinmaydi) */
+.mobile-search-btn {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+        padding-bottom: 5rem; /* Space for bottom nav */
+    }
+
+    .header-content {
+        flex-wrap: nowrap; /* Qaytadan o'rashni bekor qilish */
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .logo {
+        font-size: 1.6rem; /* Mobil uchun o'lchamni kattalashtirish */
+        flex-shrink: 0; /* Logonni qisqarmasligini ta'minlash */
+    }
+
+    /* Katta ekranlar uchun qidiruvni yashirish */
+    .desktop-search {
+        display: none;
+    }
+
+    /* Mobil qidiruv tugmasini ko'rsatish */
+    .mobile-search-btn {
+        display: flex;
+    }
+
+    .header-actions {
+        gap: 0.5rem;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .category-grid .category-card:last-child:nth-child(odd) {
+        grid-column: span 2;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .cart-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .toast-container {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+    }
+
+    .filters-container {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .profile-page-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-grid {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+
+    .logo {
+        font-size: 1.5rem; /* Further reduce logo size */
+    }
+
+    .icon-btn {
+        font-size: 1.2rem; /* Adjust icon button size */
+        padding: 0.5rem;
+    }
+
+    .header-actions {
+        gap: 0.25rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .logo {
+        font-size: 1.3rem; /* Even smaller logo */
+    }
+
+    .icon-btn {
+        font-size: 1.2rem;
+        padding: 0.4rem;
+    }
+}
+
+/* Pastki navigatsiya uchun qo'shimcha stil */
+@media (max-width: 400px) {
+  .nav-text {
+    font-size: 0.6rem; /* Kichikroq shrift */
+    line-height: 1.1;   /* Qator balandligini moslashtirish */
+  }
+}
+
+
+================================================
+FILE: src/assets/css/slider.css
+================================================
+
+.slider-container {
+    margin-bottom: 2rem; /* Space between slider and categories */
+    border-radius: var(--radius-lg);
+    overflow: hidden; /* Ensures images stay within the rounded corners */
+    box-shadow: var(--shadow-lg);
+}
+
+.mySwiper {
+    width: 100%;
+    height: auto;
+}
+
+.slider-image {
+    display: block;
+    width: 100%;
+    height: 300px; /* Adjust height as needed */
+    object-fit: cover; /* Ensures the image covers the slide area beautifully */
+}
+
+/* Styling for Swiper Pagination Bullets */
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.7);
+    opacity: 1;
+    transition: var(--transition-fast);
+}
+
+.swiper-pagination-bullet-active {
+    width: 24px;
+    border-radius: var(--radius-full);
+    background-color: var(--primary-color);
+}
+
+.slider-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+}
+
+.slider-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.slider-description {
+    font-size: 1rem;
+}
+
+
+
+================================================
+FILE: src/assets/css/variables.css
+================================================
+
+:root {
+    /* Font Family */
+    --font-logo: 'Fruktur', cursive;
+
+    /* Z-index values */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+    --z-toast: 9999;
+
+    /* Brand Colors */
+    --primary-color: #087c36;
+    --secondary-color: #116128;
+    --success-color: #087c36;
+    --danger-color: #e53e3e; /* Slightly softer red */
+    --warning-color: #dd6b20; /* Slightly softer orange */
+    --info-color: #3b82f6;
+    --light-color: #f8f9fa; /* Slightly different light gray */
+    --dark-color: #343a40; /* Slightly different dark gray */
+    --splash-bg-color: #ebf2ee; /* Slightly different light gray for splash screens */
+    
+    /* --primary-color: #11be49;
+    --secondary-color: #02ab38;
+    --success-color: #11be49;
+    --danger-color: #e53e3e; 
+    --warning-color: #dd6b20; 
+    --info-color: #3b82f6; */
+
+    /* Grays & Whites */
+    --gray-50: #f8f9fa; /* Slightly different light gray */
+    --gray-100: #f1f3f5;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #868e96;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --white: #ffffff;
+    --black: #000000;
+
+    /* Modern UI Properties */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition-fast: all 0.2s ease-in-out;
+    --transition-normal: all 0.3s ease-in-out;
+}
+
+
+
+================================================
+FILE: src/components/ConfirmModal.jsx
+================================================
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const ConfirmModal = ({ title, message, onConfirm, onCancel, confirmText, cancelText, confirmButtonClass }) => {
+    const { t } = useTranslation();
+
+    return (
+        <div style={{ textAlign: 'center' }}>
+            <h3 className="confirm-modal-title" style={{ marginBottom: '1rem' }}>{title}</h3>
+            <p className="confirm-modal-message" style={{ marginBottom: '1.5rem' }}>{message}</p>
+            <div className="confirm-modal-footer" style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
+                <button onClick={onCancel} className="btn btn-secondary">
+                    {cancelText || t('cancel')}
+                </button>
+                <button onClick={onConfirm} className={`btn ${confirmButtonClass || 'btn-danger'}`}>
+                    {confirmText || t('confirm')}
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default ConfirmModal;
+
+
+
+================================================
+FILE: src/components/EditProfileModal.jsx
+================================================
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
+import { useModal } from '../contexts/ModalContext';
+import { useToast } from './Toast';
+
+const EditProfileModal = () => {
+  const { t } = useTranslation();
+  const { user, updateUser } = useAuth();
+  const { closeModal } = useModal();
+  const { showToast } = useToast();
+  const [formData, setFormData] = useState({
+    firstName: user.firstName,
+    lastName: user.lastName,
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    updateUser(formData);
+    showToast(t('profile_updated_success'), 'success');
+    closeModal();
+  };
+
+  return (
+    <div style={{ padding: '2.5rem' }}>
+      <h3 style={{ marginBottom: '1rem' }}>{t('edit_profile')}</h3>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="firstName" className="form-label">{t('first_name')}</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            className="form-input"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="lastName" className="form-label">{t('last_name')}</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            className="form-input"
+            value={formData.lastName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem' }}>
+          <button type="button" className="btn btn-secondary" onClick={closeModal}>{t('cancel')}</button>
+          <button type="submit" className="btn btn-primary">{t('save_changes')}</button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default EditProfileModal;
+
+
+================================================
+FILE: src/components/ImageSlider.jsx
+================================================
+import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { sliders } from '../data/sliders'; // Import sliders data
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
+
+const ImageSlider = () => {
+    const { t } = useTranslation();
+
+    return (
+        <div className="slider-container">
+            <Swiper
+                modules={[Pagination, Autoplay]}
+                spaceBetween={15}
+                slidesPerView={1}
+                pagination={{ clickable: true, dynamicBullets: true }}
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
+                loop={true}
+                className="mySwiper"
+            >
+                {sliders.map(slide => (
+                    <SwiperSlide key={slide.id}>
+                        <Link to={slide.link}>
+                            <img src={slide.src} alt={slide.alt} className="slider-image" />
+                            <div className="slider-content">
+                                <h3 className="slider-title">{t(`slider_title_${slide.id}`)}</h3>
+                                <p className="slider-description">{t(`slider_description_${slide.id}`)}</p>
+                            </div>
+                        </Link>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+        </div>
+    );
+};
+
+export default ImageSlider;
+
+
+================================================
+FILE: src/components/LanguageSwitcher.jsx
+================================================
+
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import { languages } from '../data/languages'; // Import languages data
+
+function LanguageSwitcher() {
+  const { i18n, t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.resolvedLanguage) || languages[0];
+
+  return (
+    <div className="language-switcher" ref={dropdownRef}>
+      <button className="icon-btn language-btn" onClick={() => setIsOpen(!isOpen)}>
+        <span className="language-flag">{currentLanguage.flag}</span>
+      </button>
+      {isOpen && (
+        <div className="language-dropdown">
+          <p className="dropdown-header">{t('language')}</p>
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              className={`dropdown-item ${i18n.resolvedLanguage === lang.code ? 'active' : ''}`}
+              type="button" // Changed to button type
+              onClick={() => changeLanguage(lang.code)}
+            >
+              <span className="language-flag">{lang.flag}</span>
+              <span className="language-name">{lang.name}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default LanguageSwitcher;
+
+
+
+================================================
+FILE: src/components/Loading.jsx
+================================================
+
+import React, { useState, createContext, useContext, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const LoadingContext = createContext();
+
+export const LoadingProvider = ({ children }) => {
+    const [loading, setLoading] = useState(false);
+
+    const showLoading = useCallback(() => {
+        setLoading(true);
+    }, []);
+
+    const hideLoading = useCallback(() => {
+        setLoading(false);
+    }, []);
+
+    const value = { showLoading, hideLoading };
+
+    return (
+        <LoadingContext.Provider value={value}>
+            {children}
+            <AnimatePresence>
+                {loading && (
+                    <motion.div
+                        className="loading-overlay"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="loading-spinner"></div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </LoadingContext.Provider>
+    );
+};
+
+export const useLoading = () => useContext(LoadingContext);
+
+
+
+================================================
+FILE: src/components/LoginModal.jsx
+================================================
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from './Toast';
+import { useModal } from '../contexts/ModalContext';
+import { useAuth } from '../contexts/AuthContext';
+import RegisterModalContent from './RegisterModal';
+
+const LoginModalContent = () => {
+    const { t } = useTranslation();
+    const { showToast } = useToast();
+    const { openModal, closeModal } = useModal();
+    const { login } = useAuth();
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        login();
+        showToast(t('login_success'), 'success');
+        closeModal();
+    };
+
+    const showRegister = (e) => {
+        e.preventDefault();
+        openModal(<RegisterModalContent />);
+    };
+
+    return (
+        <div style={{ padding: '2.5rem' }}>
+            <h3 style={{ marginBottom: '1rem' }}>{t('login')}</h3>
+            <form id="loginForm" onSubmit={handleLogin}>
+                <div className="form-group">
+                    <label className="form-label">{t('email_or_phone')}</label>
+                    <input type="text" className="form-input" id="loginInput" required defaultValue="test@user.com" />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">{t('password')}</label>
+                    <input type="password" className="form-input" id="passwordInput" required defaultValue="12345" />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block">{t('login')}</button>
+            </form>
+            <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+                {t('no_account')} <a href="#" onClick={showRegister}>{t('register_now')}</a>
+            </p>
+        </div>
+    );
+};
+
+export default LoginModalContent;
+
+
+
+================================================
+FILE: src/components/Meta.jsx
+================================================
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const Meta = ({ title, description, keywords }) => {
+  const { t } = useTranslation();
+
+  const defaultTitle = t('default_meta_title');
+  const defaultDescription = t('default_meta_description');
+  const defaultKeywords = t('default_meta_keywords');
+
+  return (
+    <>
+      <title>{title || defaultTitle}</title>
+      <meta name="description" content={description || defaultDescription} />
+      <meta name="keywords" content={keywords || defaultKeywords} />
+    </>
+  );
+};
+
+export default Meta;
+
+
+================================================
+FILE: src/components/RegisterModal.jsx
+================================================
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useModal } from '../contexts/ModalContext';
+import LoginModalContent from './LoginModal';
+
+const RegisterModalContent = () => {
+    const { t } = useTranslation();
+    const { openModal } = useModal();
+
+    const showLogin = (e) => {
+        e.preventDefault();
+        openModal(<LoginModalContent />);
+    };
+
+    return (
+        <div style={{ padding: '2.5rem' }}>
+            <h3 style={{ marginBottom: '1rem' }}>{t('register')}</h3>
+            <form id="registerForm">
+                <div className="form-group">
+                    <label className="form-label">{t('name')}</label>
+                    <input type="text" className="form-input" id="nameInput" required />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">{t('email')}</label>
+                    <input type="email" className="form-input" id="emailInput" required />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">{t('phone')}</label>
+                    <input type="tel" className="form-input" id="phoneInput" required />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">{t('password')}</label>
+                    <input type="password" className="form-input" id="newPasswordInput" required />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">{t('confirm_password')}</label>
+                    <input type="password" className="form-input" id="confirmPasswordInput" required />
+                </div>
+                <button type="submit" className="btn btn-primary btn-block">{t('register')}</button>
+            </form>
+            <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+                {t('have_account')} <a href="#" onClick={showLogin}>{t('login_now')}</a>
+            </p>
+        </div>
+    );
+};
+
+export default RegisterModalContent;
+
+
+
+================================================
+FILE: src/components/ScrollToTop.jsx
+================================================
+
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null; // This component does not render anything
+}
+
+export default ScrollToTop;
+
+
+
+================================================
+FILE: src/components/SearchOverlay.jsx
+================================================
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const SearchOverlay = ({ onClose, onSearch }) => {
+    const { t } = useTranslation();
+    const [query, setQuery] = useState('');
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (query.trim()) {
+            onSearch(query.trim());
+        }
+    };
+
+    return (
+        <div className="search-overlay">
+            <div className="search-overlay-content">
+                <button className="close-btn" onClick={onClose}>
+                    <i className="fas fa-times"></i>
+                </button>
+                <form onSubmit={handleSearch} className="search-form">
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder={t('search_products_placeholder')}
+                        className="search-input-overlay"
+                    />
+                    <button type="submit" className="search-btn-overlay">
+                        <i className="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default SearchOverlay;
+
+
+
+================================================
+FILE: src/components/SplashScreen.jsx
+================================================
+import React from 'react';
+
+const SplashScreen = () => {
+    return (
+        <div className="splash-screen">
+            <div className="splash-icon-container">
+                {/* Agar public papkada favicon.png bo'lsa, avtomatik ishlatiladi */}
+                <img src="/loadings/light-splash.gif" alt="Loading Light Splash" className="splash-icon" />
+            </div>
+        </div>
+    );
+};
+
+export default SplashScreen;
+
+
+
+================================================
+FILE: src/components/Toast.jsx
+================================================
+import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import ReactDOM from 'react-dom/client';
+
+const generateId = (prefix = '') => {
+    return prefix + Math.random().toString(36).substr(2, 9);
+};
+
+const sanitizeHtml = (html) => {
+    const div = document.createElement('div');
+    div.innerText = html;
+    return div.innerHTML;
+};
+
+const ToastContext = createContext();
+
+export const ToastProvider = ({ children }) => {
+    const [toasts, setToasts] = useState([]);
+
+    const showToast = useCallback((message, type = 'info', duration = 3000) => {
+        const id = generateId('toast');
+        setToasts(prevToasts => [...prevToasts, { id, message, type, duration }]);
+    }, []);
+
+    const dismissToast = useCallback((id) => {
+        setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
+    }, []);
+
+    const value = { showToast, dismissToast };
+
+    return (
+        <ToastContext.Provider value={value}>
+            {children}
+            <div className="toast-container">
+                {toasts.map(toast => (
+                    <ToastItem key={toast.id} {...toast} onDismiss={dismissToast} />
+                ))}
+            </div>
+        </ToastContext.Provider>
+    );
+};
+
+const ToastItem = ({ id, message, type, duration, onDismiss }) => {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Animate in
+        setIsVisible(true);
+
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+            // Allow time for fade out animation before removing from DOM
+            setTimeout(() => onDismiss(id), 300);
+        }, duration);
+
+        return () => clearTimeout(timer);
+    }, [duration, id, onDismiss]);
+
+    const getTypeIcon = (type) => {
+        const icons = {
+            success: 'check-circle',
+            error: 'exclamation-circle',
+            warning: 'exclamation-triangle',
+            info: 'info-circle'
+        };
+        return icons[type] || icons.info;
+    };
+
+    const getTypeColor = (type) => {
+        const colors = {
+            success: 'var(--success-color)',
+            error: 'var(--danger-color)',
+            warning: 'var(--warning-color)',
+            info: 'var(--info-color)'
+        };
+        return colors[type] || colors.info;
+    };
+
+    return (
+        <div className={`toast ${type} ${isVisible ? 'show' : ''}`} style={{ borderLeftColor: getTypeColor(type) }}>
+            <div className="toast-content">
+                <i className={`fas fa-${getTypeIcon(type)} toast-icon`} style={{ color: getTypeColor(type) }}></i>
+                <span className="toast-message">{sanitizeHtml(message)}</span>
+                <button className="toast-close" onClick={() => onDismiss(id)}>&times;</button>
+            </div>
+        </div>
+    );
+};
+
+export const useToast = () => useContext(ToastContext);
+
+
+
+================================================
+FILE: src/contexts/AuthContext.jsx
+================================================
+
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { users } from '../data/users'; // Import users data
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('isLoggedIn'));
+    // Find a user to be the dummy user, for example the first one
+    const [user, setUser] = useState(users[0]); 
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            localStorage.setItem('isLoggedIn', 'true');
+        } else {
+            localStorage.removeItem('isLoggedIn');
+        }
+    }, [isLoggedIn]);
+
+    const login = () => {
+        setIsLoggedIn(true);
+    };
+
+    const logout = () => {
+        setIsLoggedIn(false);
+    };
+
+    const updateUser = (updatedData) => {
+        setUser(prevUser => ({ ...prevUser, ...updatedData }));
+        // Here you would typically also make an API call to update the backend
+    };
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, user, login, logout, updateUser }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
+
+export const useAuth = () => useContext(AuthContext);
+
+
+
+================================================
+FILE: src/contexts/CartContext.jsx
+================================================
+
+
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../components/Toast';
+
+const CartContext = createContext();
+
+export const CartProvider = ({ children }) => {
+    const { t } = useTranslation();
+    const [cartItems, setCartItems] = useState(() => {
+        const savedCart = localStorage.getItem('cartItems');
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+    const { showToast } = useToast();
+
+    useEffect(() => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
+
+    const addToCart = (product) => {
+        setCartItems(prevItems => {
+            const exist = prevItems.find(item => item.id === product.id);
+            if (exist) {
+                return prevItems.map(item =>
+                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                );
+            } else {
+                return [...prevItems, { ...product, quantity: 1 }];
+            }
+        });
+        showToast(t('added_to_cart', { product: t(product.name) }), 'success');
+    };
+
+    const removeFromCart = (productId) => {
+        setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+        showToast(t('removed_from_cart'), 'info');
+    };
+
+    const incrementQuantity = (productId) => {
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+            )
+        );
+    };
+
+    const decrementQuantity = (productId) => {
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.id === productId && item.quantity > 1
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item
+            ).filter(item => item.quantity > 0) // Remove if quantity becomes 0
+        );
+    };
+
+    return (
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, incrementQuantity, decrementQuantity }}>
+            {children}
+        </CartContext.Provider>
+    );
+};
+
+export const useCart = () => useContext(CartContext);
+
+
+
+
+================================================
+FILE: src/contexts/ModalContext.jsx
+================================================
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import ReactDOM from 'react-dom';
+
+const ModalContext = createContext();
+
+export const ModalProvider = ({ children }) => {
+    const [modalContent, setModalContent] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = useCallback((content) => {
+        setModalContent(content);
+        setIsModalOpen(true);
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }, []);
+
+    const closeModal = useCallback(() => {
+        setIsModalOpen(false);
+        setModalContent(null);
+        document.body.style.overflow = ''; // Restore scrolling
+    }, []);
+
+    const value = { openModal, closeModal };
+
+    return (
+        <ModalContext.Provider value={value}>
+            {children}
+            {isModalOpen &&
+                ReactDOM.createPortal(
+                    <div className="modal active">
+                        <div className="modal-content">
+                            <button className="modal-close" onClick={closeModal}>&times;</button>
+                            {modalContent}
+                        </div>
+                    </div>,
+                    document.body
+                )}
+        </ModalContext.Provider>
+    );
+};
+
+export const useModal = () => useContext(ModalContext);
+
+
+
+================================================
+FILE: src/contexts/WishlistContext.jsx
+================================================
+
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../components/Toast';
+
+const WishlistContext = createContext();
+
+export const WishlistProvider = ({ children }) => {
+    const { t } = useTranslation();
+    const [wishlistItems, setWishlistItems] = useState(() => {
+        const savedWishlist = localStorage.getItem('wishlistItems');
+        return savedWishlist ? JSON.parse(savedWishlist) : [];
+    });
+    const { showToast } = useToast();
+
+    useEffect(() => {
+        localStorage.setItem('wishlistItems', JSON.stringify(wishlistItems));
+    }, [wishlistItems]);
+
+    const toggleWishlist = (product) => {
+        setWishlistItems(prevItems => {
+            const exist = prevItems.find(item => item.id === product.id);
+            if (exist) {
+                showToast(t('removed_from_wishlist', { product: t(product.name) }), 'info');
+                return prevItems.filter(item => item.id !== product.id);
+            } else {
+                showToast(t('added_to_wishlist', { product: t(product.name) }), 'success');
+                return [...prevItems, product];
+            }
+        });
+    };
+
+    const isItemInWishlist = (productId) => {
+        return wishlistItems.some(item => item.id === productId);
+    };
+
+    return (
+        <WishlistContext.Provider value={{ wishlistItems, toggleWishlist, isItemInWishlist }}>
+            {children}
+        </WishlistContext.Provider>
+    );
+};
+
+export const useWishlist = () => useContext(WishlistContext);
+
+
+
+================================================
+FILE: src/data/addresses.js
+================================================
+export const addresses = [
+  {
+    id: 1,
+    userId: 1,
+    street: 'Amir Temur ko\'chasi 1',
+    city: 'Toshkent',
+    zipCode: '100000',
+    country: 'O\'zbekiston',
+  },
+  {
+    id: 2,
+    userId: 2,
+    street: 'Navoiy ko\'chasi 2',
+    city: 'Samarqand',
+    zipCode: '140100',
+    country: 'O\'zbekiston',
+  },
+];
+
+
+
+================================================
+FILE: src/data/categories.js
+================================================
+export const categories = [
+  { id: 1, name: 'Sabzavotlar', slug: 'vegetables', icon: 'fas fa-carrot' },
+  { id: 2, name: 'Mevalar', slug: 'fruits', icon: 'fas fa-apple-alt' },
+  { id: 3, name: 'Mavsumiy', slug: 'seasonal', icon: 'fas fa-star' },
+  { id: 4, name: 'Ko\'katlar', slug: 'greens', icon: 'fas fa-leaf' },
+  { id: 5, name: 'Poliz ekinlari', slug: 'gourds', icon: 'fas fa-seedling' },
+];
+
+
+================================================
+FILE: src/data/cities.js
+================================================
+export const cities = [
+  { id: 1, name: 'Toshkent' },
+  { id: 2, name: 'Samarqand' },
+  { id: 3, name: 'Buxoro' },
+  { id: 4, name: 'Xiva' },
+  { id: 5, name: 'Andijon' },
+  { id: 6, name: 'Farg\'ona' },
+  { id: 7, name: 'Namangan' },
+  { id: 8, name: 'Qarshi' },
+  { id: 9, name: 'Termiz' },
+  { id: 10, name: 'Urganch' },
+];
+
+
+
+================================================
+FILE: src/data/languages.js
+================================================
+export const languages = [
+  {
+    code: 'uz',
+    name: 'O\'zbek',
+    flag: '🇺🇿',
+  },
+  {
+    code: 'ru',
+    name: 'Русский',
+    flag: '🇷🇺',
+  },
+];
+
+
+
+
+================================================
+FILE: src/data/payments.js
+================================================
+export const payments = [
+  { id: 1, name: 'Naqd pul', icon: 'fas fa-money-bill-wave' },
+  { id: 2, name: 'Karta orqali', icon: 'fas fa-credit-card' },
+  { id: 3, name: 'Payme', icon: 'fas fa-wallet' },
+  { id: 4, name: 'Click', icon: 'fas fa-wallet' },
+];
+
+
+
+================================================
+FILE: src/data/products.js
+================================================
+export const allProducts = [
+    {
+        id: 1,
+        name: 'product_1_name',
+        price: 15000,
+        originalPrice: 18000,
+        image: 'https://static.life.ru/publications/2021/9/24/476683648469.8461.png',
+        category: 'vegetables',
+        description: 'product_1_description'
+    },
+    {
+        id: 2,
+        name: 'product_2_name',
+        price: 12000,
+        originalPrice: null,
+        image: 'https://inbusiness.kz/uploads/37/images/ihR7cfIL.jpg',
+        category: 'vegetables',
+        description: 'product_2_description'
+    },
+    {
+        id: 3,
+        name: 'product_3_name',
+        price: 8000,
+        originalPrice: null,
+        image: 'https://avatars.mds.yandex.net/i?id=0682df2ac42d033a08001f6139608ac3_l-12982376-images-thumbs&n=13',
+        category: 'vegetables',
+        description: 'product_3_description'
+    },
+    {
+        id: 4,
+        name: 'product_4_name',
+        price: 5000,
+        originalPrice: 6000,
+        image: 'https://i.pinimg.com/originals/f7/23/ba/f723baea8301149c6fcd6b06bb9154bf.jpg',
+        category: 'vegetables',
+        description: 'product_4_description'
+    },
+    {
+        id: 5,
+        name: 'product_5_name',
+        price: 25000,
+        originalPrice: null,
+        image: 'https://live.staticflickr.com/5561/14950280215_023791f23b_b.jpg',
+        category: 'fruits',
+        description: 'product_5_description'
+    },
+    {
+        id: 6,
+        name: 'product_6_name',
+        price: 35000,
+        originalPrice: 40000,
+        image: 'https://frankfurt.apollo.olxcdn.com/v1/files/oxxdpgxlth451-UZ/image;s=1280x720',
+        category: 'seasonal',
+        description: 'product_6_description'
+    },
+    {
+        id: 7,
+        name: 'product_7_name',
+        price: 30000,
+        originalPrice: null,
+        image: 'https://storage.kun.uz/source/10/mb8_PtSMH3ihMr1BwstevCao-RDSTWqc.jpg',
+        category: 'seasonal',
+        description: 'product_7_description'
+    },
+    {
+        id: 8,
+        name: 'product_8_name',
+        price: 4000,
+        originalPrice: null,
+        image: 'https://i.ytimg.com/vi/o7_pqclH4oQ/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFAgZSg3MA8=&rs=AOn4CLAka1qgeTa7VbmYeWS8mHsGhRs-Ew',
+        category: 'gourds',
+        description: 'product_8_description'
+    },
+    {
+        id: 9,
+        name: 'product_9_name',
+        price: 2000,
+        originalPrice: null,
+        image: 'https://cdn.am.sputniknews.ru/img/1633/40/16334041_0:170:1601:1070_1920x0_80_0_0_15864446ec8fa2f8b365a490dbfc67a3.jpg',
+        category: 'greens',
+        description: 'product_9_description'
+    },
+    {
+        id: 10,
+        name: 'product_10_name',
+        price: 14000,
+        originalPrice: 16000,
+        image: 'https://plodovyisad.ru/assets/images/products/697/post-59b38e49eb8f4-800x516.jpg',
+        category: 'fruits',
+        description: 'product_10_description'
+    }
+];
+
+
+
+================================================
+FILE: src/data/reviews.js
+================================================
+export const reviews = [
+  {
+    id: 1,
+    productId: 1,
+    userId: 1,
+    rating: 5,
+    comment: 'Ajoyib mahsulot, tez yetkazib berildi!',
+    date: '2023-07-20',
+  },
+  {
+    id: 2,
+    productId: 1,
+    userId: 2,
+    rating: 4,
+    comment: 'Narxiga arziydi, lekin yetkazib berish biroz kechikdi.',
+    date: '2023-07-21',
+  },
+  {
+    id: 3,
+    productId: 2,
+    userId: 1,
+    rating: 5,
+    comment: 'Sifatli va mazali, tavsiya qilaman.',
+    date: '2023-07-22',
+  },
+];
+
+
+
+================================================
+FILE: src/data/sliders.js
+================================================
+export const sliders = [
+  {
+    id: 1,
+    src: 'https://animalequality.org.uk/app/uploads/2024/11/vegan-food-ingredients-shutterstock_2284408579-1-1.jpg',
+    alt: 'Fresh Vegetables Banner',
+    title: 'Yangi sabzavotlar',
+    description: 'Fermadan to dasturxoningizgacha.',
+    link: '/products?category=vegetables',
+  },
+  {
+    id: 2,
+    src: 'https://avatars.mds.yandex.net/i?id=f690dbcd7d7520b85b423b9f80537dc2_l-8243435-images-thumbs&n=13',
+    alt: 'Seasonal Fruits Banner',
+    title: 'Mavsumiy mevalar',
+    description: 'Eng sara va shirin mevalar.',
+    link: '/products?category=fruits',
+  },
+  {
+    id: 3,
+    src: 'https://avatars.mds.yandex.net/i?id=7a33e200e09ce56ced863f74f321c7af_l-5223485-images-thumbs&n=13',
+    alt: 'Farm to Table Banner',
+    title: 'Organik mahsulotlar',
+    description: 'Tabiiy va foydali.',
+    link: '/products?category=organic',
+  },
+];
+
+
+
+================================================
+FILE: src/data/translations.js
+================================================
+export const resources = {
+  uz: {
+    translation: {
+      // Bottom Menu
+      "home": "Bosh sahifa",
+      "cart": "Savat",
+      "orders": "Buyurtmalar",
+      "profile": "Profil",
+      "wishlist": "Sevimlilar",
+
+      // Header
+      "search_placeholder": "Mahsulotlarni qidirish...",
+      "language": "Til",
+      "uzbek": "🇺🇿 O'zbek",
+      "russian": "🇷🇺 Русский",
+
+      // Pages
+      "products": "Mahsulotlar",
+      "product_details": "Mahsulot haqida",
+      "shopping_cart": "Xaridlar savati",
+      "my_orders": "Mening buyurtmalarim",
+      "my_profile": "Mening profilim",
+      "my_wishlist": "Mening istaklarim ro'yxati",
+      "search_results": "Qidiruv natijalari",
+
+      // General
+      "loading": "Yuklanmoqda...",
+      "add_to_cart": "Savatga qo'shish",
+      "remove_from_cart": "Savatchadan o'chirish",
+      "price": "Narx",
+      "quantity": "Miqdori",
+      "total": "Jami",
+      "confirm": "Tasdiqlash",
+      "cancel": "Bekor qilish",
+      "login": "Kirish",
+      "register": "Ro'yxatdan o'tish",
+      "logout": "Chiqish",
+
+      // Categories
+      "categories": "Kategoriyalar",
+      "all_categories": "Barcha kategoriyalar",
+      "category_electronics": "Elektronika",
+      "category_clothing": "Kiyim-kechak",
+      "category_appliances": "Maishiy texnika",
+      "category_beauty-health": "Go'zallik va salomatlik",
+      "category_kids": "Bolalar uchun",
+      "category_sports-leisure": "Sport va hordiq",
+      "category_books": "Kitoblar",
+      "category_furniture": "Mebel",
+      "category_construction": "Qurilish mollari",
+      "category_auto": "Avto tovarlar",
+      "category_vegetables": "Sabzavotlar",
+      "category_fruits": "Mevalar",
+      "category_seasonal": "Mavsumiy",
+      "category_greens": "Ko'katlar",
+      "category_gourds": "Poliz ekinlari",
+
+      // Products Data
+      "product_1_name": "Pomidor (O'zbekiston)",
+      "product_1_description": "Quyoshli O'zbekistonda yetishtirilgan sersuv va shirin pomidorlar. Salatlar va taomlar uchun ajoyib tanlov. 1 kg narxi.",
+      "product_2_name": "Bodring (Issiqxona)",
+      "product_2_description": "Karsillama va tetiklantiruvchi issiqxona bodringlari. Har qanday dasturxonga ko'rk bag'ishlaydi. 1 kg narxi.",
+      "product_3_name": "Yosh kartoshka",
+      "product_3_description": "Yangi kavlab olingan, po'sti yupqa yosh kartoshkalar. Qovurish va qaynatish uchun juda mos keladi. 1 kg narxi.",
+      "product_4_name": "Qizil piyoz",
+      "product_4_description": "Salatlar uchun maxsus, achchig'i past va yoqimli ta'mga ega qizil piyoz. 1 kg narxi.",
+      "product_5_name": "Banan (Ekvador)",
+      "product_5_description": "Ekvadordan keltirilgan, tabiiy shirin va to'yimli bananlar. Kletchatka va kaliy manbai. 1 kg narxi.",
+      "product_6_name": "Qulupnay (Tog'li)",
+      "product_6_description": "Tog' yonbag'irlarida pishib yetilgan, xushbo'y va mazali qulupnay. Ajoyib desert. 1 kg narxi.",
+      "product_7_name": "Gilos",
+      "product_7_description": "Mavsumning eng shirin mevasi - sersuv gilos. Vitaminlarga boy va tetiklantiruvchi. 1 kg narxi.",
+      "product_8_name": "Tarvuz (Vobkent)",
+      "product_8_description": "Vobkentning mashhur, qip-qizil va shakar kabi shirin tarvuzlari. Jaziramada chanqog'ingizni bosadi. 1 kg narxi.",
+      "product_9_name": "Ukrop bog'i",
+      "product_9_description": "Yangi uzilgan, xushbo'y ukrop. Taomlaringizga o'zgacha ta'm va ifor baxsh etadi. 1 bog' narxi.",
+      "product_10_name": "Olma (Semerenko)",
+      "product_10_description": "Semerenko navli, nordon-shirin va karsillama olmalar. Vitamin C ga boy. 1 kg narxi.",
+
+      // Home Page
+      "new_products": "Yangi mahsulotlar",
+      "see_all": "Barchasini ko'rish",
+      "details": "Batafsil",
+
+      // Auth Modals
+      "login_success": "Muvaffaqiyatli kirdingiz!",
+      "email_or_phone": "Email yoki Telefon",
+      "password": "Parol",
+      "no_account": "Akkount yo'qmi?",
+      "register_now": "Ro'yxatdan o'ting",
+      "name": "Ism",
+      "email": "Email",
+      "phone": "Telefon",
+      "confirm_password": "Parolni tasdiqlang",
+      "have_account": "Akkountingiz bormi?",
+      "login_now": "Kirish",
+
+      // Profile Page
+      "logout_title": "Tizimdan chiqish",
+      "logout_message": "Rostdan ham profilingizdan chiqmoqchimisiz?",
+      "logout_success": "Tizimdan muvaffaqiyatli chiqdingiz",
+      "coming_soon": "Bu bo'lim tez orada qo'shiladi",
+      "login_to_profile": "Profilga kirish",
+      "login_to_profile_message": "Buyurtmalaringizni va sevimlilar ro'yxatini ko'rish uchun tizimga kiring.",
+      "settings": "Sozlamalar",
+
+      // Cart Page
+      "confirm_remove_title": "O'chirishni tasdiqlang",
+      "confirm_remove_message": "Rostdan ham mahsulotni savatdan o'chirmoqchimisiz?",
+      "cart_empty_title": "Savatchangiz bo'sh",
+      "cart_empty_message": "Mahsulotlarni qo'shish uchun mahsulotlar sahifasiga o'ting.",
+      "go_to_products": "Mahsulotlarga o'tish",
+      "remove": "O'chirish",
+      "order_summary": "Buyurtma xulosasi",
+      "subtotal": "Mahsulotlar narxi",
+      "shipping": "Yetkazib berish",
+      "checkout": "Rasmiylashtirish",
+
+      // Orders Page
+      "no_orders_yet": "Sizda hali buyurtmalar yo'q",
+      "no_orders_message": "Mahsulotlarni xarid qilib, birinchi buyurtmangizni bering.",
+      "order": "Buyurtma",
+      "status": "Holati",
+      "total_amount": "Umumiy summa",
+      "status_delivered": "Yetkazib berildi",
+      "status_pending": "Kutilmoqda",
+      "status_cancelled": "Bekor qilindi",
+
+      // Wishlist Page
+      "wishlist_empty_title": "Sevimlilar ro'yxati bo'sh",
+      "wishlist_empty_message": "Mahsulotlarga ❤️ belgisini bosib, ularni shu yerga qo'shing.",
+
+      // Product Detail Page
+      "link_copied": "Havola nusxalandi",
+      "product_not_found": "Mahsulot topilmadi",
+      "app_name": "Dom Product",
+      "product_description": "Mahsulot haqida",
+
+      // Products Page
+      "all_products": "Barcha Mahsulotlar",
+      "search_products_placeholder": "Sabzavot, meva va ko'katlarni qidiring...",
+      "sort_by": "Saralash",
+      "price_asc": "Narx: Arzonidan",
+      "price_desc": "Narx: Qimmatidan",
+      "name_asc": "Nomi bo'yicha (A-Z)",
+      "no_products_found_title": "Mahsulotlar topilmadi",
+      "no_products_found_message": "Sizning qidiruvingizga mos mahsulotlar mavjud emas.",
+
+      // Search Results Page
+      "products_found_for": "uchun topilgan mahsulotlar",
+      "no_results_found": "Hech narsa topilmadi.",
+
+      // Meta Tags
+      "default_meta_title": "Dom Product - Onlayn Do'kon",
+      "default_meta_description": "O'zbekistondagi eng yaxshi onlayn do'kon. Mahsulotlarni arzon narxlarda toping.",
+      "default_meta_keywords": "onlayn do'kon, e-commerce, o'zbekiston, arzon narxlar, dom product",
+
+      // Sliders
+      "slider_title_1": "Yangi sabzavotlar",
+      "slider_description_1": "Fermadan to dasturxoningizgacha.",
+      "slider_title_2": "Mavsumiy mevalar",
+      "slider_description_2": "Eng sara va shirin mevalar.",
+      "slider_title_3": "Organik mahsulotlar",
+      "slider_description_3": "Tabiiy va foydali.",
+
+      // Toasts
+      "added_to_cart": "'{{product}}' savatga qo'shildi!",
+      "removed_from_cart": "Mahsulot savatdan o'chirildi",
+      "added_to_wishlist": "'{{product}}' sevimlilarga qo'shildi",
+      "removed_from_wishlist": "'{{product}}' sevimlilardan olib tashlandi",
+
+      // Edit Profile Modal
+      "edit_profile": "Profilni tahrirlash",
+      "save_changes": "O'zgarishlarni saqlash",
+      "first_name": "Ism",
+      "last_name": "Familiya",
+      "profile_updated_success": "Profil muvaffaqiyatli yangilandi!"
+    }
+  },
+  ru: {
+    translation: {
+      // Bottom Menu
+      "home": "Главная",
+      "cart": "Корзина",
+      "orders": "Заказы",
+      "profile": "Профиль",
+      "wishlist": "Избранное",
+
+      // Header
+      "search_placeholder": "Поиск продуктов...",
+      "language": "Язык",
+      "uzbek": "Узбекский",
+      "russian": "Русский",
+
+      // Pages
+      "products": "Продукты",
+      "product_details": "Детали продукта",
+      "shopping_cart": "Корзина",
+      "my_orders": "Мои заказы",
+      "my_profile": "Мой профиль",
+      "my_wishlist": "Мой список желаний",
+      "search_results": "Результаты поиска",
+
+      // General
+      "loading": "Загрузка...",
+      "add_to_cart": "Добавить в корзину",
+      "remove_from_cart": "Удалить из корзины",
+      "price": "Цена",
+      "quantity": "Количество",
+      "total": "Итого",
+      "confirm": "Подтвердить",
+      "cancel": "Отмена",
+      "login": "Войти",
+      "register": "Зарегистрироваться",
+      "logout": "Выйти",
+
+      // Categories
+      "categories": "Категории",
+      "all_categories": "Все категории",
+      "category_electronics": "Электроника",
+      "category_clothing": "Одежда",
+      "category_appliances": "Бытовая техника",
+      "category_beauty-health": "Красота и здоровье",
+      "category_kids": "Детские товары",
+      "category_sports-leisure": "Спорт и отдых",
+      "category_books": "Книги",
+      "category_furniture": "Мебель",
+      "category_construction": "Строительные материалы",
+      "category_auto": "Автотовары",
+      "category_vegetables": "Овощи",
+      "category_fruits": "Фрукты",
+      "category_seasonal": "Сезонные",
+      "category_greens": "Зелень",
+      "category_gourds": "Бахчевые",
+
+      // Products Data
+      "product_1_name": "Помидор (Узбекистан)",
+      "product_1_description": "Сочные и сладкие помидоры, выращенные в солнечном Узбекистане. Отличный выбор для салатов и блюд. Цена за 1 кг.",
+      "product_2_name": "Огурец (Тепличный)",
+      "product_2_description": "Хрустящие и освежающие тепличные огурцы. Украсят любой стол. Цена за 1 кг.",
+      "product_3_name": "Молодой картофель",
+      "product_3_description": "Свежевыкопанный, с тонкой кожурой молодой картофель. Идеально подходит для жарки и варки. Цена за 1 кг.",
+      "product_4_name": "Красный лук",
+      "product_4_description": "Красный лук с мягким вкусом, специально для салатов. Цена за 1 кг.",
+      "product_5_name": "Банан (Эквадор)",
+      "product_5_description": "Натурально сладкие и питательные бананы из Эквадора. Источник клетчатки и калия. Цена за 1 кг.",
+      "product_6_name": "Клубника (Горная)",
+      "product_6_description": "Ароматная и вкусная клубника, созревшая на горных склонах. Отличный десерт. Цена за 1 кг.",
+      "product_7_name": "Черешня",
+      "product_7_description": "Самая сладкая ягода сезона - сочная черешня. Богата витаминами и освежает. Цена за 1 кг.",
+      "product_8_name": "Арбуз (Вабкент)",
+      "product_8_description": "Знаменитые, ярко-красные и сладкие как сахар арбузы из Вабкента. Утолят жажду в жару. Цена за 1 кг.",
+      "product_9_name": "Пучок укропа",
+      "product_9_description": "Свежесрезанный, ароматный укроп. Придаст вашим блюдам особый вкус и аромат. Цена за 1 пучок.",
+      "product_10_name": "Яблоко (Семеренко)",
+      "product_10_description": "Яблоки сорта Семеренко, кисло-сладкие и хрустящие. Богаты витамином С. Цена за 1 кг.",
+
+      // Home Page
+      "new_products": "Новые продукты",
+      "see_all": "Смотреть все",
+      "details": "Подробнее",
+
+      // Auth Modals
+      "login_success": "Вы успешно вошли!",
+      "email_or_phone": "Email или телефон",
+      "password": "Пароль",
+      "no_account": "Нет аккаунта?",
+      "register_now": "Зарегистрируйтесь",
+      "name": "Имя",
+      "email": "Email",
+      "phone": "Телефон",
+      "confirm_password": "Подтвердите пароль",
+      "have_account": "Уже есть аккаунт?",
+      "login_now": "Войти",
+
+      // Profile Page
+      "logout_title": "Выйти из системы",
+      "logout_message": "Вы действительно хотите выйти из своего профиля?",
+      "logout_success": "Вы успешно вышли из системы",
+      "coming_soon": "Этот раздел скоро будет добавлен",
+      "login_to_profile": "Войдите в свой профиль",
+      "login_to_profile_message": "Войдите, чтобы увидеть свои заказы и список желаний.",
+      "settings": "Настройки",
+
+      // Cart Page
+      "confirm_remove_title": "Подтвердите удаление",
+      "confirm_remove_message": "Вы действительно хотите удалить товар из корзины?",
+      "cart_empty_title": "Ваша корзина пуста",
+      "cart_empty_message": "Перейдите на страницу продуктов, чтобы добавить товары.",
+      "go_to_products": "Перейти к продуктам",
+      "remove": "Удалить",
+      "order_summary": "Итог заказа",
+      "subtotal": "Подытог",
+      "shipping": "Доставка",
+      "checkout": "Оформить заказ",
+
+      // Orders Page
+      "no_orders_yet": "У вас еще нет заказов",
+      "no_orders_message": "Совершите свою первую покупку, чтобы увидеть здесь свои заказы.",
+      "order": "Заказ",
+      "status": "Статус",
+      "total_amount": "Общая сумма",
+      "status_delivered": "Доставлено",
+      "status_pending": "В ожидании",
+      "status_cancelled": "Отменено",
+
+      // Wishlist Page
+      "wishlist_empty_title": "Список желаний пуст",
+      "wishlist_empty_message": "Нажмите на ❤️ на товарах, чтобы добавить их сюда.",
+
+      // Product Detail Page
+      "link_copied": "Ссылка скопирована",
+      "product_not_found": "Продукт не найден",
+      "app_name": "Dom Product",
+      "product_description": "О продукте",
+
+      // Products Page
+      "all_products": "Все продукты",
+      "search_products_placeholder": "Искать овощи, фрукты и зелень...",
+      "sort_by": "Сортировать по",
+      "price_asc": "Цена: по возрастанию",
+      "price_desc": "Цена: по убыванию",
+      "name_asc": "По названию (А-Я)",
+      "no_products_found_title": "Продукты не найдены",
+      "no_products_found_message": "Продукты, соответствующие вашему запросу, отсутствуют.",
+
+      // Search Results Page
+      "products_found_for": "Найденные товары для",
+      "no_results_found": "Ничего не найдено.",
+
+      // Meta Tags
+      "default_meta_title": "Dom Product - Онлайн магазин",
+      "default_meta_description": "Лучший онлайн-магазин в Узбекистане. Найдите товары по низким ценам.",
+      "default_meta_keywords": "онлайн магазин, электронная коммерция, узбекистан, низкие цены, dom product",
+
+      // Sliders
+      "slider_title_1": "Свежие овощи",
+      "slider_description_1": "От фермы до вашего стола.",
+      "slider_title_2": "Сезонные фрукты",
+      "slider_description_2": "Самые отборные и сладкие фрукты.",
+      "slider_title_3": "Органические продукты",
+      "slider_description_3": "Натурально и полезно.",
+
+      // Toasts
+      "added_to_cart": "'{{product}}' добавлен в корзину!",
+      "removed_from_cart": "Товар удален из корзины",
+      "added_to_wishlist": "'{{product}}' добавлен в избранное",
+      "removed_from_wishlist": "'{{product}}' удален из избранного",
+
+      // Edit Profile Modal
+      "edit_profile": "Редактировать профиль",
+      "save_changes": "Сохранить изменения",
+      "first_name": "Имя",
+      "last_name": "Фамилия",
+      "profile_updated_success": "Профиль успешно обновлен!"
+    }
+  }
+};
+
+
+================================================
+FILE: src/data/users.js
+================================================
+export const users = [
+  {
+    id: 1,
+    name: 'Urinboy Tursunboyev',
+    email: 'urinboytursunboev@domproduct.uz',
+    phone: '+998970961196',
+    addressId: 1,
+  },
+  {
+    id: 2,
+    name: 'Marat Kallibekov',
+    email: 'marat.kallibekov@domproduct.uz',
+    phone: '+998919382717',
+    addressId: 2,
+  },
+];
+
+
+
+================================================
+FILE: src/pages/CartPage.jsx
+================================================
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useCart } from '../contexts/CartContext';
+import { useModal } from '../contexts/ModalContext';
+import ConfirmModal from '../components/ConfirmModal';
+import { Link } from 'react-router-dom';
+import Meta from '../components/Meta';
+
+const CartPage = () => {
+    const { t } = useTranslation();
+    const { cartItems, incrementQuantity, decrementQuantity, removeFromCart } = useCart();
+    const { openModal, closeModal } = useModal();
+
+    const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const shipping = subtotal > 0 ? 25000 : 0;
+    const total = subtotal + shipping;
+
+    const handleDelete = (productId) => {
+        openModal(
+            <ConfirmModal 
+                title={t('confirm_remove_title')}
+                message={t('confirm_remove_message')}
+                onConfirm={() => {
+                    removeFromCart(productId);
+                    closeModal();
+                }}
+                onCancel={closeModal}
+            />
+        );
+    };
+
+    return (
+        <div id="cartPage">
+            <Meta title={t('shopping_cart')} />
+            <h2 style={{ marginBottom: '1rem' }}>{t('shopping_cart')}</h2>
+            {cartItems.length === 0 ? (
+                <div className="cart-empty">
+                    <i className="fas fa-shopping-cart cart-empty-icon"></i>
+                    <div className="cart-empty-title">{t('cart_empty_title')}</div>
+                    <p className="cart-empty-message">{t('cart_empty_message')}</p>
+                    <Link to="/products" className="btn btn-primary">{t('go_to_products')}</Link>
+                </div>
+            ) : (
+                <>
+                    <div id="cartItems">
+                        {cartItems.map(item => (
+                            <div className="cart-item" key={item.id}>
+                                <div className="cart-item-image">
+                                    <img src={item.image} alt={item.name} />
+                                </div>
+                                <div className="cart-item-info">
+                                    <div className="cart-item-title">{t(item.name)}</div>
+                                    <div className="cart-item-price">{item.price.toLocaleString('uz-UZ')} UZS</div>
+                                    <div className="quantity-controls">
+                                        <button className="quantity-btn" onClick={() => decrementQuantity(item.id)}>-</button>
+                                        <span className="quantity-display">{item.quantity}</span>
+                                        <button className="quantity-btn" onClick={() => incrementQuantity(item.id)}>+</button>
+                                    </div>
+                                </div>
+                                <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>{t('remove')}</button>
+                            </div>
+                        ))}
+                    </div>
+                    <div id="cartSummary" className="cart-summary">
+                        <h3 className="summary-title">{t('order_summary')}</h3>
+                        <div className="summary-row">
+                            <span className="summary-label">{t('subtotal')}:</span>
+                            <span className="summary-value">{subtotal.toLocaleString('uz-UZ')} UZS</span>
+                        </div>
+                        <div className="summary-row">
+                            <span className="summary-label">{t('shipping')}:</span>
+                            <span className="summary-value">{shipping.toLocaleString('uz-UZ')} UZS</span>
+                        </div>
+                        <div className="summary-divider"></div>
+                        <div className="summary-row summary-total-row">
+                            <span className="summary-label">{t('total')}:</span>
+                            <span className="summary-total-value">{total.toLocaleString('uz-UZ')} UZS</span>
+                        </div>
+                        <button className="btn btn-primary btn-block" style={{ marginTop: '1.5rem' }}>
+                            <i className="fas fa-check-circle" style={{ marginRight: '0.5rem' }}></i>
+                            {t('checkout')}
+                        </button>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
+export default CartPage;
+
+
+
+================================================
+FILE: src/pages/CategoriesPage.jsx
+================================================
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { categories } from '../data/categories';
+import Meta from '../components/Meta';
+
+function CategoriesPage() {
+  const { t } = useTranslation();
+
+  return (
+    <div className="page-container">
+      <Meta title={t('all_categories')} />
+      <h1 className="page-title">{t('all_categories')}</h1>
+      <div className="category-grid-full">
+        {categories.map(category => (
+          <Link to={`/products?category=${category.slug}`} key={category.id} className="category-card-full">
+            <div className="category-card-icon">
+              <i className={category.icon}></i>
+            </div>
+            <div className="category-card-name">
+              {t(`category_${category.slug}`)} 
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default CategoriesPage;
+
+
+
+================================================
+FILE: src/pages/HomePage.jsx
+================================================
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { allProducts } from '../data/products';
+import { categories } from '../data/categories'; // Import categories
+import ImageSlider from '../components/ImageSlider';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
+import Meta from '../components/Meta';
+
+const HomePage = () => {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
+    const { toggleWishlist, isItemInWishlist } = useWishlist();
+
+    // Show a limited number of categories on the home page
+    const featuredCategories = categories.slice(0, 5);
+    const featuredProducts = allProducts.slice(0, 4);
+
+    const handleCategoryClick = (categorySlug) => {
+        navigate(`/products?category=${categorySlug}`);
+    };
+
+    return (
+        <div id="homePage">
+            <Meta />
+            <ImageSlider />
+            <div className="section-header">
+                <h2>{t('categories')}</h2>
+                <Link to="/categories" className="see-all-link">{t('see_all')}</Link>
+            </div>
+            <div className="category-grid" id="categoriesGrid">
+                {featuredCategories.map(category => (
+                    <div 
+                        className="category-card" 
+                        key={category.id}
+                        onClick={() => handleCategoryClick(category.slug)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <i className={`${category.icon} category-icon`}></i> 
+                        <span>{t(`category_${category.slug}`)}</span>
+                    </div>
+                ))}
+            </div>
+            <div className="section-header">
+                <h2>{t('new_products')}</h2>
+                <Link to="/products" className="see-all-link">{t('see_all')}</Link>
+            </div>
+            <div className="product-grid" id="featuredProducts">
+                {featuredProducts.map(product => (
+                    <div className="product-card" key={product.id}>
+                        <Link to={`/products/${product.id}`} className="product-image-link">
+                            <div className="product-image">
+                                <img src={product.image} alt={product.name} />
+                            </div>
+                        </Link>
+                        <div className="product-info">
+                            <div className="product-title">{t(product.name)}</div>
+                            <div className="product-price">
+                                <span className="current-price">{product.price.toLocaleString('uz-UZ')} UZS</span>
+                            </div>
+                            <div className="product-card-actions">
+                                <Link to={`/products/${product.id}`} className="btn btn-primary btn-sm">{t('details')}</Link>
+                                <button className="btn-icon" onClick={() => addToCart(product)}>
+                                    <i className="fas fa-shopping-cart"></i>
+                                </button>
+                                <button 
+                                    className={`btn-icon ${isItemInWishlist(product.id) ? 'active' : ''}`}
+                                    onClick={() => toggleWishlist(product)}
+                                >
+                                    <i className={`${isItemInWishlist(product.id) ? 'fas' : 'far'} fa-heart`}></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default HomePage;
+
+
+
+================================================
+FILE: src/pages/OrdersPage.jsx
+================================================
+
+
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import Meta from '../components/Meta';
+
+const OrdersPage = () => {
+    const { t } = useTranslation();
+
+    // Dummy data should eventually come from a context or API
+    const dummyOrders = [
+        { id: 1, date: '2023-01-15', total: '4,700,000 UZS', status: 'delivered', items: ['Smartfon X1', 'Aqlli soat'] },
+        { id: 2, date: '2023-02-20', total: '8,000,000 UZS', status: 'pending', items: ['Noutbuk Pro'] },
+        { id: 3, date: '2023-03-10', total: '750,000 UZS', status: 'cancelled', items: ['Simsiz quloqchin'] },
+        { id: 4, date: '2023-04-01', total: '6,000,000 UZS', status: 'delivered', items: ['Televizor 4K', 'O\'yin konsoli'] },
+    ];
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'delivered': return 'var(--success-color)';
+            case 'pending': return 'var(--warning-color)';
+            case 'cancelled': return 'var(--danger-color)';
+            default: return 'var(--gray-600)';
+        }
+    };
+
+    const getStatusIcon = (status) => {
+        switch (status) {
+            case 'delivered': return 'fa-check-circle';
+            case 'pending': return 'fa-clock';
+            case 'cancelled': return 'fa-times-circle';
+            default: return 'fa-info-circle';
+        }
+    };
+
+    return (
+        <div id="ordersPage">
+            <Meta title={t('my_orders')} />
+            <h2 style={{ marginBottom: '1rem' }}>{t('my_orders')}</h2>
+            {dummyOrders.length === 0 ? (
+                <div className="orders-empty cart-empty">
+                    <i className="fas fa-clipboard-list cart-empty-icon"></i>
+                    <div className="cart-empty-title">{t('no_orders_yet')}</div>
+                    <p className="cart-empty-message">{t('no_orders_message')}</p>
+                    <Link to="/products" className="btn btn-primary">{t('go_to_products')}</Link>
+                </div>
+            ) : (
+                <div id="ordersList">
+                    {dummyOrders.map(order => (
+                        <div className="order-card" key={order.id} style={{ borderLeftColor: getStatusColor(order.status) }}>
+                            <div className="order-card-header">
+                                <span className="order-id">{t('order')} #{order.id}</span>
+                                <span className="order-date">{order.date}</span>
+                            </div>
+                            <div className="order-card-body">
+                                <div className="order-detail-item">
+                                    <span className="order-detail-label">{t('status')}</span>
+                                    <span className="order-detail-value" style={{ color: getStatusColor(order.status) }}>
+                                        <i className={`fas ${getStatusIcon(order.status)}`}></i> {t(`status_${order.status}`)}
+                                    </span>
+                                </div>
+                                <div className="order-detail-item">
+                                    <span className="order-detail-label">{t('total_amount')}</span>
+                                    <span className="order-detail-value total-price">{order.total}</span>
+                                </div>
+                            </div>
+                            <div className="order-card-footer">
+                                <h4 className="order-items-title">{t('products')}:</h4>
+                                <ul className="order-items-list">
+                                    {order.items.map((item, index) => (
+                                        <li key={index}>{item}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default OrdersPage;
+
+
+
+================================================
+FILE: src/pages/ProductDetailPage.jsx
+================================================
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { allProducts } from '../data/products';
+import { useToast } from '../components/Toast';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
+import Meta from '../components/Meta';
+
+const ProductDetailPage = () => {
+    const { t } = useTranslation();
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { showToast } = useToast();
+    const { addToCart } = useCart();
+    const { toggleWishlist, isItemInWishlist } = useWishlist();
+
+    const product = allProducts.find(p => p.id === parseInt(id));
+    const isLiked = product && isItemInWishlist(product.id);
+
+    const handleGoBack = () => {
+        if (window.history.length > 2) {
+            navigate(-1);
+        } else {
+            navigate('/');
+        }
+    };
+
+    const handleShare = () => {
+        navigator.clipboard.writeText(window.location.href);
+        showToast(t('link_copied'), 'info');
+    };
+
+    const handleLike = () => {
+        if (!product) return;
+        toggleWishlist(product);
+    };
+
+    if (!product) {
+        return (
+            <div className="product-detail-container">
+                <Meta title={t('product_not_found')} />
+                <div className="error">{t('product_not_found')}</div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="product-detail-page">
+            <Meta 
+                title={`${product.name} - ${t('app_name')}`}
+                description={product.description}
+            />
+            <header className="detail-header">
+                <button onClick={handleGoBack} className="header-btn">
+                    <i className="fas fa-arrow-left"></i>
+                </button>
+                <div className="header-actions">
+                    <button onClick={handleShare} className="header-btn">
+                        <i className="fas fa-share-alt"></i>
+                    </button>
+                    <button onClick={handleLike} className={`header-btn ${isLiked ? 'liked' : ''}`}>
+                        <i className={isLiked ? "fas fa-heart" : "far fa-heart"}></i>
+                    </button>
+                </div>
+            </header>
+
+            <main className="detail-content">
+                <div className="product-image-gallery">
+                    <img src={product.image} alt={product.name} className="main-product-image" />
+                </div>
+                <div className="product-info-section">
+                    <h1 className="product-detail-title">{t(product.name)}</h1>
+                    <div className="product-detail-price">
+                        <span className="current-price">{product.price.toLocaleString('uz-UZ')} UZS</span>
+                        {product.originalPrice && (
+                            <span className="original-price">{product.originalPrice.toLocaleString('uz-UZ')} UZS</span>
+                        )}
+                    </div>
+                    <div className="product-description">
+                        <h3 className="description-title">{t('product_description')}</h3>
+                        <p>{t(product.description)}</p>
+                    </div>
+                </div>
+            </main>
+
+            <footer className="detail-footer">
+                <button className="btn btn-primary btn-block add-to-cart-btn" onClick={() => addToCart(product)}>
+                    <i className="fas fa-shopping-cart"></i> {t('add_to_cart')}
+                </button>
+            </footer>
+        </div>
+    );
+};
+
+export default ProductDetailPage;
+
+
+================================================
+FILE: src/pages/ProductsPage.jsx
+================================================
+import React, { useState, useMemo } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { allProducts } from '../data/products';
+import { categories } from '../data/categories'; // Import categories for translation
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
+import Meta from '../components/Meta';
+
+const ProductsPage = () => {
+    const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const selectedCategorySlug = searchParams.get('category');
+    const { addToCart } = useCart();
+    const { toggleWishlist, isItemInWishlist } = useWishlist();
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOrder, setSortOrder] = useState('');
+
+    const displayedProducts = useMemo(() => {
+        let products = selectedCategorySlug
+            ? allProducts.filter(p => p.category === selectedCategorySlug)
+            : allProducts;
+
+        if (searchTerm) {
+            products = products.filter(p =>
+                p.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        if (sortOrder) {
+            products = [...products].sort((a, b) => {
+                switch (sortOrder) {
+                    case 'price-asc': return a.price - b.price;
+                    case 'price-desc': return b.price - a.price;
+                    case 'name-asc': return a.name.localeCompare(b.name);
+                    default: return 0;
+                }
+            });
+        }
+
+        return products;
+    }, [selectedCategorySlug, searchTerm, sortOrder]);
+
+    const getCategoryName = (slug) => {
+        const category = categories.find(cat => cat.slug === slug);
+        return category ? t(`category_${category.slug}`) : t('all_products');
+    };
+
+    return (
+        <div id="productsPage">
+            <Meta title={getCategoryName(selectedCategorySlug)} />
+            <h2 style={{ marginBottom: '1rem' }}>
+                {getCategoryName(selectedCategorySlug)}
+            </h2>
+
+            <div className="filters-container">
+                <div className="search-form-group">
+                    <i className="fas fa-search"></i>
+                    <input
+                        type="text"
+                        placeholder={t('search_products_placeholder')}
+                        className="filter-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="search-form-group">
+                    <i className="fas fa-sort-amount-down"></i>
+                    <select
+                        className="filter-select"
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value)}
+                    >
+                        <option value="">{t('sort_by')}</option>
+                        <option value="price-asc">{t('price_asc')}</option>
+                        <option value="price-desc">{t('price_desc')}</option>
+                        <option value="name-asc">{t('name_asc')}</option>
+                    </select>
+                </div>
+            </div>
+
+            {displayedProducts.length > 0 ? (
+                <div className="product-grid" id="productsGrid">
+                    {displayedProducts.map(product => (
+                        <div className="product-card" key={product.id}>
+                            <Link to={`/products/${product.id}`} className="product-image-link">
+                                <div className="product-image">
+                                    <img src={product.image} alt={product.name} />
+                                </div>
+                            </Link>
+                            <div className="product-info">
+                                <div className="product-title">{t(product.name)}</div>
+                                <div className="product-price">
+                                    <span className="current-price">{product.price.toLocaleString('uz-UZ')} UZS</span>
+                                </div>
+                                <div className="product-card-actions">
+                                    <Link to={`/products/${product.id}`} className="btn btn-primary btn-sm">{t('details')}</Link>
+                                    <button className="btn-icon" onClick={() => addToCart(product)}>
+                                        <i className="fas fa-shopping-cart"></i>
+                                    </button>
+                                    <button 
+                                        className={`btn-icon ${isItemInWishlist(product.id) ? 'active' : ''}`}
+                                        onClick={() => toggleWishlist(product)}
+                                    >
+                                        <i className={`${isItemInWishlist(product.id) ? 'fas' : 'far'} fa-heart`}></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="cart-empty" style={{ padding: '2rem' }}>
+                    <i className="fas fa-box-open cart-empty-icon"></i>
+                    <div className="cart-empty-title">{t('no_products_found_title')}</div>
+                    <p className="cart-empty-message">
+                        {t('no_products_found_message')}
+                    </p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ProductsPage;
+
+
+================================================
+FILE: src/pages/ProfilePage.jsx
+================================================
+
+
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../contexts/AuthContext';
+import { useModal } from '../contexts/ModalContext';
+import { useToast } from '../components/Toast';
+import LoginModalContent from '../components/LoginModal';
+import ConfirmModal from '../components/ConfirmModal';
+import Meta from '../components/Meta';
+import EditProfileModal from '../components/EditProfileModal';
+
+const ProfilePage = () => {
+    const { t } = useTranslation();
+    const { isLoggedIn, user, logout } = useAuth();
+    const { openModal, closeModal } = useModal();
+    const { showToast } = useToast();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        openModal(
+            <ConfirmModal 
+                title={t('logout_title')}
+                message={t('logout_message')}
+                confirmText={t('logout')}
+                cancelText={t('cancel')}
+                confirmButtonClass="btn-primary"
+                onConfirm={() => {
+                    logout();
+                    showToast(t('logout_success'), 'info');
+                    closeModal();
+                }}
+                onCancel={closeModal}
+            />
+        );
+    };
+
+    const handleEditProfile = () => {
+        openModal(<EditProfileModal />);
+    };
+
+    return (
+        <div id="profilePage">
+            <Meta title={t('my_profile')} />
+            <h2 style={{ marginBottom: '1rem' }}>{t('profile')}</h2>
+            {!isLoggedIn || !user ? (
+                <div className="profile-guest-card">
+                    <i className="fas fa-user-circle cart-empty-icon"></i>
+                    <div className="cart-empty-title">{t('login_to_profile')}</div>
+                    <p className="cart-empty-message">{t('login_to_profile_message')}</p>
+                    <div className="profile-actions">
+                        <button className="btn btn-primary" onClick={() => openModal(<LoginModalContent />)}>{t('login')}</button>
+                    </div>
+                </div>
+            ) : (
+                <div className="profile-container">
+                    <div className="profile-user-card">
+                        <div className="profile-avatar">{user.firstName && user.firstName.charAt(0)}</div>
+                        <h3 className="profile-name">{`${user.firstName} ${user.lastName}`}</h3>
+                    </div>
+                    <div className="profile-menu">
+                        <button className="profile-menu-item" onClick={handleEditProfile}>
+                            <i className="fas fa-cog profile-menu-icon"></i>
+                            <span>{t('settings')}</span>
+                            <i className="fas fa-chevron-right"></i>
+                        </button>
+                        <button className="profile-menu-item" onClick={() => navigate('/orders')}>
+                            <i className="fas fa-clipboard-list profile-menu-icon"></i>
+                            <span>{t('my_orders')}</span>
+                            <i className="fas fa-chevron-right"></i>
+                        </button>
+                        <button className="profile-menu-item" onClick={() => navigate('/wishlist')}>
+                            <i className="fas fa-heart profile-menu-icon"></i>
+                            <span>{t('my_wishlist')}</span>
+                            <i className="fas fa-chevron-right"></i>
+                        </button>
+                        <button className="profile-menu-item danger" onClick={handleLogout}>
+                            <i className="fas fa-sign-out-alt profile-menu-icon"></i>
+                            <span>{t('logout')}</span>
+                            <i className="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ProfilePage;
+
+
+
+================================================
+FILE: src/pages/SearchResultsPage.jsx
+================================================
+import React from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { allProducts } from '../data/products';
+import Meta from '../components/Meta';
+
+const SearchResultsPage = () => {
+    const { t } = useTranslation();
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('q')?.toLowerCase() || '';
+
+    const filteredProducts = query
+        ? allProducts.filter(product =>
+            product.name.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query)
+        )
+        : [];
+
+    return (
+        <div className="products-page">
+            <Meta title={`${t('search_results')}: ${query}`} description={`${t('products_found_for')} "${query}".`} />
+            <h1 className="page-title">
+                {t('search_results')}: "{query}"
+            </h1>
+
+            {filteredProducts.length > 0 ? (
+                <div className="product-grid">
+                    {filteredProducts.map(product => (
+                        <div className="product-card" key={product.id}>
+                            <Link to={`/products/${product.id}`} className="product-image-link">
+                                <div className="product-image">
+                                    <img src={product.image} alt={product.name} />
+                                </div>
+                            </Link>
+                            <div className="product-info">
+                                <div className="product-title">{t(product.name)}</div>
+                                <div className="product-price">
+                                    <span className="current-price">{product.price.toLocaleString('uz-UZ')} UZS</span>
+                                </div>
+                                <Link to={`/products/${product.id}`} className="btn btn-secondary btn-sm">{t('details')}</Link>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="empty-message">{t('no_results_found')}</p>
+            )}
+        </div>
+    );
+};
+
+export default SearchResultsPage;
+
+
+
+================================================
+FILE: src/pages/WishlistPage.jsx
+================================================
+
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
+import Meta from '../components/Meta';
+
+const WishlistPage = () => {
+    const { t } = useTranslation();
+    const { wishlistItems, toggleWishlist } = useWishlist();
+    const { addToCart } = useCart();
+
+    return (
+        <div id="wishlistPage">
+            <Meta title={t('my_wishlist')} />
+            <h2 style={{ marginBottom: '1rem' }}>{t('my_wishlist')}</h2>
+            {wishlistItems.length === 0 ? (
+                <div className="cart-empty">
+                    <i className="fas fa-heart-broken cart-empty-icon"></i>
+                    <div className="cart-empty-title">{t('wishlist_empty_title')}</div>
+                    <p className="cart-empty-message">{t('wishlist_empty_message')}</p>
+                    <Link to="/products" className="btn btn-primary">{t('go_to_products')}</Link>
+                </div>
+            ) : (
+                <div className="product-grid">
+                    {wishlistItems.map(product => (
+                        <div key={product.id} className="product-card">
+                             <div className="product-image">
+                                <img src={product.image} alt={product.name} />
+                                <button className="wishlist-btn-remove" onClick={() => toggleWishlist(product)}>
+                                    <i className="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div className="product-info">
+                                <div className="product-title">{t(product.name)}</div>
+                                <div className="product-price">
+                                    <span className="current-price">{product.price.toLocaleString('uz-UZ')} UZS</span>
+                                </div>
+                                <button className="btn btn-primary btn-sm btn-block" onClick={() => addToCart(product)}>
+                                    {t('add_to_cart')}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default WishlistPage;
+
+

@@ -1,0 +1,202 @@
+/* Profil sahifasi - avvalgi loyihadagi dizaynni takrorlash */
+
+.profile-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 2.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-info h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.profile-info p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.profile-menu {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-menu-item {
+  background: white;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--gray-800);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.profile-menu-item:hover {
+  background: var(--gray-50);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.profile-menu-item i {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin-right: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.profile-menu-item .menu-text {
+  flex: 1;
+}
+
+.profile-menu-item .menu-title {
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.profile-menu-item .menu-description {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  margin: 0;
+}
+
+.profile-menu-item .arrow {
+  color: var(--gray-400);
+  font-size: 0.9rem;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-stat {
+  background: white;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.profile-stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin: 0 0 0.5rem;
+}
+
+.profile-stat-label {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  margin: 0;
+}
+
+/* Logout tugma */
+.logout-button {
+  background: var(--danger-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.logout-button:hover {
+  background: var(--danger-dark);
+  transform: translateY(-1px);
+}
+
+/* Login shakli */
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--gray-800);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(8, 124, 54, 0.1);
+}
+
+.login-button {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 1rem;
+}
+
+.login-button:hover {
+  background: var(--primary-dark);
+}
+
+.login-button:disabled {
+  background: var(--gray-400);
+  cursor: not-allowed;
+}
