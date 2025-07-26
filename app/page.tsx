@@ -3,10 +3,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { products, categories } from '../src/data/products';
-import { useCart } from '../src/contexts/CartContext';
-import { useWishlist } from '../src/contexts/WishlistContext';
-import ImageSlider from '../src/components/ImageSlider';
+import { products, categories } from './data/products';
+import { useCart } from './contexts/CartContext';
+import { useWishlist } from './contexts/WishlistContext';
+import ImageSlider from './components/ImageSlider';
 
 /* Avvalgi loyihadagi bosh sahifani to'liq takrorlash */
 const HomePage = () => {

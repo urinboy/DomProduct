@@ -4,9 +4,9 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useCart } from '../../src/contexts/CartContext';
-import { useWishlist } from '../../src/contexts/WishlistContext';
-import { useToast } from '../../src/components/Toast/ToastProvider';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useToast } from '../components/Toast/ToastProvider';
 
 interface Product {
   id: number;

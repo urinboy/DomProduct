@@ -13,12 +13,24 @@ interface AppLayoutProps {
 /* Avvalgi loyihadagi App componentining layout qismini takrorlash */
 const AppLayout = ({ children }: AppLayoutProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isAppLoading, setIsAppLoading] = useState(true);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  // Dastur yuklash holatini boshqarish
+  // Faqat birinchi safar splash ekran ko'rsatish
   useEffect(() => {
-    const timer = setTimeout(() => setIsAppLoading(false), 2000);
-    return () => clearTimeout(timer);
+    const hasVisited = sessionStorage.getItem('domproduct_visited');
+    
+    if (!hasVisited) {
+      // Birinchi safar tashrif
+      const timer = setTimeout(() => {
+        setIsFirstLoad(false);
+        sessionStorage.setItem('domproduct_visited', 'true');
+      }, 2500); // 2.5 soniya splash
+      
+      return () => clearTimeout(timer);
+    } else {
+      // Oldin tashrif bo'lgan
+      setIsFirstLoad(false);
+    }
   }, []);
 
   // Qidiruv funksiyasi
@@ -27,8 +39,8 @@ const AppLayout = ({ children }: AppLayoutProps) => {
     window.location.href = `/search?q=${encodeURIComponent(query)}`;
   };
 
-  // Agar dastur yuklanayotgan bo'lsa, splash screen ko'rsatish
-  if (isAppLoading) {
+  // Faqat birinchi safar splash screen ko'rsatish
+  if (isFirstLoad) {
     return <SplashScreen />;
   }
 

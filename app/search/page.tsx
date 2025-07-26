@@ -4,8 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useCart } from '../../src/contexts/CartContext';
-import { useWishlist } from '../../src/contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
 
 interface Product {
   id: number;
@@ -33,7 +33,7 @@ const SearchPage = () => {
   
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [sortBy, setSortBy] = useState('relevance');
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLoading, setIsLoading] = useState(false);
 

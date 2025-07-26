@@ -2,9 +2,9 @@
 
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useWishlist } from '../../src/contexts/WishlistContext';
-import { useCart } from '../../src/contexts/CartContext';
-import { useToast } from '../../src/components/Toast/ToastProvider';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useCart } from '../contexts/CartContext';
+import { useToast } from '../components/Toast/ToastProvider';
 import './wishlist.css';
 
 /* Sevimlilar sahifasi - zamonaviy dizayn */

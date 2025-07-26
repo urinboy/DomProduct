@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useCart } from '../../../src/contexts/CartContext';
-import { useWishlist } from '../../../src/contexts/WishlistContext';
+import { useCart } from '../../contexts/CartContext';
+import { useWishlist } from '../../contexts/WishlistContext';
 import './product-detail.css';
 
 interface Product {

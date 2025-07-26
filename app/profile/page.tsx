@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useAuth } from '../../src/contexts/AuthContext';
-import { useCart } from '../../src/contexts/CartContext';
-import { useWishlist } from '../../src/contexts/WishlistContext';
-import { useToast } from '../../src/components/Toast/ToastProvider';
+import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
+import { useToast } from '../components/Toast/ToastProvider';
 import './profile.css';
 
 interface LoginFormData {
@@ -52,7 +52,7 @@ const ProfilePage = () => {
       const demoUser: User = {
         id: 1,
         email: loginForm.email,
-        name: loginForm.email.split('@')[0],
+        name: loginForm.email?.split('@')[0] || 'User',
         phone: '+998 90 123 45 67'
       };
       
