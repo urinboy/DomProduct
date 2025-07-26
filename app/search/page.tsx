@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
+import ProductImage from '../components/ProductImage';
 
 interface Product {
   id: number;
@@ -774,18 +775,20 @@ const SearchPage = () => {
                     overflow: 'hidden',
                     borderRadius: '15px 15px 0 0'
                   }}>
-                    <img 
-                      src={product.images[0]} 
+                    <ProductImage 
+                      src={product.images[0] || ''} 
                       alt={isUzbek ? product.nameUz : product.name}
                       loading="lazy"
+                      width={250}
+                      height={200}
                       style={{
                         width: '100%',
                         height: '200px',
                         objectFit: 'cover',
                         transition: 'transform 0.3s ease'
                       }}
-                      onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                      onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                      onMouseOver={(e) => (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.05)'}
+                      onMouseOut={(e) => (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'}
                     />
                     {product.discount > 0 && (
                       <div className="discount-badge" style={{

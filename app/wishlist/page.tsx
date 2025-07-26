@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
 import { useToast } from '../components/Toast/ToastProvider';
+import ProductImage from '../components/ProductImage';
 import './wishlist.css';
 
 /* Sevimlilar sahifasi - zamonaviy dizayn */
@@ -87,9 +88,11 @@ const WishlistPage = () => {
         {items.map((product: any) => (
           <div key={product.id} className="wishlist-item">
             <div className="wishlist-item-image">
-              <img 
-                src={product.image} 
+              <ProductImage 
+                src={product.image || ''} 
                 alt={isUzbek ? (product.nameUz || product.name) : product.name}
+                width={150}
+                height={150}
               />
             </div>
             

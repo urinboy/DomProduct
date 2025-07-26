@@ -7,6 +7,7 @@ import { products, categories } from './data/products';
 import { useCart } from './contexts/CartContext';
 import { useWishlist } from './contexts/WishlistContext';
 import ImageSlider from './components/ImageSlider';
+import ProductImage from './components/ProductImage';
 
 /* Avvalgi loyihadagi bosh sahifani to'liq takrorlash */
 const HomePage = () => {
@@ -76,10 +77,12 @@ const HomePage = () => {
             {/* Mahsulot rasmi */}
             <Link href={`/products/${product.id}`} className="product-image-link">
               <div className="product-image">
-                <img 
-                  src={product.images[0]} 
+                <ProductImage 
+                  src={product.images[0] || ''} 
                   alt={product.nameUz} 
                   loading="lazy"
+                  width={250}
+                  height={250}
                 />
                 {/* Chegirma badge */}
                 {product.discount > 0 && (

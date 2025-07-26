@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { useCart } from '../../contexts/CartContext';
 import { useWishlist } from '../../contexts/WishlistContext';
+import ProductImage from '../../components/ProductImage';
 import './product-detail.css';
 
 interface Product {
@@ -182,10 +183,13 @@ export default function ProductDetailPage() {
         {/* Image Gallery */}
         <div className="product-image-gallery">
           <div className="main-image-container">
-            <img 
-              src={product.images[selectedImageIndex]} 
+            <ProductImage 
+              src={product.images[selectedImageIndex] || ''} 
               alt={isUzbek ? product.nameUz : product.name}
               className="main-product-image"
+              width={500}
+              height={500}
+              priority
             />
             {product.discount > 0 && (
               <div className="discount-badge">
@@ -202,7 +206,12 @@ export default function ProductDetailPage() {
                   className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
                   onClick={() => setSelectedImageIndex(index)}
                 >
-                  <img src={image} alt={`${product.name} ${index + 1}`} />
+                  <ProductImage 
+                    src={image || ''} 
+                    alt={`${product.name} ${index + 1}`}
+                    width={80}
+                    height={80}
+                  />
                 </button>
               ))}
             </div>

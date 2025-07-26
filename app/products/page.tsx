@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
 import { useToast } from '../components/Toast/ToastProvider';
+import ProductImage from '../components/ProductImage';
 
 interface Product {
   id: number;
@@ -401,10 +402,12 @@ export default function ProductsPage() {
             <div className="product-card" key={product.id}>
               <Link href={`/products/${product.id}`} className="product-image-link">
                 <div className="product-image">
-                  <img 
-                    src={product.images[0]} 
+                  <ProductImage 
+                    src={product.images[0] || ''} 
                     alt={isUzbek ? product.nameUz : product.name}
                     loading="lazy"
+                    width={250}
+                    height={250}
                   />
                   {product.discount > 0 && (
                     <div className="discount-badge">
